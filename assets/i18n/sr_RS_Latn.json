@@ -1,0 +1,415 @@
+{
+    "nav": {
+        "home": "Početna",
+        "generator": "Generator",
+        "validator": "Validator",
+        "templates": "Šabloni",
+        "language": "Jezik"
+    },
+    "home": {
+        "title": "NBS IPS QR Kod",
+        "subtitle": "Generator i Validator",
+        "lead": "Profesionalni GUI wrapper za API NBS IPS QR kodova",
+        "whatIs": "Šta je NBS IPS QR?",
+        "description": "NBS IPS QR kodovi omogućavaju instant plaćanja u Srbiji kroz Sistem instant plaćanja (IPS) Narodne banke. Generišite validne QR kodove za račune, fakture i zahteve za plaćanje koji su usklađeni sa srpskim bankarskim standardima.",
+        "features": {
+            "generate": {
+                "title": "Generiši QR Kodove",
+                "description": "Kreiraj usklađene NBS IPS QR kodove iz podataka o plaćanju sa instant validacijom",
+                "button": "Počni generisanje"
+            },
+            "validate": {
+                "title": "Validiraj QR Kodove",
+                "description": "Proveri QR kodove prema NBS specifikacijama i dobij detaljne izveštaje o validaciji",
+                "button": "Počni validaciju"
+            },
+            "templates": {
+                "title": "Sačuvaj Šablone",
+                "description": "Skladišti često korišćene podatke o plaćanju kao šablone za brzu ponovnu upotrebu i efikasnost",
+                "button": "Upravljaj šablonima"
+            },
+            "upload": {
+                "title": "Otpremi i Proveri",
+                "description": "Otpremi postojeće QR kod slike da dekodiraš i validiraš njihov sadržaj",
+                "button": "Otpremi QR"
+            }
+        },
+        "keyFeatures": {
+            "title": "Ključne funkcionalnosti",
+            "items": {
+                "integration": "Kompletna NBS API integracija",
+                "templates": "Sistem upravljanja šablonima",
+                "languages": "Podrška za više jezika",
+                "storage": "Lokalno skladištenje šablona",
+                "export": "Export/Import funkcionalnost",
+                "upload": "Validacija otpremljenih slika",
+                "responsive": "Responzivan dizajn",
+                "free": "Besplatno za korišćenje"
+            }
+        },
+        "notice": {
+            "title": "Važno obaveštenje",
+            "display": "Za prikaz plaćanja: Kada koristite generisane NBS IPS QR kodove, morate prikazati tekst \"NBS IPS QR\" pored, ispod ili iznad QR koda na računima, fakturama ili zahtevima za plaćanje.",
+            "merchant": "Za trgovinska plaćanja: IPS QR kodovi sa PT i EK identifikatorima za plaćanja na prodajnom mestu zahtevaju ugovorni odnos sa bankom akvirerkom.",
+            "service": "Servis: Usluga NBS IPS QR Generator/Validator API se pruža besplatno od strane Narodne banke Srbije."
+        },
+        "quickStart": "Brzi početak",
+        "quickActions": {
+            "generate": "Generiši QR kod",
+            "validate": "Validiraj QR kod",
+            "browse": "Pregledaj šablone"
+        },
+        "footer": {
+            "official": "Zvanični API",
+            "officialDesc": "Pokreće zvanični API QR kodova Narodne banke Srbije",
+            "secure": "Siguran i usklađen",
+            "secureDesc": "Svi generisani kodovi su usklađeni sa srpskim bankarskim standardima",
+            "openSource": "Otvoreni kod",
+            "openSourceDesc": "Besplatna Jekyll aplikacija otvorenog koda za lako postavljanje"
+        }
+    },
+    "generator": {
+        "title": "Generator QR kodova",
+        "saveTemplate": "Sačuvaj šablon",
+        "export": "Eksportuj",
+        "import": "Importuj",
+        "generateTitle": "Generiši QR kod",
+        "generationType": {
+            "imageOnly": "Samo slika",
+            "fullResponse": "Potpun odgovor"
+        },
+        "form": {
+            "paymentType": {
+                "label": "Tip plaćanja (K)",
+                "pr": "Regularno plaćanje (PR)",
+                "pt": "Prodajno mesto (PT)",
+                "ek": "E-trgovina (EK)",
+                "help": "Tip zahteva za plaćanje"
+            },
+            "version": {
+                "label": "Verzija (V)",
+                "help": "Verzija QR koda (uvek 01)"
+            },
+            "characterSet": {
+                "label": "Set karaktera (C)",
+                "utf8": "UTF-8 (1)",
+                "windows": "Windows-1250 (2)",
+                "help": "Kodiranje karaktera"
+            },
+            "accountNumber": {
+                "label": "Broj računa (R)",
+                "labelDetailed": "Račun primaoca (R) *",
+                "helpDetailed": "18-cifreni broj računa primaoca plaćanja"
+            },
+            "companyName": {
+                "label": "Naziv kompanije/primaoca (N)",
+                "labelDetailed": "Ime i adresa primaoca (N) *",
+                "helpDetailed": "Ime i adresa primaoca plaćanja (koristite prelom reda za adresu)"
+            },
+            "amount": {
+                "label": "Iznos (I)",
+                "helpDetailed": "Kod valute + iznos (npr., RSD1000,00)"
+            },
+            "currency": {
+                "label": "Valuta (P)"
+            },
+            "paymentCode": {
+                "label": "Šifra plaćanja (SF)",
+                "helpDetailed": "3-cifrena šifra svrhe plaćanja"
+            },
+            "paymentPurpose": {
+                "label": "Svrha plaćanja (S)",
+                "labelDetailed": "Opis plaćanja (S)",
+                "helpDetailed": "Opis plaćanja (maksimalno 140 karaktera)"
+            },
+            "referenceNumber": {
+                "label": "Poziv na broj (RO)",
+                "helpDetailed": "Broj reference za identifikaciju plaćanja (maksimalno 25 karaktera)"
+            },
+            "payerName": {
+                "label": "Ime i adresa platioca (P)",
+                "help": "Opciono: Ime i adresa platioca (koristite prelom reda za adresu)"
+            },
+            "qrCodeSize": {
+                "label": "Veličina QR koda",
+                "help": "Izaberite željenu veličinu QR koda"
+            }
+        },
+        "buttons": {
+            "clear": "Obriši formu",
+            "generate": "Generiši QR kod",
+            "sample": "Popuni probne podatke"
+        },
+        "results": {
+            "title": "Generisani QR kod",
+            "download": "Preuzmi QR kod",
+            "print": "Štampaj QR kod"
+        },
+        "response": {
+            "title": "API odgovor"
+        },
+        "help": {
+            "title": "Pomoć i saveti",
+            "paymentTypes": {
+                "title": "Tipovi plaćanja",
+                "pr": "PR: Regularno plaćanje - Standardno plaćanje sa jednog računa na drugi",
+                "pt": "PT: Prodajno mesto - Plaćanje na fizičkoj lokaciji trgovca (zahteva ugovor sa bankom akvirerkom)",
+                "ek": "EK: E-trgovina - Online plaćanje (zahteva ugovor sa bankom akvirerkom)"
+            },
+            "requiredFields": {
+                "title": "Obavezna polja",
+                "k": "K: Tip plaćanja (PR, PT ili EK)",
+                "v": "V: Verzija (uvek 01)",
+                "c": "C: Set karaktera (1 za UTF-8, 2 za Windows-1250)",
+                "r": "R: Broj računa (format: 123-1234567890123-12)",
+                "n": "N: Naziv primaoca"
+            },
+            "optionalFields": {
+                "title": "Opciona polja",
+                "i": "I: Iznos u dinarima (format: 123.45)",
+                "p": "P: Kod valute (podrazumevano: RSD)",
+                "sf": "SF: Šifra plaćanja",
+                "s": "S: Svrha plaćanja",
+                "ro": "RO: Poziv na broj"
+            },
+            "formattingTips": {
+                "title": "Saveti za formatiranje"
+            }
+        },
+        "quickTemplates": {
+            "title": "Brzi šabloni",
+            "noTemplates": "Nema sačuvanih šablona",
+            "createTemplate": "Kreiraj šablon"
+        }
+    },
+    "validator": {
+        "title": "Validator QR kodova",
+        "validateText": "Validiraj QR tekst",
+        "uploadImage": "Otpremi QR sliku",
+        "saveTemplate": "Sačuvaj šablon",
+        "textInput": {
+            "label": "Tekstualni sadržaj QR koda",
+            "placeholder": "Nalepi tekstualni sadržaj QR koda ovde...",
+            "description": "Nalepi ili unesi tekstualne podatke QR koda za validaciju prema NBS IPS specifikacijama.",
+            "help": "Unesi kompletan tekst QR koda koristeći format: K:PR|V:01|C:1|..."
+        },
+        "imageUpload": {
+            "label": "Izaberi QR kod sliku",
+            "dragText": "Prevuci i otpusti QR kod sliku ovde",
+            "orText": "ili",
+            "chooseFile": "Izaberi datoteku",
+            "supportedFormats": "Podržani formati: PNG, JPG, JPEG, GIF",
+            "description": "Otpremi PNG ili JPEG sliku QR koda da dekodiraš i validiraš njen sadržaj."
+        },
+        "buttons": {
+            "validate": "Validiraj QR kod",
+            "validateImage": "Validiraj sliku",
+            "clear": "Obriši",
+            "clearFile": "Obriši datoteku",
+            "sampleData": "Probni podaci",
+            "formatText": "Formatiraj tekst"
+        },
+        "results": {
+            "title": "Rezultati validacije",
+            "status": "Status validacije"
+        },
+        "quickTemplates": {
+            "title": "Brzi šabloni",
+            "description": "Nedavni šabloni validacije će se pojaviti ovde",
+            "manage": "Upravljaj šablonima",
+            "viewAll": "Prikaži sve šablone"
+        },
+        "rules": {
+            "title": "Pravila validacije"
+        }
+    },
+    "templates": {
+        "title": "Upravljanje šablonima",
+        "noTemplates": "Još nema sačuvanih šablona.",
+        "createFirst": "Kreiraj svoj prvi šablon čuvanjem forme iz Generatora.",
+        "buttons": {
+            "loadTemplate": "Učitaj šablon",
+            "editTemplate": "Uredi šablon",
+            "deleteTemplate": "Obriši šablon",
+            "exportAll": "Eksportuj sve šablone",
+            "importTemplates": "Importuj šablone",
+            "newTemplate": "Novi šablon",
+            "import": "Importuj",
+            "clearAll": "Obriši sve",
+            "createTemplate": "Kreiraj šablon",
+            "updateTemplate": "Ažuriraj šablon"
+        },
+        "modal": {
+            "create": {
+                "title": "Kreiraj novi šablon",
+                "name": "Naziv šablona",
+                "description": "Opis (opciono)",
+                "endpoint": "API Endpoint",
+                "selectEndpoint": "Izaberi endpoint...",
+                "data": "Podaci šablona (JSON)",
+                "dataHelp": "Unesi podatke šablona kao JSON objekat"
+            },
+            "edit": {
+                "title": "Uredi šablon",
+                "name": "Naziv šablona",
+                "description": "Opis (opciono)",
+                "endpoint": "API Endpoint",
+                "data": "Podaci šablona (JSON)",
+                "dataHelp": "Uredi podatke šablona kao JSON objekat"
+            },
+            "details": {
+                "title": "Detalji šablona",
+                "name": "Naziv:",
+                "description": "Opis:",
+                "endpoint": "Endpoint:",
+                "usageCount": "Broj korišćenja:",
+                "created": "Kreiran:",
+                "lastUsed": "Poslednji put korišćen:",
+                "data": "Podaci:"
+            }
+        },
+        "search": {
+            "label": "Pretraži šablone",
+            "placeholder": "Pretraži po nazivu, opisu ili endpoint-u..."
+        },
+        "filter": {
+            "label": "Filtriraj po Endpoint-u",
+            "all": "Svi Endpoint-ovi",
+            "generate": "Generiši sliku",
+            "generateResponse": "Generiši sa odgovorom",
+            "validate": "Validiraj tekst",
+            "upload": "Otpremi i validiraj"
+        },
+        "sort": {
+            "label": "Sortiraj po",
+            "name": "Naziv",
+            "created": "Datum kreiranja",
+            "usage": "Broj upotreba",
+            "endpoint": "Endpoint"
+        },
+        "emptyState": {
+            "title": "Nema pronađenih šablona",
+            "description": "Počnite kreiranjem prvog šablona ili uvozom postojećih"
+        },
+        "statistics": {
+            "total": "Ukupno šablona",
+            "usage": "Ukupna upotreba",
+            "title": "Statistike"
+        }
+    },
+    "modal": {
+        "saveTemplate": {
+            "title": "Sačuvaj kao šablon",
+            "name": "Naziv šablona",
+            "description": "Opis (opciono)",
+            "cancel": "Otkaži",
+            "save": "Sačuvaj šablon"
+        },
+        "import": {
+            "title": "Importuj šablone",
+            "selectFile": "Izaberi JSON datoteku",
+            "browse": "Pregledaj...",
+            "noFileSelected": "Nije izabrana datoteka",
+            "cancel": "Otkaži",
+            "import": "Importuj"
+        },
+        "loading": {
+            "text": "Obrađujem zahtev..."
+        }
+    },
+    "notifications": {
+        "languageChanged": "Jezik promenjen na",
+        "templateSaved": "Šablon uspešno sačuvan",
+        "templateLoaded": "Šablon uspešno učitan",
+        "templateDeleted": "Šablon uspešno obrisan",
+        "templatesExported": "Šabloni uspešno eksportovani",
+        "templatesImported": "Šabloni uspešno importovani",
+        "templateDuplicated": "Šablon uspešno dupliran",
+        "qrGenerated": "QR kod uspešno generisan",
+        "qrValidated": "QR kod uspešno validiran",
+        "formCleared": "Forma obrisana",
+        "copiedToClipboard": "Kopirano u clipboard",
+        "downloadStarted": "Preuzimanje početo",
+        "error": "Dogodila se greška",
+        "invalidFile": "Nevažan format datoteke",
+        "fileRequired": "Molimo izaberite datoteku",
+        "fieldRequired": "Ovo polje je obavezno",
+        "pleaseSelectJsonFile": "Molimo izaberite JSON datoteku",
+        "pleaseSelectImageFile": "Molimo izaberite PNG ili JPEG sliku",
+        "fileSizeLimit": "Veličina datoteke mora biti manja od 5MB",
+        "selectFileToImport": "Molimo izaberite datoteku za uvoz",
+        "overwriteExistingTemplates": "Da li želite da prepišete postojeće šablone sa istim imenom?",
+        "importCompleted": "Uvoz završen: {{imported}} uvezeno",
+        "importCompletedWithSkipped": "Uvoz završen: {{imported}} uvezeno, {{skipped}} preskočeno",
+        "importCompletedWithErrors": "Uvoz završen: {{imported}} uvezeno, {{errors}} grešaka",
+        "importCompletedFull": "Uvoz završen: {{imported}} uvezeno, {{skipped}} preskočeno, {{errors}} grešaka",
+        "importFailed": "Uvoz neuspešan"
+    },
+    "errors": {
+        "invalidAccountNumber": "Nevaljan format broja računa",
+        "invalidAmount": "Nevaljan format iznosa",
+        "networkError": "Dogodila se mrežna greška",
+        "serverError": "Dogodila se greška servera",
+        "validationFailed": "Validacija neuspešna",
+        "fileUploadFailed": "Otpremanje datoteke neuspešno",
+        "templateNotFound": "Šablon nije pronađen",
+        "invalidTemplate": "Nevaljan format šablona"
+    },
+    "common": {
+        "loading": "Učitavam...",
+        "success": "Uspešno",
+        "error": "Greška",
+        "warning": "Upozorenje",
+        "info": "Info",
+        "yes": "Da",
+        "no": "Ne",
+        "ok": "OK",
+        "cancel": "Otkaži",
+        "save": "Sačuvaj",
+        "delete": "Obriši",
+        "edit": "Uredi",
+        "close": "Zatvori",
+        "back": "Nazad",
+        "next": "Sledeće",
+        "previous": "Prethodno",
+        "search": "Pretraži",
+        "filter": "Filter",
+        "sort": "Sortiraj",
+        "export": "Eksportuj",
+        "import": "Importuj",
+        "download": "Preuzmi",
+        "upload": "Otpremi",
+        "print": "Štampaj",
+        "copy": "Kopiraj",
+        "clear": "Obriši",
+        "reset": "Resetuj",
+        "refresh": "Osveži"
+    },
+    "test": {
+        "title": "Test internacionalizacije",
+        "runTest": "Pokreni test",
+        "debugInfo": "Debug informacije",
+        "languageStatus": "Status jezika",
+        "currentLanguage": "Trenutni jezik",
+        "loadedLanguages": "Učitani jezici",
+        "i18nStatus": "i18n status",
+        "translationExamples": "Primeri prevoda",
+        "navigationItems": "Stavke navigacije",
+        "commonActions": "Česte akcije",
+        "formElements": "Elementi forme",
+        "placeholderAmount": "Unesi iznos...",
+        "debugInformation": "Debug informacije",
+        "languageConfig": "Konfiguracija jezika",
+        "translationSample": "Primer prevoda",
+        "testResults": "Rezultati testa",
+        "noTestsRun": "Još nema pokretanih testova. Kliknite \"Pokreni test\" da počnete.",
+        "instructions": {
+            "title": "Instrukcije za test",
+            "step1": "Koristite padajući meni jezika u navigaciji za prebacivanje između jezika",
+            "step2": "Posmatrajte kako se tekst na ovoj strani automatski menja",
+            "step3": "Kliknite \"Pokreni test\" da izvršite automatske testove prevoda",
+            "step4": "Omogućite \"Debug Info\" da vidite tehničke detalje o i18n sistemu"
+        },
+        "supportedLanguages": "Podržani jezici"
+    }
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TemplateManager Debug</title>
+    <style>
+        body { font-family: monospace; padding: 20px; }
+        .log { margin: 5px 0; }
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>TemplateManager Debug</h1>
+    <div id="log"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            document.getElementById('log').appendChild(div);
+            console.log(message);
+        }
+
+        log('Starting debug test...');
+
+        // Check initial state
+        log(`window.TemplateManager type: ${typeof window.TemplateManager}`);
+
+        // Mock required globals before loading scripts
+        window.showNotification = function(msg, type) {
+            log(`Notification: ${msg} (${type})`);
+        };
+
+        window.bootstrap = {
+            Modal: function(element) {
+                return {
+                    show: function() { log('Modal show called'); },
+                    hide: function() { log('Modal hide called'); }
+                };
+            }
+        };
+
+        window.makeAPICall = function() {
+            log('makeAPICall mock called');
+        };
+
+        log('Loading main.js...');
+    </script>
+
+    <!-- Load only templates.js to isolate the issue -->
+    <script src="/assets/js/templates.js" onload="log('templates.js loaded')" onerror="log('templates.js failed to load', 'error')"></script>
+
+    <script>
+        // Test after a delay
+        setTimeout(function() {
+            log('=== Testing TemplateManager ===');
+            log(`typeof window.TemplateManager: ${typeof window.TemplateManager}`);
+
+            if (window.TemplateManager) {
+                log('TemplateManager exists!', 'success');
+                log(`Methods: ${Object.getOwnPropertyNames(window.TemplateManager).join(', ')}`);
+
+                if (typeof window.TemplateManager.filterByEndpoint === 'function') {
+                    log('filterByEndpoint method available!', 'success');
+
+                    try {
+                        const templates = window.TemplateManager.filterByEndpoint('/gen');
+                        log(`filterByEndpoint test: returned ${templates.length} templates`, 'success');
+                    } catch (e) {
+                        log(`filterByEndpoint error: ${e.message}`, 'error');
+                    }
+                } else {
+                    log('filterByEndpoint method NOT available', 'error');
+                    log(`Type: ${typeof window.TemplateManager.filterByEndpoint}`);
+                }
+            } else {
+                log('TemplateManager does NOT exist', 'error');
+                log(`window keys: ${Object.keys(window).filter(k => k.includes('Template')).join(', ')}`);
+            }
+
+            // Test lowercase version
+            if (window.templateManager) {
+                log('window.templateManager (lowercase) exists', 'info');
+            }
+
+        }, 100);
+
+        // Also test immediately
+        log('=== Immediate Test ===');
+        log(`typeof window.TemplateManager (immediate): ${typeof window.TemplateManager}`);
+    </script>
+</body>
+</html>

@@ -1,0 +1,415 @@
+{
+    "nav": {
+        "home": "Home",
+        "generator": "Generator",
+        "validator": "Validator",
+        "templates": "Templates",
+        "language": "Language"
+    },
+    "home": {
+        "title": "NBS IPS QR Code",
+        "subtitle": "Generator & Validator",
+        "lead": "Professional GUI wrapper for the Serbian National Bank IPS QR Code API",
+        "whatIs": "What is NBS IPS QR?",
+        "description": "NBS IPS QR codes enable instant payments in Serbia through the National Bank's Instant Payment System (IPS). Generate valid QR codes for invoices, bills, and payment requests that comply with Serbian banking standards.",
+        "features": {
+            "generate": {
+                "title": "Generate QR Codes",
+                "description": "Create compliant NBS IPS QR codes from payment data with instant validation",
+                "button": "Start Generating"
+            },
+            "validate": {
+                "title": "Validate QR Codes",
+                "description": "Verify QR codes against NBS specifications and get detailed validation reports",
+                "button": "Start Validating"
+            },
+            "templates": {
+                "title": "Save Templates",
+                "description": "Store frequently used payment data as templates for quick reuse and efficiency",
+                "button": "Manage Templates"
+            },
+            "upload": {
+                "title": "Upload & Verify",
+                "description": "Upload existing QR code images to decode and validate their content",
+                "button": "Upload QR"
+            }
+        },
+        "keyFeatures": {
+            "title": "Key Features",
+            "items": {
+                "integration": "Complete NBS API integration",
+                "templates": "Template management system",
+                "languages": "Multiple language support",
+                "storage": "Local storage for templates",
+                "export": "Export/Import functionality",
+                "upload": "Image upload validation",
+                "responsive": "Responsive design",
+                "free": "Free to use"
+            }
+        },
+        "notice": {
+            "title": "Important Notice",
+            "display": "For Payment Display: When using generated NBS IPS QR codes, you must display the text \"NBS IPS QR\" next to, below, or above the QR code on invoices, bills, or payment requests.",
+            "merchant": "For Merchant Payments: IPS QR codes with PT and EK identifiers for point-of-sale payments require a contractual relationship with an acquiring bank.",
+            "service": "Service: The NBS IPS QR Generator/Validator API service is provided free of charge by the National Bank of Serbia."
+        },
+        "quickStart": "Quick Start",
+        "quickActions": {
+            "generate": "Generate QR Code",
+            "validate": "Validate QR Code",
+            "browse": "Browse Templates"
+        },
+        "footer": {
+            "official": "Official API",
+            "officialDesc": "Powered by the National Bank of Serbia's official QR code API",
+            "secure": "Secure & Compliant",
+            "secureDesc": "All generated codes comply with Serbian banking standards",
+            "openSource": "Open Source",
+            "openSourceDesc": "Free, open-source Jekyll application for easy deployment"
+        }
+    },
+    "generator": {
+        "title": "QR Code Generator",
+        "saveTemplate": "Save Template",
+        "export": "Export",
+        "import": "Import",
+        "generateTitle": "Generate QR Code",
+        "generationType": {
+            "imageOnly": "Image Only",
+            "fullResponse": "Full Response"
+        },
+        "form": {
+            "paymentType": {
+                "label": "Payment Type (K)",
+                "pr": "Regular Payment (PR)",
+                "pt": "Point of Sale (PT)",
+                "ek": "E-Commerce (EK)",
+                "help": "Type of payment request"
+            },
+            "version": {
+                "label": "Version (V)",
+                "help": "QR code version (always 01)"
+            },
+            "characterSet": {
+                "label": "Character Set (C)",
+                "utf8": "UTF-8 (1)",
+                "windows": "Windows-1250 (2)",
+                "help": "Character encoding"
+            },
+            "accountNumber": {
+                "label": "Account Number (R)",
+                "labelDetailed": "Recipient Account (R) *",
+                "helpDetailed": "18-digit account number of the payment recipient"
+            },
+            "companyName": {
+                "label": "Company/Recipient Name (N)",
+                "labelDetailed": "Recipient Name and Address (N) *",
+                "helpDetailed": "Name and address of payment recipient (use line breaks for address)"
+            },
+            "amount": {
+                "label": "Amount (I)",
+                "helpDetailed": "Currency code + amount (e.g., RSD1000,00)"
+            },
+            "currency": {
+                "label": "Currency (P)"
+            },
+            "paymentCode": {
+                "label": "Payment Code (SF)",
+                "helpDetailed": "3-digit payment purpose code"
+            },
+            "paymentPurpose": {
+                "label": "Payment Purpose (S)",
+                "labelDetailed": "Payment Description (S)",
+                "helpDetailed": "Description of payment (max 140 characters)"
+            },
+            "referenceNumber": {
+                "label": "Reference Number (RO)",
+                "helpDetailed": "Reference number for payment identification (max 25 characters)"
+            },
+            "payerName": {
+                "label": "Payer Name and Address (P)",
+                "help": "Optional: Name and address of payer (use line breaks for address)"
+            },
+            "qrCodeSize": {
+                "label": "QR Code Size",
+                "help": "Select desired QR code size"
+            }
+        },
+        "buttons": {
+            "clear": "Clear Form",
+            "generate": "Generate QR Code",
+            "sample": "Fill Sample Data"
+        },
+        "results": {
+            "title": "Generated QR Code",
+            "download": "Download QR Code",
+            "print": "Print QR Code"
+        },
+        "response": {
+            "title": "API Response"
+        },
+        "help": {
+            "title": "Help & Tips",
+            "paymentTypes": {
+                "title": "Payment Types",
+                "pr": "PR: Regular payment - Standard payment from one account to another",
+                "pt": "PT: Point of Sale - Payment at physical merchant location (requires acquiring bank contract)",
+                "ek": "EK: E-Commerce - Online payment (requires acquiring bank contract)"
+            },
+            "requiredFields": {
+                "title": "Required Fields",
+                "k": "K: Payment type (PR, PT, or EK)",
+                "v": "V: Version (always 01)",
+                "c": "C: Character set (1 for UTF-8, 2 for Windows-1250)",
+                "r": "R: Account number (format: 123-1234567890123-12)",
+                "n": "N: Recipient name"
+            },
+            "optionalFields": {
+                "title": "Optional Fields",
+                "i": "I: Amount in dinars (format: 123.45)",
+                "p": "P: Currency code (default: RSD)",
+                "sf": "SF: Payment code",
+                "s": "S: Payment purpose",
+                "ro": "RO: Reference number"
+            },
+            "formattingTips": {
+                "title": "Formatting Tips"
+            }
+        },
+        "quickTemplates": {
+            "title": "Quick Templates",
+            "noTemplates": "No templates saved yet",
+            "createTemplate": "Create Template"
+        }
+    },
+    "validator": {
+        "title": "QR Code Validator",
+        "validateText": "Validate QR Text",
+        "uploadImage": "Upload QR Image",
+        "saveTemplate": "Save Template",
+        "textInput": {
+            "label": "QR Code Text Content",
+            "placeholder": "Paste QR code text content here...",
+            "description": "Paste or enter the QR code text data to validate against NBS IPS specifications.",
+            "help": "Enter the complete QR code text string using the format: K:PR|V:01|C:1|..."
+        },
+        "imageUpload": {
+            "label": "Select QR Code Image",
+            "dragText": "Drag & drop QR code image here",
+            "orText": "or",
+            "chooseFile": "Choose File",
+            "supportedFormats": "Supported formats: PNG, JPG, JPEG, GIF",
+            "description": "Upload a PNG or JPEG image of a QR code to decode and validate its content."
+        },
+        "buttons": {
+            "validate": "Validate QR Code",
+            "validateImage": "Validate Image",
+            "clear": "Clear",
+            "clearFile": "Clear File",
+            "sampleData": "Sample Data",
+            "formatText": "Format Text"
+        },
+        "results": {
+            "title": "Validation Results",
+            "status": "Validation Status"
+        },
+        "quickTemplates": {
+            "title": "Quick Templates",
+            "description": "Recent validation templates will appear here",
+            "manage": "Manage Templates",
+            "viewAll": "View All Templates"
+        },
+        "rules": {
+            "title": "Validation Rules"
+        }
+    },
+    "templates": {
+        "title": "Template Management",
+        "noTemplates": "No templates saved yet.",
+        "createFirst": "Create your first template by saving a form from the Generator.",
+        "buttons": {
+            "loadTemplate": "Load Template",
+            "editTemplate": "Edit Template",
+            "deleteTemplate": "Delete Template",
+            "exportAll": "Export All Templates",
+            "importTemplates": "Import Templates",
+            "newTemplate": "New Template",
+            "import": "Import",
+            "clearAll": "Clear All",
+            "createTemplate": "Create Template",
+            "updateTemplate": "Update Template"
+        },
+        "modal": {
+            "create": {
+                "title": "Create New Template",
+                "name": "Template Name",
+                "description": "Description (optional)",
+                "endpoint": "API Endpoint",
+                "selectEndpoint": "Select endpoint...",
+                "data": "Template Data (JSON)",
+                "dataHelp": "Enter the template data as JSON object"
+            },
+            "edit": {
+                "title": "Edit Template",
+                "name": "Template Name",
+                "description": "Description (optional)",
+                "endpoint": "API Endpoint",
+                "data": "Template Data (JSON)",
+                "dataHelp": "Edit the template data as JSON object"
+            },
+            "details": {
+                "title": "Template Details",
+                "name": "Name:",
+                "description": "Description:",
+                "endpoint": "Endpoint:",
+                "usageCount": "Usage Count:",
+                "created": "Created:",
+                "lastUsed": "Last Used:",
+                "data": "Data:"
+            }
+        },
+        "search": {
+            "label": "Search Templates",
+            "placeholder": "Search by name, description, or endpoint..."
+        },
+        "filter": {
+            "label": "Filter by Endpoint",
+            "all": "All Endpoints",
+            "generate": "Generate Image",
+            "generateResponse": "Generate with Response",
+            "validate": "Validate Text",
+            "upload": "Upload & Validate"
+        },
+        "sort": {
+            "label": "Sort By",
+            "name": "Name",
+            "created": "Created Date",
+            "usage": "Usage Count",
+            "endpoint": "Endpoint"
+        },
+        "emptyState": {
+            "title": "No Templates Found",
+            "description": "Start by creating your first template or importing existing ones"
+        },
+        "statistics": {
+            "total": "Total Templates",
+            "usage": "Total Usage",
+            "title": "Statistics"
+        }
+    },
+    "modal": {
+        "saveTemplate": {
+            "title": "Save as Template",
+            "name": "Template Name",
+            "description": "Description (optional)",
+            "cancel": "Cancel",
+            "save": "Save Template"
+        },
+        "import": {
+            "title": "Import Templates",
+            "selectFile": "Select JSON file",
+            "browse": "Browse...",
+            "noFileSelected": "No files selected",
+            "cancel": "Cancel",
+            "import": "Import"
+        },
+        "loading": {
+            "text": "Processing request..."
+        }
+    },
+    "notifications": {
+        "languageChanged": "Language changed to",
+        "templateSaved": "Template saved successfully",
+        "templateLoaded": "Template loaded successfully",
+        "templateDeleted": "Template deleted successfully",
+        "templatesExported": "Templates exported successfully",
+        "templatesImported": "Templates imported successfully",
+        "templateDuplicated": "Template duplicated successfully",
+        "qrGenerated": "QR code generated successfully",
+        "qrValidated": "QR code validated successfully",
+        "formCleared": "Form cleared",
+        "copiedToClipboard": "Copied to clipboard",
+        "downloadStarted": "Download started",
+        "error": "An error occurred",
+        "invalidFile": "Invalid file format",
+        "fileRequired": "Please select a file",
+        "fieldRequired": "This field is required",
+        "pleaseSelectJsonFile": "Please select a JSON file",
+        "pleaseSelectImageFile": "Please select a PNG or JPEG image file",
+        "fileSizeLimit": "File size must be less than 5MB",
+        "selectFileToImport": "Please select a file to import",
+        "overwriteExistingTemplates": "Do you want to overwrite existing templates with the same name?",
+        "importCompleted": "Import completed: {{imported}} imported",
+        "importCompletedWithSkipped": "Import completed: {{imported}} imported, {{skipped}} skipped",
+        "importCompletedWithErrors": "Import completed: {{imported}} imported, {{errors}} errors",
+        "importCompletedFull": "Import completed: {{imported}} imported, {{skipped}} skipped, {{errors}} errors",
+        "importFailed": "Import failed"
+    },
+    "errors": {
+        "invalidAccountNumber": "Invalid account number format",
+        "invalidAmount": "Invalid amount format",
+        "networkError": "Network error occurred",
+        "serverError": "Server error occurred",
+        "validationFailed": "Validation failed",
+        "fileUploadFailed": "File upload failed",
+        "templateNotFound": "Template not found",
+        "invalidTemplate": "Invalid template format"
+    },
+    "common": {
+        "loading": "Loading...",
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info",
+        "yes": "Yes",
+        "no": "No",
+        "ok": "OK",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "close": "Close",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "search": "Search",
+        "filter": "Filter",
+        "sort": "Sort",
+        "export": "Export",
+        "import": "Import",
+        "download": "Download",
+        "upload": "Upload",
+        "print": "Print",
+        "copy": "Copy",
+        "clear": "Clear",
+        "reset": "Reset",
+        "refresh": "Refresh"
+    },
+    "test": {
+        "title": "Internationalization Test",
+        "runTest": "Run Test",
+        "debugInfo": "Debug Info",
+        "languageStatus": "Language Status",
+        "currentLanguage": "Current Language",
+        "loadedLanguages": "Loaded Languages",
+        "i18nStatus": "i18n Status",
+        "translationExamples": "Translation Examples",
+        "navigationItems": "Navigation Items",
+        "commonActions": "Common Actions",
+        "formElements": "Form Elements",
+        "placeholderAmount": "Enter amount...",
+        "debugInformation": "Debug Information",
+        "languageConfig": "Language Configuration",
+        "translationSample": "Translation Sample",
+        "testResults": "Test Results",
+        "noTestsRun": "No tests run yet. Click \"Run Test\" to start.",
+        "instructions": {
+            "title": "Test Instructions",
+            "step1": "Use the language dropdown in the navigation to switch between languages",
+            "step2": "Watch how the text on this page changes automatically",
+            "step3": "Click \"Run Test\" to perform automated translation tests",
+            "step4": "Enable \"Debug Info\" to see technical details about the i18n system"
+        },
+        "supportedLanguages": "Supported Languages"
+    }
+}

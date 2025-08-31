@@ -1,0 +1,1076 @@
+---
+layout: default
+title: 'QR Code Validator - NBS IPS QR'
+description: 'Validate NBS IPS QR codes and upload QR code images for verification using the official Serbian National Bank API'
+---
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    <span data-i18n="validator.title">QR Code Validator</span>
+                </h2>
+                <div class="btn-group" role="group">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        data-action="save-template"
+                        title="Save as Template (Ctrl+S)"
+                    >
+                        <i class="fas fa-bookmark me-1"></i
+                        ><span data-i18n="validator.saveTemplate"
+                            >Save Template</span
+                        >
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="exportTemplates()"
+                        title="Export Templates"
+                    >
+                        <i class="fas fa-download me-1"></i
+                        ><span data-i18n="common.export">Export</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-info"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importModal"
+                        title="Import Templates"
+                    >
+                        <i class="fas fa-upload me-1"></i
+                        ><span data-i18n="common.import">Import</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: Validation Forms -->
+        <div class="col-lg-8">
+            <!-- Text Validation -->
+            <div class="api-section">
+                <h3>
+                    <i class="fas fa-text-width me-2"></i>
+                    <span data-i18n="validator.validateText"
+                        >Validate QR Code Text</span
+                    >
+                </h3>
+                <p
+                    class="text-muted"
+                    data-i18n="validator.textInput.description"
+                >
+                    Paste or enter the QR code text data to validate against NBS
+                    IPS specifications.
+                </p>
+
+                <form
+                    id="textValidatorForm"
+                    data-api-endpoint="/validate"
+                    data-method="POST"
+                >
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <label
+                                for="qrText"
+                                class="form-label"
+                                data-i18n="validator.textInput.label"
+                                >QR Code Text Data *</label
+                            >
+                            <textarea
+                                class="form-control"
+                                name="qrText"
+                                id="qrText"
+                                rows="8"
+                                required
+                                data-i18n="validator.textInput.placeholder"
+                                placeholder="K:PR|V:01|C:1|R:845000000040484987|N:JP EPS BEOGRAD&#10;BALKANSKA 13|I:RSD3596,13|P:MARKO PETROVIĆ&#10;KNEZ MIHAILOVA 12&#10;BEOGRAD 11000|SF:189|S:UPLATA PO RAČUNU ZA EL. ENERGIJU|RO:97163220000111111111000"
+                            ></textarea>
+                            <div
+                                class="form-text"
+                                data-i18n="validator.textInput.help"
+                            >
+                                Enter the complete QR code text string using the
+                                format: K:PR|V:01|C:1|...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check-circle me-1"></i
+                                    >Validate Text
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary"
+                                    data-action="clear"
+                                >
+                                    <i class="fas fa-broom me-1"></i
+                                    ><span data-i18n="validator.buttons.clear"
+                                        >Clear</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-info"
+                                    onclick="fillSampleValidationData()"
+                                >
+                                    <i class="fas fa-clipboard me-1"></i>
+                                    <span
+                                        data-i18n="validator.buttons.sampleData"
+                                        >Sample Data</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-primary"
+                                    onclick="formatQRText()"
+                                >
+                                    <i class="fas fa-align-left me-1"></i>
+                                    <span
+                                        data-i18n="validator.buttons.formatText"
+                                        >Format Text</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Image Upload Validation -->
+            <div class="api-section" id="upload">
+                <h3>
+                    <i class="fas fa-upload me-2"></i>
+                    <span data-i18n="validator.uploadImage"
+                        >Upload QR Code Image</span
+                    >
+                </h3>
+                <p
+                    class="text-muted"
+                    data-i18n="validator.imageUpload.description"
+                >
+                    Upload a PNG or JPEG image of a QR code to decode and
+                    validate its content.
+                </p>
+
+                <form
+                    id="uploadValidatorForm"
+                    data-api-endpoint="/upload"
+                    data-method="POST"
+                >
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <div class="file-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h5>Drop QR Code Image Here</h5>
+                                <p class="text-muted">
+                                    or click to browse files
+                                </p>
+                                <input
+                                    type="file"
+                                    name="file"
+                                    id="qrImageFile"
+                                    accept="image/png,image/jpeg,image/jpg"
+                                    style="display: none"
+                                />
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        Supported formats: PNG, JPEG (max 5MB)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button
+                                    type="submit"
+                                    class="btn btn-warning"
+                                    disabled
+                                    id="uploadSubmitBtn"
+                                >
+                                    <i class="fas fa-search me-1"></i
+                                    ><span
+                                        data-i18n="validator.buttons.validateImage"
+                                        >Validate Image</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="clearFileUpload()"
+                                >
+                                    <i class="fas fa-times me-1"></i
+                                    ><span
+                                        data-i18n="validator.buttons.clearFile"
+                                        >Clear File</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Validation Results -->
+            <div id="validationResults" style="display: none">
+                <div data-result="success" style="display: none"></div>
+                <div data-result="error" style="display: none"></div>
+            </div>
+        </div>
+
+        <!-- Right Column: Help and Templates -->
+        <div class="col-lg-4">
+            <!-- Validation Status Panel -->
+            <div class="card" id="validationStatusPanel" style="display: none">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <span data-i18n="validator.results.status"
+                            >Validation Status</span
+                        >
+                    </h5>
+                </div>
+                <div class="card-body" id="validationStatusContent">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- Quick Templates -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bookmark text-info me-2"></i>
+                        <span data-i18n="validator.quickTemplates.title"
+                            >Validation Templates</span
+                        >
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="validationTemplates">
+                        <p class="text-muted text-center">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <span
+                                data-i18n="validator.quickTemplates.description"
+                                >Recent validation templates will appear
+                                here</span
+                            >
+                        </p>
+                        <div class="text-center">
+                            <a
+                                href="{{ '/templates' | relative_url }}"
+                                class="btn btn-sm btn-outline-info"
+                            >
+                                <i class="fas fa-list me-1"></i
+                                ><span
+                                    data-i18n="validator.quickTemplates.manage"
+                                    >Manage Templates</span
+                                >
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Rules -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-check text-primary me-2"></i>
+                        <span data-i18n="validator.rules.title"
+                            >Validation Rules</span
+                        >
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="validationRulesAccordion">
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#rulesRequired"
+                                >
+                                    Required Fields
+                                </button>
+                            </h6>
+                            <div
+                                id="rulesRequired"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#validationRulesAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>
+                                            <strong>K:</strong> Must be PR, PT,
+                                            or EK
+                                        </li>
+                                        <li>
+                                            <strong>V:</strong> Must be "01"
+                                        </li>
+                                        <li>
+                                            <strong>C:</strong> Must be "1" or
+                                            "2"
+                                        </li>
+                                        <li>
+                                            <strong>R:</strong> Must be 18-digit
+                                            account number
+                                        </li>
+                                        <li>
+                                            <strong>N:</strong> Recipient name
+                                            and address required
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#rulesFormat"
+                                >
+                                    Format Rules
+                                </button>
+                            </h6>
+                            <div
+                                id="rulesFormat"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#validationRulesAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>
+                                            <strong>Amount (I):</strong>
+                                            CURRxxxxx,xx format
+                                        </li>
+                                        <li>
+                                            <strong>Reference (RO):</strong> Max
+                                            25 characters
+                                        </li>
+                                        <li>
+                                            <strong>Description (S):</strong>
+                                            Max 140 characters
+                                        </li>
+                                        <li>
+                                            <strong>Payment Code (SF):</strong>
+                                            3-digit numeric
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#rulesStructure"
+                                >
+                                    Structure Rules
+                                </button>
+                            </h6>
+                            <div
+                                id="rulesStructure"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#validationRulesAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>
+                                            Fields separated by pipe (|)
+                                            character
+                                        </li>
+                                        <li>Format: KEY:VALUE|KEY:VALUE|...</li>
+                                        <li>Cannot end with pipe character</li>
+                                        <li>
+                                            Line breaks as \r\n in address
+                                            fields
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#rulesCommon"
+                                >
+                                    Common Errors
+                                </button>
+                            </h6>
+                            <div
+                                id="rulesCommon"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#validationRulesAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>Missing required fields</li>
+                                        <li>Invalid account number format</li>
+                                        <li>Incorrect amount format</li>
+                                        <li>
+                                            Invalid reference number (Model 97)
+                                        </li>
+                                        <li>Text ending with pipe character</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Upload Tips -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-camera text-warning me-2"></i>
+                        Image Upload Tips
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="small mb-0">
+                        <li>Use high-quality, clear images</li>
+                        <li>Ensure good contrast and lighting</li>
+                        <li>Avoid blurry or distorted images</li>
+                        <li>Supported formats: PNG, JPEG</li>
+                        <li>Maximum file size: 5MB</li>
+                        <li>QR code should fill most of the image</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Page-specific JavaScript for validator
+    document.addEventListener('DOMContentLoaded', function () {
+        // Wait for TemplateManager to be ready before initializing
+        if (
+            window.TemplateManager &&
+            typeof window.TemplateManager.filterByEndpoint === 'function'
+        ) {
+            initializeValidator();
+        } else {
+            // Listen for TemplateManager ready event
+            window.addEventListener('templateManagerReady', function () {
+                initializeValidator();
+            });
+
+            // Fallback: check periodically if TemplateManager becomes available
+            const checkInterval = setInterval(function () {
+                if (
+                    window.TemplateManager &&
+                    typeof window.TemplateManager.filterByEndpoint ===
+                        'function'
+                ) {
+                    clearInterval(checkInterval);
+                    initializeValidator();
+                }
+            }, 100);
+
+            // Clear interval after 5 seconds to prevent infinite checking
+            setTimeout(function () {
+                clearInterval(checkInterval);
+            }, 5000);
+        }
+    });
+
+    function initializeValidator() {
+        // Set up file upload
+        setupFileUpload();
+
+        // Load validation templates
+        loadValidationTemplates();
+
+        // Set up save template buttons
+        setupSaveTemplateButtons();
+
+        // Set up form submission handlers
+        setupValidationForms();
+
+        // Check for template to load from session storage
+        checkForTemplateToLoad();
+    }
+
+    function setupFileUpload() {
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('qrImageFile');
+        const submitBtn = document.getElementById('uploadSubmitBtn');
+
+        // Click to open file dialog
+        fileUploadArea.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        // File selection handler
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                handleFileSelection(file);
+            }
+        });
+
+        // Drag and drop handlers
+        fileUploadArea.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelection(files[0]);
+            }
+        });
+    }
+
+    function handleFileSelection(file) {
+        const submitBtn = document.getElementById('uploadSubmitBtn');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+
+        // Validate file
+        if (!validateFile(file)) {
+            return;
+        }
+
+        // Update UI
+        fileUploadArea.innerHTML = `
+        <div class="file-icon text-success">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h5 class="text-success">File Selected</h5>
+        <p class="mb-1"><strong>${file.name}</strong></p>
+        <p class="text-muted small">${formatFileSize(file.size)}</p>
+    `;
+
+        // Enable submit button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML =
+            '<i class="fas fa-search me-1"></i>Validate Image';
+    }
+
+    function validateFile(file) {
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!allowedTypes.includes(file.type)) {
+            showNotification(
+                window.i18n?.t('notifications.pleaseSelectImageFile') ||
+                    'Please select a PNG or JPEG image file',
+                'error'
+            );
+            return false;
+        }
+
+        if (file.size > maxSize) {
+            showNotification(
+                window.i18n?.t('notifications.fileSizeLimit') ||
+                    'File size must be less than 5MB',
+                'error'
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    function clearFileUpload() {
+        const fileInput = document.getElementById('qrImageFile');
+        const submitBtn = document.getElementById('uploadSubmitBtn');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+
+        // Clear file input
+        fileInput.value = '';
+
+        // Reset UI
+        fileUploadArea.innerHTML = `
+        <div class="file-icon">
+            <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h5>Drop QR Code Image Here</h5>
+        <p class="text-muted">or click to browse files</p>
+        <input type="file" name="file" id="qrImageFile" accept="image/png,image/jpeg,image/jpg" style="display: none;">
+        <div class="mt-3">
+            <small class="text-muted">
+                Supported formats: PNG, JPEG (max 5MB)
+            </small>
+        </div>
+    `;
+
+        // Disable submit button
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+            '<i class="fas fa-search me-1"></i>Validate Image';
+
+        // Re-setup file upload for the new input
+        const newFileInput = document.getElementById('qrImageFile');
+        newFileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                handleFileSelection(file);
+            }
+        });
+    }
+
+    function setupValidationForms() {
+        // Text validation form
+        const textForm = document.getElementById('textValidatorForm');
+        textForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const qrText = document.getElementById('qrText').value.trim();
+            if (!qrText) {
+                showNotification(
+                    'Please enter QR code text to validate',
+                    'error'
+                );
+                return;
+            }
+
+            showLoadingModal();
+
+            validateQRText(qrText)
+                .then((response) => {
+                    handleValidationResponse(response, 'text');
+                })
+                .catch((error) => {
+                    handleValidationError(error);
+                })
+                .finally(() => {
+                    hideLoadingModal();
+                });
+        });
+
+        // Upload validation form
+        const uploadForm = document.getElementById('uploadValidatorForm');
+        uploadForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('qrImageFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showNotification('Please select a file to upload', 'error');
+                return;
+            }
+
+            showLoadingModal();
+
+            uploadQRImage(file)
+                .then((response) => {
+                    handleValidationResponse(response, 'upload');
+                })
+                .catch((error) => {
+                    handleValidationError(error);
+                })
+                .finally(() => {
+                    hideLoadingModal();
+                });
+        });
+    }
+
+    function handleValidationResponse(response, validationType) {
+        const resultsSection = document.getElementById('validationResults');
+        const statusPanel = document.getElementById('validationStatusPanel');
+        const statusContent = document.getElementById(
+            'validationStatusContent'
+        );
+
+        resultsSection.style.display = 'block';
+        statusPanel.style.display = 'block';
+
+        if (response.success) {
+            const data = response.data;
+
+            if (data.s && data.s.code === 0) {
+                // Validation successful
+                displayValidationSuccess(data, validationType);
+                updateStatusPanel('success', data);
+                showNotification('QR code is valid!', 'success');
+            } else {
+                // Validation failed
+                displayValidationError(data, validationType);
+                updateStatusPanel('error', data);
+                showNotification('QR code validation failed', 'error');
+            }
+        } else {
+            handleValidationError(response);
+        }
+    }
+
+    function handleValidationError(error) {
+        const resultsSection = document.getElementById('validationResults');
+        const statusPanel = document.getElementById('validationStatusPanel');
+
+        resultsSection.style.display = 'block';
+        statusPanel.style.display = 'block';
+
+        displayGenericError(error);
+        updateStatusPanel('error', error);
+        showNotification(error.message || 'Validation failed', 'error');
+    }
+
+    function displayValidationSuccess(data, validationType) {
+        const successContainer = document.querySelector(
+            '[data-result="success"]'
+        );
+
+        let content = '<div class="response-display response-success">';
+        content +=
+            '<h5><i class="fas fa-check-circle text-success me-2"></i>Validation Successful</h5>';
+
+        if (data.s) {
+            content += `<p><strong>Status:</strong> ${data.s.desc || 'Valid QR code'}</p>`;
+        }
+
+        if (data.t) {
+            content += '<div class="mt-3">';
+            content += '<strong>QR Code Content:</strong>';
+            content += `<div class="response-code mt-2">${escapeHtml(data.t)}</div>`;
+            content +=
+                '<button class="btn btn-sm btn-outline-primary mt-2" onclick="copyToClipboard(\'' +
+                escapeHtml(data.t) +
+                '\')">Copy Content</button>';
+            content += '</div>';
+        }
+
+        if (data.n) {
+            content += '<div class="mt-3">';
+            content += '<strong>Parsed Fields:</strong>';
+            content += `<div class="response-code mt-2">${formatJSON(data.n)}</div>`;
+            content += '</div>';
+        }
+
+        content += '</div>';
+
+        successContainer.innerHTML = content;
+        successContainer.style.display = 'block';
+
+        // Hide error container
+        document.querySelector('[data-result="error"]').style.display = 'none';
+    }
+
+    function displayValidationError(data, validationType) {
+        const errorContainer = document.querySelector('[data-result="error"]');
+
+        let content = '<div class="response-display response-error">';
+        content +=
+            '<h5><i class="fas fa-exclamation-triangle text-danger me-2"></i>Validation Failed</h5>';
+
+        if (data.s) {
+            content += `<p><strong>Error Code:</strong> ${data.s.code}</p>`;
+            content += `<p><strong>Description:</strong> ${data.s.desc}</p>`;
+        }
+
+        if (data.e && Array.isArray(data.e)) {
+            content += '<div class="mt-3">';
+            content += '<strong>Validation Errors:</strong>';
+            content += '<ul class="mt-2">';
+            data.e.forEach((error) => {
+                content += `<li class="text-danger">${escapeHtml(error)}</li>`;
+            });
+            content += '</ul>';
+            content += '</div>';
+        }
+
+        if (data.t) {
+            content += '<div class="mt-3">';
+            content += '<strong>Submitted Content:</strong>';
+            content += `<div class="response-code mt-2">${escapeHtml(data.t)}</div>`;
+            content += '</div>';
+        }
+
+        content += '</div>';
+
+        errorContainer.innerHTML = content;
+        errorContainer.style.display = 'block';
+
+        // Hide success container
+        document.querySelector('[data-result="success"]').style.display =
+            'none';
+    }
+
+    function updateStatusPanel(status, data) {
+        const statusContent = document.getElementById(
+            'validationStatusContent'
+        );
+
+        if (status === 'success') {
+            let content = '<div class="alert alert-success mb-0">';
+            content +=
+                '<h6><i class="fas fa-check-circle me-1"></i>Valid QR Code</h6>';
+
+            if (data.n) {
+                const fields = data.n;
+                content += '<ul class="small mb-0 mt-2">';
+                if (fields.K)
+                    content += `<li>Type: ${getPaymentTypeLabel(fields.K)}</li>`;
+                if (fields.N)
+                    content += `<li>Recipient: ${escapeHtml(fields.N.split('\n')[0])}</li>`;
+                if (fields.I)
+                    content += `<li>Amount: ${escapeHtml(fields.I)}</li>`;
+                if (fields.R)
+                    content += `<li>Account: ${escapeHtml(fields.R)}</li>`;
+                content += '</ul>';
+            }
+
+            content += '</div>';
+            statusContent.innerHTML = content;
+        } else {
+            let content = '<div class="alert alert-danger mb-0">';
+            content +=
+                '<h6><i class="fas fa-exclamation-triangle me-1"></i>Invalid QR Code</h6>';
+
+            if (data.s && data.s.desc) {
+                content += `<p class="small mb-0">${escapeHtml(data.s.desc)}</p>`;
+            }
+
+            content += '</div>';
+            statusContent.innerHTML = content;
+        }
+    }
+
+    function getPaymentTypeLabel(type) {
+        const types = {
+            PR: 'Payment Request',
+            PT: 'Point of Sale',
+            EK: 'E-commerce',
+        };
+        return types[type] || type;
+    }
+
+    function fillSampleValidationData() {
+        document.getElementById('qrText').value =
+            'K:PR|V:01|C:1|R:845000000040484987|N:JP EPS BEOGRAD\r\nBALKANSKA 13|I:RSD3596,13|P:MARKO PETROVIĆ\r\nKNEZ MIHAILOVA 12\r\nBEOGRAD 11000|SF:189|S:UPLATA PO RAČUNU ZA EL. ENERGIJU|RO:97163220000111111111000';
+        showNotification('Sample validation data loaded', 'success');
+    }
+
+    function formatQRText() {
+        const textarea = document.getElementById('qrText');
+        let text = textarea.value;
+
+        // Replace literal \r\n with actual line breaks for display
+        text = text.replace(/\\r\\n/g, '\n');
+
+        // Format for better readability (each field on new line)
+        text = text.replace(/\|/g, '|\n');
+
+        textarea.value = text;
+        showNotification('Text formatted for readability', 'info');
+    }
+
+    function loadValidationTemplates() {
+        if (
+            typeof TemplateManager === 'undefined' ||
+            typeof TemplateManager.filterByEndpoint !== 'function'
+        ) {
+            console.log('TemplateManager not ready, skipping template loading');
+            return;
+        }
+
+        const templates = TemplateManager.filterByEndpoint('/validate')
+            .concat(TemplateManager.filterByEndpoint('/upload'))
+            .slice(0, 5); // Show only first 5
+
+        const container = document.getElementById('validationTemplates');
+
+        if (templates.length === 0) {
+            container.innerHTML = `
+            <p class="text-muted text-center">
+                <i class="fas fa-info-circle me-1"></i>
+                <span data-i18n="validator.quickTemplates.description">Recent validation templates will appear here</span>
+            </p>
+            <div class="text-center">
+                <a href="{{ '/templates' | relative_url }}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-list me-1"></i><span data-i18n="validator.quickTemplates.manage">Manage Templates</span>
+                </a>
+            </div>
+        `;
+            return;
+        }
+
+        let html = '';
+        templates.forEach((template) => {
+            html += `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <strong class="small">${escapeHtml(template.name)}</strong>
+                    <div class="text-muted small">${getEndpointLabel(template.endpoint)}</div>
+                </div>
+                <button class="btn btn-sm btn-outline-primary" onclick="loadTemplate('${template.id}')">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+        `;
+        });
+
+        html += `
+        <div class="text-center mt-3">
+            <a href="{{ '/templates' | relative_url }}" class="btn btn-sm btn-outline-info">
+                <i class="fas fa-list me-1"></i><span data-i18n="validator.quickTemplates.viewAll">View All Templates</span>
+            </a>
+        </div>
+    `;
+
+        container.innerHTML = html;
+    }
+
+    function getEndpointLabel(endpoint) {
+        const labels = {
+            '/validate': 'Text Validation',
+            '/upload': 'Image Upload',
+        };
+        return labels[endpoint] || endpoint;
+    }
+
+    function setupSaveTemplateButtons() {
+        const saveTemplateBtn = document.querySelector(
+            '[data-action="save-template"]'
+        );
+        if (saveTemplateBtn) {
+            saveTemplateBtn.addEventListener('click', function () {
+                // Determine which form is active
+                const textForm = document.getElementById('textValidatorForm');
+                const uploadForm = document.getElementById(
+                    'uploadValidatorForm'
+                );
+
+                let activeForm = null;
+
+                // Check if text form has data
+                const qrText = document.getElementById('qrText').value.trim();
+                if (qrText) {
+                    activeForm = textForm;
+                } else {
+                    // Check if upload form has file
+                    const fileInput = document.getElementById('qrImageFile');
+                    if (fileInput.files.length > 0) {
+                        activeForm = uploadForm;
+                    }
+                }
+
+                if (!activeForm) {
+                    showNotification('No data to save as template', 'error');
+                    return;
+                }
+
+                window.currentTemplate = {
+                    form: activeForm,
+                    data: collectFormData(activeForm),
+                    endpoint: activeForm.getAttribute('data-api-endpoint'),
+                    method: activeForm.getAttribute('data-method') || 'POST',
+                };
+
+                const modal = new bootstrap.Modal(
+                    document.getElementById('templateModal')
+                );
+                modal.show();
+            });
+        }
+    }
+
+    function collectFormData(form) {
+        const formData = new FormData(form);
+        const data = {};
+
+        for (let [key, value] of formData.entries()) {
+            // Skip file inputs in template data
+            if (key === 'file') continue;
+            data[key] = value;
+        }
+
+        return data;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function checkForTemplateToLoad() {
+        const templateToLoad = sessionStorage.getItem('loadTemplate');
+        if (templateToLoad) {
+            try {
+                const templateData = JSON.parse(templateToLoad);
+                sessionStorage.removeItem('loadTemplate');
+
+                // Check if this page can handle the template
+                if (
+                    templateData.endpoint === '/validate' ||
+                    templateData.endpoint === '/upload'
+                ) {
+                    loadTemplateIntoValidatorForm(templateData);
+                }
+            } catch (error) {
+                console.error('Error loading template from session:', error);
+            }
+        }
+    }
+
+    function loadTemplateIntoValidatorForm(templateData) {
+        if (templateData.endpoint === '/validate') {
+            // Load into text validation form
+            const qrTextArea = document.getElementById('qrText');
+            if (qrTextArea && templateData.data.qrText) {
+                qrTextArea.value = templateData.data.qrText;
+            }
+        } else if (templateData.endpoint === '/upload') {
+            // For upload endpoint, we can't preload files, just show notification
+            showNotification(
+                'Upload template loaded - please select the image file',
+                'info'
+            );
+        }
+
+        showNotification('Template loaded successfully', 'success');
+    }
+
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>

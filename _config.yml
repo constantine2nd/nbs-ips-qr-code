@@ -1,0 +1,56 @@
+# Site settings
+title: 'NBS IPS QR Code Generator/Validator'
+description: 'GUI wrapper for NBS IPS QR Code API - Generate and validate Serbian National Bank IPS QR codes'
+baseurl: ''
+url: 'http://localhost:4000'
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+plugins:
+    - jekyll-feed
+
+# Exclude from processing
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - node_modules
+    - vendor/bundle/
+    - vendor/cache/
+    - vendor/gems/
+    - vendor/ruby/
+    - docker-compose.yml
+    - Dockerfile
+    - README.md
+
+# Collections
+collections:
+    pages:
+        output: true
+
+# Defaults
+defaults:
+    - scope:
+          path: ''
+          type: 'pages'
+      values:
+          layout: 'default'
+
+# Development settings
+livereload: true
+incremental: true
+host: 0.0.0.0
+port: 4000
+
+# API Configuration
+nbs_api:
+    base_url: 'https://nbs.rs/QRcode/api/qr/v1'
+    endpoints:
+        gen: '/gen'
+        generate: '/generate'
+        validate: '/validate'
+        upload: '/upload'
+    supported_languages:
+        - sr_RS_Latn
+        - sr_RS
+        - en

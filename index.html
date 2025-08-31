@@ -1,0 +1,370 @@
+---
+layout: default
+title: 'NBS IPS QR Code Generator/Validator'
+description: 'GUI wrapper for NBS IPS QR Code API - Generate and validate Serbian National Bank IPS QR codes'
+---
+
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title" data-i18n="home.title">NBS IPS QR Code</h1>
+            <p class="hero-subtitle" data-i18n="home.subtitle">
+                Generator & Validator
+            </p>
+            <p class="lead" data-i18n="home.lead">
+                Professional GUI wrapper for the Serbian National Bank IPS QR
+                Code API
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="text-center mb-5">
+                <h2 data-i18n="home.whatIs">What is NBS IPS QR?</h2>
+                <p class="lead" data-i18n="home.description">
+                    NBS IPS QR codes enable instant payments in Serbia through
+                    the National Bank's Instant Payment System (IPS). Generate
+                    valid QR codes for invoices, bills, and payment requests
+                    that comply with Serbian banking standards.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-qrcode fa-3x text-primary"></i>
+                    </div>
+                    <h5
+                        class="card-title"
+                        data-i18n="home.features.generate.title"
+                    >
+                        Generate QR Codes
+                    </h5>
+                    <p
+                        class="card-text"
+                        data-i18n="home.features.generate.description"
+                    >
+                        Create compliant NBS IPS QR codes from payment data with
+                        instant validation
+                    </p>
+                    <a
+                        href="{{ '/generator' | relative_url }}"
+                        class="btn btn-primary"
+                    >
+                        <i class="fas fa-cogs me-1"></i
+                        ><span data-i18n="home.features.generate.button"
+                            >Start Generating</span
+                        >
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-3x text-success"></i>
+                    </div>
+                    <h5
+                        class="card-title"
+                        data-i18n="home.features.validate.title"
+                    >
+                        Validate QR Codes
+                    </h5>
+                    <p
+                        class="card-text"
+                        data-i18n="home.features.validate.description"
+                    >
+                        Verify QR codes against NBS specifications and get
+                        detailed validation reports
+                    </p>
+                    <a
+                        href="{{ '/validator' | relative_url }}"
+                        class="btn btn-success"
+                    >
+                        <i class="fas fa-shield-alt me-1"></i
+                        ><span data-i18n="home.features.validate.button"
+                            >Start Validating</span
+                        >
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-file-alt fa-3x text-info"></i>
+                    </div>
+                    <h5
+                        class="card-title"
+                        data-i18n="home.features.templates.title"
+                    >
+                        Save Templates
+                    </h5>
+                    <p
+                        class="card-text"
+                        data-i18n="home.features.templates.description"
+                    >
+                        Store frequently used payment data as templates for
+                        quick reuse and efficiency
+                    </p>
+                    <a
+                        href="{{ '/templates' | relative_url }}"
+                        class="btn btn-info"
+                    >
+                        <i class="fas fa-bookmark me-1"></i
+                        ><span data-i18n="home.features.templates.button"
+                            >Manage Templates</span
+                        >
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <i class="fas fa-upload fa-3x text-warning"></i>
+                    </div>
+                    <h5
+                        class="card-title"
+                        data-i18n="home.features.upload.title"
+                    >
+                        Upload & Verify
+                    </h5>
+                    <p
+                        class="card-text"
+                        data-i18n="home.features.upload.description"
+                    >
+                        Upload existing QR code images to decode and validate
+                        their content
+                    </p>
+                    <a
+                        href="{{ '/validator#upload' | relative_url }}"
+                        class="btn btn-warning"
+                    >
+                        <i class="fas fa-image me-1"></i
+                        ><span data-i18n="home.features.upload.button"
+                            >Upload QR</span
+                        >
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i
+                        ><span data-i18n="home.keyFeatures.title"
+                            >Key Features</span
+                        >
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.integration"
+                                        >Complete NBS API integration</span
+                                    >
+                                </li>
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.templates"
+                                        >Template management system</span
+                                    >
+                                </li>
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.languages"
+                                        >Multiple language support</span
+                                    >
+                                </li>
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.storage"
+                                        >Local storage for templates</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.export"
+                                        >Export/Import functionality</span
+                                    >
+                                </li>
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.upload"
+                                        >Image upload validation</span
+                                    >
+                                </li>
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.responsive"
+                                        >Responsive design</span
+                                    >
+                                </li>
+                                <li class="mb-2">
+                                    <i
+                                        class="fas fa-check text-success me-2"
+                                    ></i>
+                                    <span
+                                        data-i18n="home.keyFeatures.items.free"
+                                        >Free to use</span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="alert alert-info">
+                <h5>
+                    <i class="fas fa-exclamation-circle me-2"></i
+                    ><span data-i18n="home.notice.title">Important Notice</span>
+                </h5>
+                <p class="mb-2" data-i18n="home.notice.display">
+                    <strong>For Payment Display:</strong> When using generated
+                    NBS IPS QR codes, you must display the text "NBS IPS QR"
+                    next to, below, or above the QR code on invoices, bills, or
+                    payment requests.
+                </p>
+                <p class="mb-2" data-i18n="home.notice.merchant">
+                    <strong>For Merchant Payments:</strong> IPS QR codes with PT
+                    and EK identifiers for point-of-sale payments require a
+                    contractual relationship with an acquiring bank.
+                </p>
+                <p class="mb-0" data-i18n="home.notice.service">
+                    <strong>Service:</strong> The NBS IPS QR Generator/Validator
+                    API service is provided free of charge by the National Bank
+                    of Serbia.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-8 mx-auto text-center">
+            <h4 data-i18n="home.quickStart">Quick Start</h4>
+            <div class="btn-group" role="group">
+                <a
+                    href="{{ '/generator' | relative_url }}"
+                    class="btn btn-outline-primary"
+                >
+                    <i class="fas fa-play me-1"></i
+                    ><span data-i18n="home.quickActions.generate"
+                        >Generate QR Code</span
+                    >
+                </a>
+                <a
+                    href="{{ '/validator' | relative_url }}"
+                    class="btn btn-outline-success"
+                >
+                    <i class="fas fa-check me-1"></i
+                    ><span data-i18n="home.quickActions.validate"
+                        >Validate QR Code</span
+                    >
+                </a>
+                <a
+                    href="{{ '/templates' | relative_url }}"
+                    class="btn btn-outline-info"
+                >
+                    <i class="fas fa-file-alt me-1"></i
+                    ><span data-i18n="home.quickActions.browse"
+                        >Browse Templates</span
+                    >
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5 py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <h5>
+                    <i class="fas fa-university me-2 text-primary"></i
+                    ><span data-i18n="home.footer.official">Official API</span>
+                </h5>
+                <p
+                    class="small text-muted"
+                    data-i18n="home.footer.officialDesc"
+                >
+                    Powered by the National Bank of Serbia's official QR code
+                    API
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h5>
+                    <i class="fas fa-shield-alt me-2 text-success"></i
+                    ><span data-i18n="home.footer.secure"
+                        >Secure & Compliant</span
+                    >
+                </h5>
+                <p class="small text-muted" data-i18n="home.footer.secureDesc">
+                    All generated codes comply with Serbian banking standards
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h5>
+                    <i class="fas fa-code me-2 text-info"></i
+                    ><span data-i18n="home.footer.openSource">Open Source</span>
+                </h5>
+                <p
+                    class="small text-muted"
+                    data-i18n="home.footer.openSourceDesc"
+                >
+                    Free, open-source Jekyll application for easy deployment
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

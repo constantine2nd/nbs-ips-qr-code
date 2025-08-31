@@ -1,0 +1,1474 @@
+---
+layout: default
+title: 'Templates - NBS IPS QR'
+description: 'Manage, create, edit, and organize your NBS IPS QR code templates for quick reuse'
+---
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-file-alt text-info me-2"></i>
+                    <span data-i18n="templates.title"
+                        >Templates Management</span
+                    >
+                </h2>
+                <div class="btn-group" role="group">
+                    <button
+                        type="button"
+                        class="btn btn-success"
+                        data-bs-toggle="modal"
+                        data-bs-target="#createTemplateModal"
+                    >
+                        <i class="fas fa-plus me-1"></i
+                        ><span data-i18n="templates.buttons.newTemplate"
+                            >New Template</span
+                        >
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        onclick="exportTemplates()"
+                    >
+                        <i class="fas fa-download me-1"></i
+                        ><span data-i18n="templates.buttons.exportAll"
+                            >Export All</span
+                        >
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importModal"
+                    >
+                        <i class="fas fa-upload me-1"></i
+                        ><span data-i18n="templates.buttons.import"
+                            >Import</span
+                        >
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        onclick="clearAllTemplates()"
+                    >
+                        <i class="fas fa-trash me-1"></i
+                        ><span data-i18n="templates.buttons.clearAll"
+                            >Clear All</span
+                        >
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label
+                                for="templateSearch"
+                                class="form-label"
+                                data-i18n="templates.search.label"
+                                >Search Templates</label
+                            >
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="templateSearch"
+                                    data-i18n="templates.search.placeholder"
+                                    placeholder="Search by name, description, or endpoint..."
+                                />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label
+                                for="endpointFilter"
+                                class="form-label"
+                                data-i18n="templates.filter.label"
+                                >Filter by Endpoint</label
+                            >
+                            <select class="form-control" id="endpointFilter">
+                                <option
+                                    value="all"
+                                    data-i18n="templates.filter.all"
+                                >
+                                    All Endpoints
+                                </option>
+                                <option
+                                    value="/gen"
+                                    data-i18n="templates.filter.generate"
+                                >
+                                    Generate Image
+                                </option>
+                                <option
+                                    value="/generate"
+                                    data-i18n="templates.filter.generateResponse"
+                                >
+                                    Generate with Response
+                                </option>
+                                <option
+                                    value="/validate"
+                                    data-i18n="templates.filter.validate"
+                                >
+                                    Validate Text
+                                </option>
+                                <option
+                                    value="/upload"
+                                    data-i18n="templates.filter.upload"
+                                >
+                                    Upload & Validate
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label
+                                for="sortBy"
+                                class="form-label"
+                                data-i18n="templates.sort.label"
+                                >Sort By</label
+                            >
+                            <select class="form-control" id="sortBy">
+                                <option
+                                    value="name"
+                                    data-i18n="templates.sort.name"
+                                >
+                                    Name
+                                </option>
+                                <option
+                                    value="created"
+                                    data-i18n="templates.sort.created"
+                                >
+                                    Created Date
+                                </option>
+                                <option
+                                    value="usage"
+                                    data-i18n="templates.sort.usage"
+                                >
+                                    Usage Count
+                                </option>
+                                <option
+                                    value="endpoint"
+                                    data-i18n="templates.sort.endpoint"
+                                >
+                                    Endpoint
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6>
+                        <i class="fas fa-chart-bar me-2"></i
+                        ><span data-i18n="templates.statistics.title"
+                            >Statistics</span
+                        >
+                    </h6>
+                    <div id="templateStats">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div
+                                    class="h4 text-primary"
+                                    id="totalTemplates"
+                                >
+                                    0
+                                </div>
+                                <small
+                                    class="text-muted"
+                                    data-i18n="templates.statistics.total"
+                                    >Total Templates</small
+                                >
+                            </div>
+                            <div class="col-6">
+                                <div class="h4 text-success" id="totalUsage">
+                                    0
+                                </div>
+                                <small
+                                    class="text-muted"
+                                    data-i18n="templates.statistics.usage"
+                                    >Total Usage</small
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Grid -->
+    <div class="row" id="templatesGrid">
+        <!-- Templates will be loaded here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="row" style="display: none">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-file-alt fa-5x text-muted"></i>
+                </div>
+                <h4 class="text-muted" data-i18n="templates.emptyState.title">
+                    No Templates Found
+                </h4>
+                <p
+                    class="text-muted mb-4"
+                    data-i18n="templates.emptyState.description"
+                >
+                    Start by creating your first template or importing existing
+                    ones
+                </p>
+                <div class="btn-group" role="group">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#createTemplateModal"
+                    >
+                        <i class="fas fa-plus me-1"></i
+                        ><span data-i18n="templates.buttons.createTemplate"
+                            >Create Template</span
+                        >
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importModal"
+                    >
+                        <i class="fas fa-file-import me-1"></i
+                        ><span data-i18n="templates.buttons.importTemplates"
+                            >Import Templates</span
+                        >
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Template Modal -->
+<div
+    class="modal fade"
+    id="createTemplateModal"
+    tabindex="-1"
+    aria-labelledby="createTemplateModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5
+                    class="modal-title"
+                    id="createTemplateModalLabel"
+                    data-i18n="templates.modal.create.title"
+                >
+                    Create New Template
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="createTemplateForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label
+                                for="newTemplateName"
+                                class="form-label"
+                                data-i18n="templates.modal.create.name"
+                                >Template Name *</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="newTemplateName"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-6">
+                            <label
+                                for="newTemplateEndpoint"
+                                class="form-label"
+                                data-i18n="templates.modal.create.endpoint"
+                                >API Endpoint *</label
+                            >
+                            <select
+                                class="form-control"
+                                id="newTemplateEndpoint"
+                                required
+                            >
+                                <option
+                                    value=""
+                                    data-i18n="templates.modal.create.selectEndpoint"
+                                >
+                                    Select endpoint...
+                                </option>
+                                <option
+                                    value="/gen"
+                                    data-i18n="templates.filter.generate"
+                                >
+                                    Generate Image
+                                </option>
+                                <option
+                                    value="/generate"
+                                    data-i18n="templates.filter.generateResponse"
+                                >
+                                    Generate with Response
+                                </option>
+                                <option
+                                    value="/validate"
+                                    data-i18n="templates.filter.validate"
+                                >
+                                    Validate Text
+                                </option>
+                                <option
+                                    value="/upload"
+                                    data-i18n="templates.filter.upload"
+                                >
+                                    Upload & Validate
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label
+                                for="createTemplateDescription"
+                                class="form-label"
+                                data-i18n="templates.modal.create.description"
+                                >Description (optional)</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="newTemplateDescription"
+                                rows="3"
+                                placeholder="Optional description for this template..."
+                            ></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label
+                                for="newTemplateData"
+                                class="form-label"
+                                data-i18n="templates.modal.create.data"
+                                >Template Data (JSON) *</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="newTemplateData"
+                                rows="5"
+                                required
+                                placeholder='{"K": "PR", "V": "01", "C": "1", "R": "845000000040484987", ...}'
+                            ></textarea>
+                            <div
+                                class="form-text"
+                                data-i18n="templates.modal.create.dataHelp"
+                            >
+                                Enter the template data as JSON object
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    data-i18n="common.cancel"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="createNewTemplate()"
+                    data-i18n="templates.buttons.createTemplate"
+                >
+                    Create Template
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Template Modal -->
+<div
+    class="modal fade"
+    id="editTemplateModal"
+    tabindex="-1"
+    aria-labelledby="editTemplateModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5
+                    class="modal-title"
+                    id="editTemplateModalLabel"
+                    data-i18n="templates.modal.edit.title"
+                >
+                    Edit Template
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="editTemplateForm">
+                    <input type="hidden" id="editTemplateId" />
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label
+                                for="editTemplateName"
+                                class="form-label"
+                                data-i18n="templates.modal.edit.name"
+                                >Template Name *</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="editTemplateName"
+                                required
+                            />
+                        </div>
+                        <div class="col-md-6">
+                            <label
+                                for="editTemplateEndpoint"
+                                class="form-label"
+                                data-i18n="templates.modal.edit.endpoint"
+                                >API Endpoint *</label
+                            >
+                            <select
+                                class="form-control"
+                                id="editTemplateEndpoint"
+                                required
+                            >
+                                <option
+                                    value="/gen"
+                                    data-i18n="templates.filter.generate"
+                                >
+                                    Generate Image
+                                </option>
+                                <option
+                                    value="/generate"
+                                    data-i18n="templates.filter.generateResponse"
+                                >
+                                    Generate with Response
+                                </option>
+                                <option
+                                    value="/validate"
+                                    data-i18n="templates.filter.validate"
+                                >
+                                    Validate Text
+                                </option>
+                                <option
+                                    value="/upload"
+                                    data-i18n="templates.filter.upload"
+                                >
+                                    Upload & Validate
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label
+                                for="editTemplateDescription"
+                                class="form-label"
+                                data-i18n="templates.modal.edit.description"
+                                >Description (optional)</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="editTemplateDescription"
+                                rows="3"
+                                placeholder="Optional description for this template..."
+                            ></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label
+                                for="editTemplateData"
+                                class="form-label"
+                                data-i18n="templates.modal.edit.data"
+                                >Template Data (JSON) *</label
+                            >
+                            <textarea
+                                class="form-control font-monospace"
+                                id="editTemplateData"
+                                rows="10"
+                                required
+                                placeholder='{"K": "PR", "V": "01", "C": "1", "R": "845000000040484987", ...}'
+                            ></textarea>
+                            <div
+                                class="form-text"
+                                data-i18n="templates.modal.edit.dataHelp"
+                            >
+                                Edit the template data as JSON object
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    data-i18n="common.cancel"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="updateExistingTemplate()"
+                    data-i18n="templates.buttons.updateTemplate"
+                >
+                    Update Template
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template Details Modal -->
+<div
+    class="modal fade"
+    id="templateDetailsModal"
+    tabindex="-1"
+    aria-labelledby="templateDetailsModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5
+                    class="modal-title"
+                    id="templateDetailsModalLabel"
+                    data-i18n="templates.modal.details.title"
+                >
+                    Template Details
+                </h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body" id="templateDetailsContent">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    onclick="loadTemplateFromDetails()"
+                >
+                    <i class="fas fa-play me-1"></i
+                    ><span data-i18n="templates.buttons.loadTemplate"
+                        >Load Template</span
+                    >
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    data-i18n="common.close"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Page-specific JavaScript for templates management
+    let currentTemplateId = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Wait for TemplateManager to be ready before initializing
+        if (
+            window.TemplateManager &&
+            typeof window.TemplateManager.getAllTemplates === 'function'
+        ) {
+            initializeTemplatesPage();
+        } else {
+            // Listen for TemplateManager ready event
+            window.addEventListener('templateManagerReady', function () {
+                initializeTemplatesPage();
+            });
+
+            // Fallback: check periodically if TemplateManager becomes available
+            const checkInterval = setInterval(function () {
+                if (
+                    window.TemplateManager &&
+                    typeof window.TemplateManager.getAllTemplates === 'function'
+                ) {
+                    clearInterval(checkInterval);
+                    initializeTemplatesPage();
+                }
+            }, 100);
+
+            // Clear interval after 5 seconds to prevent infinite checking
+            setTimeout(function () {
+                clearInterval(checkInterval);
+            }, 5000);
+        }
+    });
+
+    function initializeTemplatesPage() {
+        // Load and display templates
+        refreshTemplatesDisplay();
+
+        // Set up search and filter handlers
+        setupSearchAndFilter();
+
+        // Update statistics
+        updateTemplateStatistics();
+
+        // Set up form handlers
+        setupTemplateFormHandlers();
+    }
+
+    function refreshTemplatesDisplay() {
+        if (
+            typeof window.TemplateManager === 'undefined' ||
+            typeof window.TemplateManager.getAllTemplates !== 'function'
+        ) {
+            return;
+        }
+
+        const templates = window.TemplateManager.getAllTemplates();
+        displayTemplates(templates);
+        updateTemplateStatistics();
+    }
+
+    function displayTemplates(templates) {
+        const grid = document.getElementById('templatesGrid');
+        const emptyState = document.getElementById('emptyState');
+
+        if (templates.length === 0) {
+            grid.style.display = 'none';
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        grid.style.display = 'block';
+        emptyState.style.display = 'none';
+
+        let html = '';
+        templates.forEach((template, index) => {
+            try {
+                const cardHtml = formatTemplateCard(template);
+                if (cardHtml) {
+                    html += cardHtml;
+                }
+            } catch (error) {
+                console.error(
+                    'Error formatting template card for',
+                    template.id,
+                    ':',
+                    error
+                );
+            }
+        });
+        grid.innerHTML = html;
+    }
+
+    function formatTemplateCard(template) {
+        try {
+            if (!template || !template.id || !template.name) {
+                return '<div class="col-12"><div class="alert alert-danger">Invalid template data</div></div>';
+            }
+
+            const usageCount = template.usageCount || 0;
+            const endpointLabel = getEndpointLabel(template.endpoint);
+
+            const lastUsed = template.lastUsed
+                ? new Date(template.lastUsed).toLocaleDateString()
+                : 'Never';
+
+            const createdDate = template.createdAt
+                ? new Date(template.createdAt).toLocaleDateString()
+                : 'Unknown';
+            console.log('Last used:', lastUsed);
+
+            console.log('Creating buttons for template:', template.id);
+
+            // Simple template ID - no escaping needed for alphanumeric IDs
+            const templateId = template.id;
+            console.log('Using template ID:', templateId);
+
+            console.log('About to create card HTML...');
+            const cardHtml = `
+        <div class="col-md-6 col-xl-4 mb-4">
+            <div class="card template-card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="badge bg-primary">${endpointLabel}</span>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="loadTemplateAndNavigate('${templateId}')">
+                                <i class="fas fa-play me-2"></i>Load Template
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="viewTemplateDetails('${templateId}')">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="console.log('Dropdown edit clicked for ${templateId}'); editTemplateInModal('${templateId}')">
+                                <i class="fas fa-edit me-2"></i>Edit Template
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="duplicateTemplate('${templateId}')">
+                                <i class="fas fa-copy me-2"></i>Duplicate
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteTemplate('${templateId}')">
+                                <i class="fas fa-trash me-2"></i>Delete
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" title="${escapeHtml(template.name)}">
+                        ${escapeHtml(template.name.length > 25 ? template.name.substring(0, 25) + '...' : template.name)}
+                    </h5>
+                    <p class="card-text text-muted small mb-3" title="${escapeHtml(template.description || 'No description')}">
+                        ${escapeHtml(
+                            (template.description || 'No description').length >
+                                60
+                                ? (
+                                      template.description || 'No description'
+                                  ).substring(0, 60) + '...'
+                                : template.description || 'No description'
+                        )}
+                    </p>
+                    <div class="template-meta">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="small">
+                                    <strong class="text-primary">${usageCount}</strong><br>
+                                    <span class="text-muted">Uses</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="small">
+                                    <strong class="text-info">${createdDate}</strong><br>
+                                    <span class="text-muted">Created</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="small">
+                                    <strong class="text-warning">${lastUsed}</strong><br>
+                                    <span class="text-muted">Last Used</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-primary" onclick="loadTemplateAndNavigate('${templateId}')">
+                            <i class="fas fa-play me-1"></i>Load
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="console.log('Edit button clicked for ${templateId}'); editTemplateInModal('${templateId}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteTemplate('${templateId}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+            console.log('=== formatTemplateCard END ===');
+            console.log(
+                'Generated card HTML preview:',
+                cardHtml.substring(0, 300) + '...'
+            );
+            return cardHtml;
+        } catch (error) {
+            console.error('Error in formatTemplateCard:', error);
+            console.error('Template object:', template);
+            return '<div class="col-12"><div class="alert alert-danger">Error formatting template card</div></div>';
+        }
+    }
+
+    function setupSearchAndFilter() {
+        // Search functionality
+        const searchInput = document.getElementById('templateSearch');
+        if (searchInput) {
+            searchInput.addEventListener(
+                'input',
+                debounce(function () {
+                    searchTemplates();
+                }, 300)
+            );
+        }
+
+        // Filter functionality
+        const endpointFilter = document.getElementById('endpointFilter');
+        if (endpointFilter) {
+            endpointFilter.addEventListener('change', function () {
+                filterTemplatesByEndpoint(this.value);
+            });
+        }
+
+        // Sort functionality
+        const sortBy = document.getElementById('sortBy');
+        if (sortBy) {
+            sortBy.addEventListener('change', function () {
+                sortTemplates(this.value);
+            });
+        }
+    }
+
+    function setupTemplateFormHandlers() {
+        // Create template form
+        const createForm = document.getElementById('createTemplateForm');
+        if (createForm) {
+            createForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                createNewTemplate();
+            });
+        }
+
+        // Edit template form
+        const editForm = document.getElementById('editTemplateForm');
+        if (editForm) {
+            editForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                updateExistingTemplate();
+            });
+        }
+    }
+
+    function createNewTemplate() {
+        const name = document.getElementById('newTemplateName').value.trim();
+        const description = document
+            .getElementById('newTemplateDescription')
+            .value.trim();
+        const endpoint = document.getElementById('newTemplateEndpoint').value;
+        const dataText = document
+            .getElementById('newTemplateData')
+            .value.trim();
+
+        if (!name) {
+            showNotification('Template name is required', 'error');
+            return;
+        }
+
+        if (!endpoint) {
+            showNotification('API endpoint is required', 'error');
+            return;
+        }
+
+        if (!dataText) {
+            showNotification('Template data is required', 'error');
+            return;
+        }
+
+        // Validate JSON data
+        let data;
+        try {
+            data = JSON.parse(dataText);
+        } catch (error) {
+            showNotification('Invalid JSON format: ' + error.message, 'error');
+            return;
+        }
+
+        // Check for duplicate names
+        const existing = window.TemplateManager.templates.find(
+            (t) => t.name === name
+        );
+        if (existing) {
+            showNotification(
+                'A template with this name already exists',
+                'error'
+            );
+            return;
+        }
+
+        try {
+            window.TemplateManager.addTemplate(
+                name,
+                description,
+                data,
+                endpoint
+            );
+            showNotification(
+                `Template "${name}" created successfully`,
+                'success'
+            );
+
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('createTemplateModal')
+            );
+            if (modal) {
+                modal.hide();
+            }
+
+            // Clear form
+            document.getElementById('createTemplateForm').reset();
+
+            // Refresh display
+            refreshTemplatesDisplay();
+        } catch (error) {
+            showNotification(
+                'Failed to create template: ' + error.message,
+                'error'
+            );
+        }
+    }
+
+    function editTemplateInModal(templateId) {
+        const template = window.TemplateManager.getTemplate(templateId);
+        if (!template) {
+            showNotification('Template not found', 'error');
+            return;
+        }
+
+        // Debug: Log template data before editing
+        console.log('Editing template:', templateId, template);
+        console.log('Template data:', template.data);
+
+        // Populate edit form basic fields
+        console.log('Populating basic form fields...');
+        document.getElementById('editTemplateId').value = template.id;
+        document.getElementById('editTemplateName').value = template.name;
+        document.getElementById('editTemplateDescription').value =
+            template.description || '';
+        document.getElementById('editTemplateEndpoint').value =
+            template.endpoint;
+
+        // Store template data for delayed loading
+        const jsonString = JSON.stringify(template.data, null, 2);
+        console.log('JSON string prepared:', jsonString);
+
+        window.editingTemplateData = {
+            template: template,
+            jsonString: jsonString,
+        };
+
+        // Show modal first, then populate data after it's fully shown
+        const modalElement = document.getElementById('editTemplateModal');
+        if (!modalElement) {
+            console.error('Edit modal element not found!');
+            return;
+        }
+
+        console.log('Creating modal instance...');
+        const modal = new bootstrap.Modal(modalElement);
+
+        // Set up one-time event listener to populate data after modal is shown
+        const populateDataAfterShow = () => {
+            console.log('Modal shown event fired, populating data...');
+            setTimeout(() => {
+                try {
+                    const textArea =
+                        document.getElementById('editTemplateData');
+                    console.log('Text area element:', textArea);
+
+                    if (textArea && window.editingTemplateData) {
+                        console.log(
+                            'Populating template data after modal shown'
+                        );
+                        console.log(
+                            'Data to populate:',
+                            window.editingTemplateData.jsonString
+                        );
+                        textArea.value = window.editingTemplateData.jsonString;
+                        console.log(
+                            'Text area value after setting:',
+                            textArea.value
+                        );
+                        console.log(
+                            'Text area value length:',
+                            textArea.value.length
+                        );
+                    } else {
+                        console.error(
+                            'Missing textArea or editingTemplateData'
+                        );
+                        console.log('textArea:', textArea);
+                        console.log(
+                            'editingTemplateData:',
+                            window.editingTemplateData
+                        );
+                    }
+                } catch (error) {
+                    console.error('Error populating template data:', error);
+                }
+            }, 100);
+            modalElement.removeEventListener(
+                'shown.bs.modal',
+                populateDataAfterShow
+            );
+        };
+
+        console.log('Adding event listener for modal shown...');
+        modalElement.addEventListener('shown.bs.modal', populateDataAfterShow);
+
+        modal.show();
+
+        // Fallback: try to populate data after a delay even if event doesn't fire
+        setTimeout(() => {
+            const textArea = document.getElementById('editTemplateData');
+            if (textArea && !textArea.value && window.editingTemplateData) {
+                textArea.value = window.editingTemplateData.jsonString;
+            }
+        }, 1000);
+    }
+
+    function updateExistingTemplate() {
+        const templateId = document.getElementById('editTemplateId').value;
+        const name = document.getElementById('editTemplateName').value.trim();
+        const description = document
+            .getElementById('editTemplateDescription')
+            .value.trim();
+        const endpoint = document.getElementById('editTemplateEndpoint').value;
+        const dataText = document
+            .getElementById('editTemplateData')
+            .value.trim();
+
+        if (!name) {
+            showNotification('Template name is required', 'error');
+            return;
+        }
+
+        // Validate JSON data
+        let data;
+        try {
+            // Trim and validate the JSON text
+            if (!dataText || dataText.trim() === '') {
+                showNotification('Template data cannot be empty', 'error');
+                return;
+            }
+            data = JSON.parse(dataText);
+            console.log('Parsed JSON data for update:', data);
+        } catch (error) {
+            console.error('JSON parse error:', error);
+            showNotification('Invalid JSON format: ' + error.message, 'error');
+            return;
+        }
+
+        try {
+            const updatedTemplate = window.TemplateManager.updateTemplate(
+                templateId,
+                {
+                    name: name,
+                    description: description,
+                    data: data,
+                    endpoint: endpoint,
+                }
+            );
+
+            // Debug: Log updated template
+            console.log('Template after update:', updatedTemplate);
+
+            showNotification(
+                `Template "${name}" updated successfully`,
+                'success'
+            );
+
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('editTemplateModal')
+            );
+            if (modal) {
+                modal.hide();
+            }
+
+            // Refresh display
+            refreshTemplatesDisplay();
+        } catch (error) {
+            console.error('Error updating template:', error);
+            showNotification(
+                'Failed to update template: ' + error.message,
+                'error'
+            );
+        }
+    }
+
+    function viewTemplateDetails(templateId) {
+        const template = window.TemplateManager.getTemplate(templateId);
+        if (!template) {
+            showNotification('Template not found', 'error');
+            return;
+        }
+
+        currentTemplateId = templateId;
+
+        const content = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Basic Information</h6>
+                <table class="table table-sm">
+                    <tr><td><strong>Name:</strong></td><td>${escapeHtml(template.name)}</td></tr>
+                    <tr><td><strong>Endpoint:</strong></td><td>${getEndpointLabel(template.endpoint)}</td></tr>
+                    <tr><td><strong>Created:</strong></td><td>${formatDate(template.createdAt)}</td></tr>
+                    <tr><td><strong>Updated:</strong></td><td>${formatDate(template.updatedAt)}</td></tr>
+                    <tr><td><strong>Usage Count:</strong></td><td>${template.usageCount || 0}</td></tr>
+                    <tr><td><strong>Last Used:</strong></td><td>${template.lastUsed ? formatDate(template.lastUsed) : 'Never'}</td></tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>Description</h6>
+                <p class="text-muted">${escapeHtml(template.description || 'No description provided')}</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <h6>Template Data</h6>
+                <pre class="bg-light p-3 border rounded"><code>${JSON.stringify(template.data, null, 2)}</code></pre>
+            </div>
+        </div>
+    `;
+
+        document.getElementById('templateDetailsContent').innerHTML = content;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('templateDetailsModal')
+        );
+        modal.show();
+    }
+
+    function loadTemplateFromDetails() {
+        if (currentTemplateId) {
+            loadTemplateAndNavigate(currentTemplateId);
+
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('templateDetailsModal')
+            );
+            if (modal) {
+                modal.hide();
+            }
+        }
+    }
+
+    // duplicateTemplate function removed to avoid conflicts with templates.js version
+
+    function sortTemplates(sortBy) {
+        let templates = window.TemplateManager.getAllTemplates();
+
+        switch (sortBy) {
+            case 'name':
+                templates.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'created':
+                templates.sort(
+                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                );
+                break;
+            case 'updated':
+                templates.sort(
+                    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+                );
+                break;
+            case 'usage':
+                templates.sort(
+                    (a, b) => (b.usageCount || 0) - (a.usageCount || 0)
+                );
+                break;
+            default:
+                break;
+        }
+
+        displayTemplates(templates);
+    }
+
+    function updateTemplateStatistics() {
+        if (!window.TemplateManager) return;
+
+        // Clean up corrupted data first
+        cleanupTemplateData();
+
+        // Get fresh statistics
+        const stats = window.TemplateManager.getStatistics();
+
+        const totalTemplatesElement = document.getElementById('totalTemplates');
+        const totalUsageElement = document.getElementById('totalUsage');
+
+        if (totalTemplatesElement) {
+            totalTemplatesElement.textContent = stats.total;
+        }
+        if (totalUsageElement) {
+            totalUsageElement.textContent = stats.totalUsage;
+        }
+    }
+
+    // Clean up any corrupted template data
+    function cleanupTemplateData() {
+        try {
+            const stored = localStorage.getItem('nbs_ips_templates');
+            if (!stored) return;
+
+            const templates = JSON.parse(stored);
+
+            // Fix corrupted templates where name is an object instead of string
+            const fixedTemplates = templates.map((t) => {
+                if (t && t.name && typeof t.name === 'object' && t.name.name) {
+                    // This template has corrupted structure - fix it
+                    return {
+                        ...t,
+                        name: t.name.name,
+                        description: t.name.description || t.description,
+                        data: t.name.data || t.data,
+                        endpoint: t.name.endpoint || t.endpoint,
+                        method: t.name.method || t.method,
+                    };
+                }
+                return t;
+            });
+
+            const validTemplates = fixedTemplates.filter(
+                (t) =>
+                    t &&
+                    t.id &&
+                    typeof t.name === 'string' &&
+                    t.name.trim() !== '' &&
+                    t.data &&
+                    typeof t === 'object'
+            );
+
+            // If we fixed or removed templates, save the cleaned data
+            if (
+                validTemplates.length !== templates.length ||
+                JSON.stringify(validTemplates) !== JSON.stringify(templates)
+            ) {
+                console.log(
+                    `Fixed/cleaned up ${templates.length - validTemplates.length} corrupted templates`
+                );
+                localStorage.setItem(
+                    'nbs_ips_templates',
+                    JSON.stringify(validTemplates)
+                );
+
+                // Force TemplateManager to reload
+                if (window.TemplateManager) {
+                    window.TemplateManager.templates = validTemplates;
+                }
+            }
+        } catch (error) {
+            console.error('Error cleaning up template data:', error);
+            // If data is completely corrupted, clear it
+            localStorage.removeItem('nbs_ips_templates');
+        }
+    }
+
+    function getEndpointLabel(endpoint) {
+        const labels = {
+            '/gen':
+                window.i18n?.t('templates.filter.generate') || 'Generate Image',
+            '/generate':
+                window.i18n?.t('templates.filter.generateResponse') ||
+                'Generate with Response',
+            '/validate':
+                window.i18n?.t('templates.filter.validate') || 'Validate Text',
+            '/upload':
+                window.i18n?.t('templates.filter.upload') ||
+                'Upload & Validate',
+        };
+        return labels[endpoint] || endpoint;
+    }
+
+    function formatDate(dateString) {
+        try {
+            return new Date(dateString).toLocaleString();
+        } catch (error) {
+            return 'Invalid Date';
+        }
+    }
+
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // Debounce function for search
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Override global functions for this page
+    function searchTemplates() {
+        const searchInput = document.getElementById('templateSearch');
+        const query = searchInput ? searchInput.value : '';
+        const templates = query
+            ? window.TemplateManager.searchTemplates(query)
+            : window.TemplateManager.getAllTemplates();
+
+        // Apply current filter if any
+        const endpointFilter = document.getElementById('endpointFilter');
+        if (endpointFilter && endpointFilter.value !== 'all') {
+            const filtered = templates.filter(
+                (t) => t.endpoint === endpointFilter.value
+            );
+            displayTemplates(filtered);
+        } else {
+            displayTemplates(templates);
+        }
+    }
+
+    function filterTemplatesByEndpoint(endpoint) {
+        const searchInput = document.getElementById('templateSearch');
+        const searchQuery = searchInput ? searchInput.value : '';
+
+        let templates;
+        if (searchQuery) {
+            templates = window.TemplateManager.searchTemplates(searchQuery);
+        } else {
+            templates = window.TemplateManager.getAllTemplates();
+        }
+
+        if (endpoint !== 'all') {
+            templates = templates.filter((t) => t.endpoint === endpoint);
+        }
+
+        displayTemplates(templates);
+    }
+
+    // Load template and navigate to appropriate page
+    function loadTemplateAndNavigate(templateId) {
+        const template = window.TemplateManager.getTemplate(templateId);
+        if (!template) {
+            showNotification('Template not found', 'error');
+            return;
+        }
+
+        // Increment usage count
+        window.TemplateManager.incrementUsage(templateId);
+
+        // Determine target page based on endpoint
+        let targetPage;
+        switch (template.endpoint) {
+            case '/gen':
+            case '/generate':
+                targetPage = '/generator';
+                break;
+            case '/validate':
+            case '/upload':
+                targetPage = '/validator';
+                break;
+            default:
+                targetPage = '/';
+        }
+
+        // Store template data for loading on target page
+        sessionStorage.setItem(
+            'loadTemplate',
+            JSON.stringify({
+                id: templateId,
+                data: template.data,
+                endpoint: template.endpoint,
+                method: template.method,
+            })
+        );
+
+        // Navigate to target page
+        window.location.href = targetPage;
+    }
+
+    // Initialize templates when page loads
+    if (typeof window.TemplateManager !== 'undefined') {
+        // Update display immediately if TemplateManager is already available
+        setTimeout(refreshTemplatesDisplay, 100);
+    }
+
+    // Override global functions to track unexpected calls
+    const originalDeleteTemplate = window.deleteTemplate;
+    window.deleteTemplate = function (templateId) {
+        console.warn('deleteTemplate called for ID:', templateId);
+        console.trace('Stack trace for deleteTemplate call');
+        return originalDeleteTemplate.call(this, templateId);
+    };
+
+    const originalClearAllTemplates = window.clearAllTemplates;
+    window.clearAllTemplates = function () {
+        console.warn('clearAllTemplates called');
+        console.trace('Stack trace for clearAllTemplates call');
+        return originalClearAllTemplates.call(this);
+    };
+
+    // Add modal event handlers to prevent data loss
+    const editTemplateModal = document.getElementById('editTemplateModal');
+    if (editTemplateModal) {
+        editTemplateModal.addEventListener('hidden.bs.modal', function () {
+            console.log('Edit modal is now hidden - cleaning up');
+            console.log(
+                'Templates count after modal hidden:',
+                window.TemplateManager.getAllTemplates().length
+            );
+            // Clean up after modal is hidden
+            setTimeout(() => {
+                const form = document.getElementById('editTemplateForm');
+                if (form) {
+                    form.reset();
+                }
+                delete window.editingTemplateData;
+            }, 200);
+        });
+    }
+
+    // Export functions globally to override templates.js versions
+    window.editTemplateInModal = editTemplateInModal;
+    window.updateExistingTemplate = updateExistingTemplate;
+    window.viewTemplateDetails = viewTemplateDetails;
+    window.refreshTemplatesDisplay = refreshTemplatesDisplay;
+    window.formatTemplateCard = formatTemplateCard;
+    window.updateTemplateStatistics = updateTemplateStatistics;
+
+    // Run cleanup immediately and on page load
+    cleanupTemplateData();
+
+    // Add function to manually clean all corrupted templates
+    window.cleanCorruptedTemplates = function () {
+        console.log('Starting manual template cleanup...');
+        cleanupTemplateData();
+        setTimeout(() => {
+            window.location.reload();
+        }, 100);
+    };
+
+    // Add function to completely reset template storage
+    window.resetTemplateStorage = function () {
+        if (confirm('This will delete ALL templates. Are you sure?')) {
+            localStorage.removeItem('nbs_ips_templates');
+            console.log('Template storage cleared');
+            window.location.reload();
+        }
+    };
+</script>

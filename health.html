@@ -1,0 +1,199 @@
+---
+layout: default
+title: "Health Check - NBS IPS QR"
+description: "Health check endpoint for NBS IPS QR Code application"
+---
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-heart me-2"></i>
+                        Application Health Check
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fas fa-server fa-2x text-success"></i>
+                            </div>
+                            <h5>Server Status</h5>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fas fa-code fa-2x text-success"></i>
+                            </div>
+                            <h5>Jekyll Status</h5>
+                            <span class="badge bg-success">Running</span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fas fa-database fa-2x text-success"></i>
+                            </div>
+                            <h5>Local Storage</h5>
+                            <span class="badge" id="storageStatus">Checking...</span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <i class="fas fa-network-wired fa-2x" id="apiIcon"></i>
+                            </div>
+                            <h5>NBS API</h5>
+                            <span class="badge" id="apiStatus">Checking...</span>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>System Information</h6>
+                            <table class="table table-sm">
+                                <tr></tr>
+                                    <td>Application Version:</td>
+                                    <td><span class="badge bg-info">1.0.0</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Build Date:</td>
+                                    <td id="buildDate">{{ site.time | date: "%Y-%m-%d %H:%M:%S" }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jekyll Version:</td>
+                                    <td>{{ jekyll.version }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Environment:</td>
+                                    <td>{{ jekyll.environment }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Features Status</h6>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Template Management
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Local Storage
+                                    <span class="badge" id="localStorageFeature">Testing...</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    File Upload
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    Multi-language
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6>Quick Actions</h6>
+                        <div class="btn-group" role="group">
+                            <a href="{{ '/' | relative_url }}" class="btn btn-outline-primary">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                            <a href="{{ '/generator' | relative_url }}" class="btn btn-outline-success">
+                                <i class="fas fa-qrcode me-1"></i>Generator
+                            </a>
+                            <a href="{{ '/validator' | relative_url }}" class="btn btn-outline-warning">
+                                <i class="fas fa-check-circle me-1"></i>Validator
+                            </a>
+                            <a href="{{ '/templates' | relative_url }}" class="btn btn-outline-info">
+                                <i class="fas fa-file-alt me-1"></i>Templates
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <small></small>
+                        <i class="fas fa-clock me-1"></i>
+                        Last checked: <span id="lastChecked">{{ "now" | date: "%Y-%m-%d %H:%M:%S" }}</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    performHealthChecks();
+
+    // Update timestamp
+    document.getElementById('lastChecked').textContent = new Date().toLocaleString();
+});
+
+function performHealthChecks() {
+    checkLocalStorage();
+    checkNBSAPI();
+}
+
+function checkLocalStorage() {
+    const storageStatus = document.getElementById('storageStatus');
+    const localStorageFeature = document.getElementById('localStorageFeature');
+
+    try {
+        // Test localStorage
+        const testKey = 'health_check_test';
+        const testValue = 'test_value_' + Date.now();
+
+        localStorage.setItem(testKey, testValue);
+        const retrieved = localStorage.getItem(testKey);
+        localStorage.removeItem(testKey);
+
+        if (retrieved === testValue) {
+            storageStatus.className = 'badge bg-success';
+            storageStatus.textContent = 'Working';
+            localStorageFeature.className = 'badge bg-success';
+            localStorageFeature.textContent = 'Active';
+        } else {
+            throw new Error('Storage test failed');
+        }
+    } catch (error) {
+        storageStatus.className = 'badge bg-danger';
+        storageStatus.textContent = 'Failed';
+        localStorageFeature.className = 'badge bg-danger';
+        localStorageFeature.textContent = 'Error';
+    }
+}
+
+function checkNBSAPI() {
+    const apiStatus = document.getElementById('apiStatus');
+    const apiIcon = document.getElementById('apiIcon');
+
+    // Simple connectivity check to NBS API
+    fetch('https://nbs.rs/QRcode/api/qr/v1/validate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+        body: 'test'
+    })
+    .then(response => {
+        // Even if the request fails due to invalid data,
+        // if we get any response, the API is reachable
+        apiStatus.className = 'badge bg-success';
+        apiStatus.textContent = 'Reachable';
+        apiIcon.className = 'fas fa-network-wired fa-2x text-success';
+    })
+    .catch(error => {
+        // Check if it's a CORS error (which means API is actually reachable)
+        if (error.message.includes('CORS') || error.message.includes('fetch')) {
+            apiStatus.className = 'badge bg-warning';
+            apiStatus.textContent = 'CORS Limited';
+            apiIcon.className = 'fas fa-network-wired fa-2x text-warning';
+        } else {
+            apiStatus.className = 'badge bg-danger';
+            apiStatus.textContent = 'Unreachable';
+            apiIcon.className = 'fas fa-network-wired fa-2x text-danger';
+        }
+    });
+}
+</script>
