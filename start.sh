@@ -95,6 +95,7 @@ show_usage() {
     echo "  build      Build the application"
     echo "  clean      Clean build files"
     echo "  install    Install dependencies"
+    echo "  setup      Setup development environment (fix platforms)"
     echo "  stop       Stop running containers"
     echo "  logs       Show application logs"
     echo "  restart    Restart the application"
@@ -103,6 +104,7 @@ show_usage() {
     echo "Examples:"
     echo "  $0 docker    # Start with Docker (easiest)"
     echo "  $0 local     # Start with local Jekyll"
+    echo "  $0 setup     # Fix platform compatibility issues"
     echo "  $0 build     # Build the site"
     echo ""
 }
@@ -155,6 +157,10 @@ start_local() {
     fi
 
     print_info "Installing Ruby dependencies..."
+    # Fix platform compatibility first
+    if ! bundle lock --add-platform x86_64-linux >/dev/null 2>&1; then
+        print_warning "Could not add x86_64-linux platform (this is normal on some systems)"
+    fi
     bundle install
 
     print_info "Starting Jekyll server..."
@@ -213,6 +219,14 @@ install_deps() {
     print_info "Installing dependencies..."
 
     if command_exists bundle; then
+        # Fix platform compatibility first
+        print_info "Adding platform compatibility for x86_64-linux..."
+        if bundle lock --add-platform x86_64-linux; then
+            print_success "Platform compatibility added!"
+        else
+            print_warning "Could not add platform (this is normal on some systems)"
+        fi
+
         bundle install
         print_success "Ruby dependencies installed!"
     fi
@@ -221,6 +235,37 @@ install_deps() {
         npm install
         print_success "Node.js dependencies installed!"
     fi
+}
+
+# Function to setup development environment
+setup_dev() {
+    print_info "Setting up development environment..."
+
+    if ! command_exists bundle; then
+        print_error "Bundler is required. Install with: gem install bundler"
+        exit 1
+    fi
+
+    print_info "Adding platform compatibility..."
+    if bundle lock --add-platform x86_64-linux; then
+        print_success "Added x86_64-linux platform support"
+    else
+        print_warning "Could not add x86_64-linux platform (this might be normal)"
+    fi
+
+    if bundle lock --add-platform x86_64-linux-musl; then
+        print_success "Added x86_64-linux-musl platform support"
+    else
+        print_warning "Could not add x86_64-linux-musl platform"
+    fi
+
+    print_info "Installing dependencies..."
+    bundle install
+
+    print_success "Development environment setup complete!"
+    print_info "You can now run the application with:"
+    print_info "  $0 local    # For local development"
+    print_info "  $0 docker   # For Docker development"
 }
 
 # Function to stop application
@@ -285,6 +330,9 @@ case "${1:-help}" in
         ;;
     install)
         install_deps
+        ;;
+    setup)
+        setup_dev
         ;;
     stop)
         stop_app

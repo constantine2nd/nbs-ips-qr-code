@@ -27,11 +27,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
-          cache-version: 0
+          bundler-cache: false
 
-      - name: Add platform compatibility
-        run: bundle lock --add-platform x86_64-linux
+      - name: Add platform compatibility and install gems
+        run: |
+          bundle lock --add-platform x86_64-linux
+          bundle install
 
       - name: Setup Pages
         id: pages
@@ -67,7 +68,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
+          bundler-cache: false
 
       - name: Install dependencies
         run: |
@@ -97,10 +98,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-          bundler-cache: true
+          bundler-cache: false
 
-      - name: Add platform compatibility
-        run: bundle lock --add-platform x86_64-linux
+      - name: Add platform compatibility and install gems
+        run: |
+          bundle lock --add-platform x86_64-linux
+          bundle install
 
       - name: Security audit
         run: |
