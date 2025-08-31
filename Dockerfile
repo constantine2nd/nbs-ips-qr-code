@@ -1,24 +1,25 @@
-FROM ruby:3.2-alpine
+FROM ruby:3.2
 
 # Install dependencies
-RUN apk add --no-cache \
-    build-base \
-    gcc \
-    cmake \
+RUN apt-get update && apt-get install -y \
+    build-essential \
     git \
+    curl \
     nodejs \
     npm \
-    curl
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy Gemfile and Gemfile.lock
-COPY Gemfile* ./
+# Copy Gemfile only (not Gemfile.lock to avoid platform conflicts)
+COPY Gemfile ./
 
-# Add platform compatibility and install gems
-RUN bundle lock --add-platform x86_64-linux \
-    && bundle install
+# Generate new Gemfile.lock for current platform and install gems
+# This ensures all gems are properly installed for x86_64-linux
+RUN bundle config set --local path /usr/local/bundle && \
+    bundle config set --local deployment false && \
+    bundle install
 
 # Copy application code
 COPY . .

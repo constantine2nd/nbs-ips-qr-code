@@ -9,13 +9,15 @@ services:
             - '35729:35729' # LiveReload port
         volumes:
             - .:/app
-            - bundle_cache:/app/vendor/bundle
+            - bundle_cache:/usr/local/bundle
             - /app/_site
         environment:
             - JEKYLL_ENV=development
-            - BUNDLE_PATH=/app/vendor/bundle
+            - BUNDLE_PATH=/usr/local/bundle
         command: >
-            sh -c "bundle install &&
+            sh -c "bundle config set --local path /usr/local/bundle &&
+                   bundle config set --local deployment false &&
+                   bundle install &&
                    bundle exec jekyll serve
                    -H 0.0.0.0
                    -P 4000
@@ -26,6 +28,12 @@ services:
         networks:
             - nbs-network
         restart: unless-stopped
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:4000/health.html']
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
 
 networks:
     nbs-network:

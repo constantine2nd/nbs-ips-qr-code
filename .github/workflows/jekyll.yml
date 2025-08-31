@@ -132,38 +132,55 @@ jobs:
       - name: Test Docker container
         run: |
           # Start container
+          echo "Starting Docker container..."
           docker run -d --name test-container -p 4000:4000 nbs-ips-qr:latest
 
-          # Wait for Jekyll to be ready (it needs time to start)
-          echo "Waiting for container to start..."
-          sleep 15
+          # Show container status immediately
+          echo "Container started. Initial status:"
+          docker ps -a | grep test-container || echo "Container not found in ps output"
 
-          # Check if container is still running
+          # Wait a moment and check logs for any immediate errors
+          echo "Waiting 5 seconds and checking for immediate errors..."
+          sleep 5
           if ! docker ps | grep -q test-container; then
-            echo "Container failed to start. Checking logs:"
+            echo "Container failed to start or exited early. Full logs:"
             docker logs test-container
+            docker rm test-container
             exit 1
           fi
 
+          # Wait for Jekyll to be ready (it needs time to start)
+          echo "Container is running. Waiting for Jekyll to start (additional 10 seconds)..."
+          sleep 10
+
+          # Check if container is still running after Jekyll startup time
+          if ! docker ps | grep -q test-container; then
+            echo "Container exited during Jekyll startup. Final logs:"
+            docker logs test-container
+            docker rm test-container
+            exit 1
+          fi
+
+          # Show that we're starting health checks
+          echo "Container is stable. Starting health endpoint tests..."
+
           # Wait for the health endpoint to respond
-          echo "Testing health endpoint..."
           for i in {1..12}; do
+            echo "Health check attempt $i/12..."
             if curl -f -s http://localhost:4000/health.html > /dev/null 2>&1; then
               echo "Health check passed!"
               break
             fi
-            echo "Attempt $i/12: Health check failed, retrying in 5 seconds..."
+            if [ $i -eq 12 ]; then
+              echo "All health check attempts failed. Container logs:"
+              docker logs test-container
+              docker stop test-container
+              docker rm test-container
+              exit 1
+            fi
+            echo "Health check failed, retrying in 5 seconds..."
             sleep 5
           done
-
-          # Final health check
-          if ! curl -f http://localhost:4000/health.html > /dev/null 2>&1; then
-            echo "Final health check failed. Container logs:"
-            docker logs test-container
-            docker stop test-container
-            docker rm test-container
-            exit 1
-          fi
 
           echo "Docker test completed successfully!"
           docker stop test-container
