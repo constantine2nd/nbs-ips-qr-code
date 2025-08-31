@@ -2,9 +2,9 @@ name: Build and Deploy Jekyll site to GitHub Pages
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,9 @@ jobs:
           bundler-cache: true
           cache-version: 0
 
+      - name: Add platform compatibility
+        run: bundle lock --add-platform x86_64-linux
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
@@ -40,7 +43,7 @@ jobs:
           JEKYLL_ENV: production
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
 
   deploy:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
@@ -52,7 +55,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
 
   test:
     runs-on: ubuntu-latest
@@ -68,6 +71,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          bundle lock --add-platform x86_64-linux
           bundle install
           gem install html-proofer
 
@@ -95,6 +99,9 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
+      - name: Add platform compatibility
+        run: bundle lock --add-platform x86_64-linux
+
       - name: Security audit
         run: |
           gem install bundler-audit
@@ -114,15 +121,47 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false
+          load: true
           tags: nbs-ips-qr:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Test Docker container
         run: |
+          # Start container
           docker run -d --name test-container -p 4000:4000 nbs-ips-qr:latest
-          sleep 30
-          curl -f http://localhost:4000/ || exit 1
+
+          # Wait for Jekyll to be ready (it needs time to start)
+          echo "Waiting for container to start..."
+          sleep 15
+
+          # Check if container is still running
+          if ! docker ps | grep -q test-container; then
+            echo "Container failed to start. Checking logs:"
+            docker logs test-container
+            exit 1
+          fi
+
+          # Wait for the health endpoint to respond
+          echo "Testing health endpoint..."
+          for i in {1..12}; do
+            if curl -f -s http://localhost:4000/health.html > /dev/null 2>&1; then
+              echo "Health check passed!"
+              break
+            fi
+            echo "Attempt $i/12: Health check failed, retrying in 5 seconds..."
+            sleep 5
+          done
+
+          # Final health check
+          if ! curl -f http://localhost:4000/health.html > /dev/null 2>&1; then
+            echo "Final health check failed. Container logs:"
+            docker logs test-container
+            docker stop test-container
+            docker rm test-container
+            exit 1
+          fi
+
+          echo "Docker test completed successfully!"
           docker stop test-container
           docker rm test-container
