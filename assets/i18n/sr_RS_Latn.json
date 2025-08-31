@@ -156,6 +156,14 @@
                 "pt": "PT: Prodajno mesto - Plaćanje na fizičkoj lokaciji trgovca (zahteva ugovor sa bankom akvirerkom)",
                 "ek": "EK: E-trgovina - Online plaćanje (zahteva ugovor sa bankom akvirerkom)"
             },
+            "fieldReference": {
+                "title": "Referenca polja",
+                "k": "K: Tip plaćanja (PR/PT/EK)",
+                "v": "V: Verzija (uvek 01)",
+                "c": "C: Set karaktera (1 ili 2)",
+                "r": "R: 18-cifreni račun primaoca",
+                "n": "N: Ime i adresa primaoca"
+            },
             "requiredFields": {
                 "title": "Obavezna polja",
                 "k": "K: Tip plaćanja (PR, PT ili EK)",
@@ -173,7 +181,16 @@
                 "ro": "RO: Poziv na broj"
             },
             "formattingTips": {
-                "title": "Saveti za formatiranje"
+                "title": "Saveti za formatiranje",
+                "amount": "Iznos: Formatiraj kao VALUTAxxxxx,xx (npr. RSD1000,00)",
+                "address": "Adresa: Koristi prelom reda za razdvajanje linija adrese",
+                "reference": "Referenca: Koristi model 97 format za srpske reference"
+            },
+            "paymentTypeDetails": {
+                "title": "Detalji tipa plaćanja",
+                "pr": "PR: Opšti zahtev za plaćanje (računi, fakture)",
+                "pt": "PT: Prodajno mesto (zahteva sporazum sa bankom)",
+                "ek": "EK: E-trgovina (zahteva sporazum sa bankom)"
             }
         },
         "quickTemplates": {
@@ -221,6 +238,29 @@
         },
         "rules": {
             "title": "Pravila validacije"
+        },
+        "help": {
+            "title": "Pomoć za validaciju",
+            "fieldReference": {
+                "title": "Referenca polja",
+                "k": "K: Tip plaćanja (PR/PT/EK)",
+                "v": "V: Verzija (uvek 01)",
+                "c": "C: Set karaktera (1 ili 2)",
+                "r": "R: 18-cifreni račun primaoca",
+                "n": "N: Ime i adresa primaoca"
+            },
+            "formattingTips": {
+                "title": "Smernice za formatiranje",
+                "amount": "Iznos: Formatiraj kao VALUTAxxxxx,xx (npr. RSD1000,00)",
+                "address": "Adresa: Koristi prelom reda za razdvajanje linija adrese",
+                "reference": "Referenca: Koristi model 97 format za srpske reference"
+            },
+            "paymentTypeDetails": {
+                "title": "Detalji tipa plaćanja",
+                "pr": "PR: Opšti zahtev za plaćanje (računi, fakture)",
+                "pt": "PT: Prodajno mesto (zahteva sporazum sa bankom)",
+                "ek": "EK: E-trgovina (zahteva sporazum sa bankom)"
+            }
         }
     },
     "templates": {
@@ -411,5 +451,92 @@
             "step4": "Omogućite \"Debug Info\" da vidite tehničke detalje o i18n sistemu"
         },
         "supportedLanguages": "Podržani jezici"
+    },
+    "documentation": {
+        "title": "NBS IPS QR kod dokumentacija",
+        "fieldReference": {
+            "title": "Vodič za polja",
+            "description": "Kompletna referenca za sva NBS IPS QR kod polja",
+            "fields": {
+                "k": {
+                    "name": "K: Tip plaćanja",
+                    "description": "Tip plaćanja (PR/PT/EK)",
+                    "required": true,
+                    "values": ["PR", "PT", "EK"]
+                },
+                "v": {
+                    "name": "V: Verzija",
+                    "description": "Verzija (uvek 01)",
+                    "required": true,
+                    "values": ["01"]
+                },
+                "c": {
+                    "name": "C: Set karaktera",
+                    "description": "Set karaktera (1 ili 2)",
+                    "required": true,
+                    "values": ["1", "2"]
+                },
+                "r": {
+                    "name": "R: Račun primaoca",
+                    "description": "18-cifreni račun primaoca",
+                    "required": true,
+                    "format": "18 cifara"
+                },
+                "n": {
+                    "name": "N: Ime i adresa primaoca",
+                    "description": "Ime i adresa primaoca (koristi prelom reda za adresu)",
+                    "required": true,
+                    "format": "Tekst sa prelomom reda"
+                }
+            }
+        },
+        "formatting": {
+            "title": "Smernice za formatiranje",
+            "amount": {
+                "title": "Format iznosa",
+                "description": "Formatiraj kao VALUTAxxxxx,xx (npr. RSD1000,00)",
+                "examples": ["RSD1000,00", "EUR250,50", "USD100,00"]
+            },
+            "address": {
+                "title": "Format adrese",
+                "description": "Koristi prelom reda za razdvajanje linija adrese",
+                "example": "Naziv kompanije\nAdresa ulice\nGrad, poštanski broj"
+            },
+            "reference": {
+                "title": "Format reference",
+                "description": "Koristi model 97 format za srpske reference",
+                "example": "97 12345678901234567"
+            }
+        },
+        "paymentTypes": {
+            "title": "Detalji tipa plaćanja",
+            "pr": {
+                "code": "PR",
+                "name": "Opšti zahtev za plaćanje",
+                "description": "Opšti zahtev za plaćanje (računi, fakture)",
+                "usage": "Standardna plaćanja, računi, fakture"
+            },
+            "pt": {
+                "code": "PT",
+                "name": "Prodajno mesto",
+                "description": "Prodajno mesto (zahteva sporazum sa bankom)",
+                "usage": "Fizičke lokacije trgovaca",
+                "note": "Zahteva ugovor sa bankom akvirerkom"
+            },
+            "ek": {
+                "code": "EK",
+                "name": "E-trgovina",
+                "description": "E-trgovina (zahteva sporazum sa bankom)",
+                "usage": "Online plaćanja",
+                "note": "Zahteva ugovor sa bankom akvirerkom"
+            }
+        },
+        "specifications": {
+            "title": "Tehničke specifikacije",
+            "encoding": "UTF-8 ili Windows-1250",
+            "maxLength": "Različito po polju",
+            "separator": "|",
+            "format": "K:vrednost|V:vrednost|C:vrednost|..."
+        }
     }
 }

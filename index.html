@@ -293,10 +293,13 @@ description: 'GUI wrapper for NBS IPS QR Code API - Generate and validate Serbia
     <div class="row mt-4">
         <div class="col-lg-8 mx-auto text-center">
             <h4 data-i18n="home.quickStart">Quick Start</h4>
-            <div class="btn-group" role="group">
+            <div
+                class="btn-group d-flex flex-column flex-sm-row w-100"
+                role="group"
+            >
                 <a
                     href="{{ '/generator' | relative_url }}"
-                    class="btn btn-outline-primary"
+                    class="btn btn-outline-primary flex-fill"
                 >
                     <i class="fas fa-play me-1"></i
                     ><span data-i18n="home.quickActions.generate"
@@ -305,7 +308,7 @@ description: 'GUI wrapper for NBS IPS QR Code API - Generate and validate Serbia
                 </a>
                 <a
                     href="{{ '/validator' | relative_url }}"
-                    class="btn btn-outline-success"
+                    class="btn btn-outline-success flex-fill"
                 >
                     <i class="fas fa-check me-1"></i
                     ><span data-i18n="home.quickActions.validate"
@@ -314,7 +317,7 @@ description: 'GUI wrapper for NBS IPS QR Code API - Generate and validate Serbia
                 </a>
                 <a
                     href="{{ '/templates' | relative_url }}"
-                    class="btn btn-outline-info"
+                    class="btn btn-outline-info flex-fill"
                 >
                     <i class="fas fa-file-alt me-1"></i
                     ><span data-i18n="home.quickActions.browse"

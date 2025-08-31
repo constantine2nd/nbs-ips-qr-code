@@ -7,15 +7,20 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>
+            <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4"
+            >
+                <h2 class="mb-2 mb-md-0">
                     <i class="fas fa-qrcode text-primary me-2"></i>
                     <span data-i18n="generator.title">QR Code Generator</span>
                 </h2>
-                <div class="btn-group" role="group">
+                <div
+                    class="btn-group d-flex flex-column flex-sm-row w-100 w-md-auto"
+                    role="group"
+                >
                     <button
                         type="button"
-                        class="btn btn-outline-primary"
+                        class="btn btn-outline-primary flex-fill"
                         data-action="save-template"
                         title="Save as Template (Ctrl+S)"
                     >
@@ -26,7 +31,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-secondary"
+                        class="btn btn-outline-secondary flex-fill"
                         onclick="exportTemplates()"
                         title="Export Templates"
                     >
@@ -35,7 +40,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-info"
+                        class="btn btn-outline-info flex-fill"
                         data-bs-toggle="modal"
                         data-bs-target="#importModal"
                         title="Import Templates"
@@ -53,13 +58,16 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         <div class="col-lg-8">
             <div class="api-section">
                 <div
-                    class="d-flex justify-content-between align-items-center mb-3"
+                    class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3"
                 >
-                    <h3 data-i18n="generator.generateTitle">
+                    <h3
+                        class="mb-2 mb-md-0"
+                        data-i18n="generator.generateTitle"
+                    >
                         Generate QR Code
                     </h3>
                     <div
-                        class="btn-group btn-group-sm"
+                        class="btn-group btn-group-sm d-flex flex-column flex-sm-row w-100 w-md-auto"
                         role="group"
                         aria-label="Generation type"
                     >
@@ -71,7 +79,10 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             value="gen"
                             checked
                         />
-                        <label class="btn btn-outline-primary" for="genImage">
+                        <label
+                            class="btn btn-outline-primary flex-fill"
+                            for="genImage"
+                        >
                             <i class="fas fa-image me-1"></i
                             ><span
                                 data-i18n="generator.generationType.imageOnly"
@@ -85,7 +96,10 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             id="genFull"
                             value="generate"
                         />
-                        <label class="btn btn-outline-primary" for="genFull">
+                        <label
+                            class="btn btn-outline-primary flex-fill"
+                            for="genFull"
+                        >
                             <i class="fas fa-code me-1"></i
                             ><span
                                 data-i18n="generator.generationType.fullResponse"
@@ -541,24 +555,37 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 <div class="accordion-body small">
                                     <ul class="mb-0">
                                         <li>
-                                            <strong>K:</strong> Payment type
-                                            (PR/PT/EK)
+                                            <span
+                                                data-i18n="generator.help.fieldReference.k"
+                                                >K: Payment type
+                                                (PR/PT/EK)</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>V:</strong> Version (always
-                                            01)
+                                            <span
+                                                data-i18n="generator.help.fieldReference.v"
+                                                >V: Version (always 01)</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>C:</strong> Character set (1
-                                            or 2)
+                                            <span
+                                                data-i18n="generator.help.fieldReference.c"
+                                                >C: Character set (1 or 2)</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>R:</strong> 18-digit
-                                            recipient account
+                                            <span
+                                                data-i18n="generator.help.fieldReference.r"
+                                                >R: 18-digit recipient
+                                                account</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>N:</strong> Recipient name
-                                            and address
+                                            <span
+                                                data-i18n="generator.help.fieldReference.n"
+                                                >N: Recipient name and
+                                                address</span
+                                            >
                                         </li>
                                     </ul>
                                 </div>
@@ -587,17 +614,25 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 <div class="accordion-body small">
                                     <ul class="mb-0">
                                         <li>
-                                            <strong>Amount:</strong> Format as
-                                            CURRxxxxx,xx (e.g., RSD1000,00)
+                                            <span
+                                                data-i18n="generator.help.formattingTips.amount"
+                                                >Amount: Format as CURRxxxxx,xx
+                                                (e.g., RSD1000,00)</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>Address:</strong> Use line
-                                            breaks to separate address lines
+                                            <span
+                                                data-i18n="generator.help.formattingTips.address"
+                                                >Address: Use line breaks to
+                                                separate address lines</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>Reference:</strong> Use
-                                            model 97 format for Serbian
-                                            references
+                                            <span
+                                                data-i18n="generator.help.formattingTips.reference"
+                                                >Reference: Use model 97 format
+                                                for Serbian references</span
+                                            >
                                         </li>
                                     </ul>
                                 </div>
@@ -626,16 +661,25 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 <div class="accordion-body small">
                                     <ul class="mb-0">
                                         <li>
-                                            <strong>PR:</strong> General payment
-                                            request (invoices, bills)
+                                            <span
+                                                data-i18n="generator.help.paymentTypeDetails.pr"
+                                                >PR: General payment request
+                                                (invoices, bills)</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>PT:</strong> Point of sale
-                                            (requires bank agreement)
+                                            <span
+                                                data-i18n="generator.help.paymentTypeDetails.pt"
+                                                >PT: Point of sale (requires
+                                                bank agreement)</span
+                                            >
                                         </li>
                                         <li>
-                                            <strong>EK:</strong> E-commerce
-                                            (requires bank agreement)
+                                            <span
+                                                data-i18n="generator.help.paymentTypeDetails.ek"
+                                                >EK: E-commerce (requires bank
+                                                agreement)</span
+                                            >
                                         </li>
                                     </ul>
                                 </div>

@@ -156,6 +156,14 @@
                 "pt": "PT: Point of Sale - Payment at physical merchant location (requires acquiring bank contract)",
                 "ek": "EK: E-Commerce - Online payment (requires acquiring bank contract)"
             },
+            "fieldReference": {
+                "title": "Field Reference",
+                "k": "K: Payment type (PR/PT/EK)",
+                "v": "V: Version (always 01)",
+                "c": "C: Character set (1 or 2)",
+                "r": "R: 18-digit recipient account",
+                "n": "N: Recipient name and address"
+            },
             "requiredFields": {
                 "title": "Required Fields",
                 "k": "K: Payment type (PR, PT, or EK)",
@@ -173,7 +181,16 @@
                 "ro": "RO: Reference number"
             },
             "formattingTips": {
-                "title": "Formatting Tips"
+                "title": "Formatting Tips",
+                "amount": "Amount: Format as CURRxxxxx,xx (e.g., RSD1000,00)",
+                "address": "Address: Use line breaks to separate address lines",
+                "reference": "Reference: Use model 97 format for Serbian references"
+            },
+            "paymentTypeDetails": {
+                "title": "Payment Type Details",
+                "pr": "PR: General payment request (invoices, bills)",
+                "pt": "PT: Point of sale (requires bank agreement)",
+                "ek": "EK: E-commerce (requires bank agreement)"
             }
         },
         "quickTemplates": {
@@ -221,6 +238,29 @@
         },
         "rules": {
             "title": "Validation Rules"
+        },
+        "help": {
+            "title": "Validation Help",
+            "fieldReference": {
+                "title": "Field Reference",
+                "k": "K: Payment type (PR/PT/EK)",
+                "v": "V: Version (always 01)",
+                "c": "C: Character set (1 or 2)",
+                "r": "R: 18-digit recipient account",
+                "n": "N: Recipient name and address"
+            },
+            "formattingTips": {
+                "title": "Formatting Guidelines",
+                "amount": "Amount: Format as CURRxxxxx,xx (e.g., RSD1000,00)",
+                "address": "Address: Use line breaks to separate address lines",
+                "reference": "Reference: Use model 97 format for Serbian references"
+            },
+            "paymentTypeDetails": {
+                "title": "Payment Type Details",
+                "pr": "PR: General payment request (invoices, bills)",
+                "pt": "PT: Point of sale (requires bank agreement)",
+                "ek": "EK: E-commerce (requires bank agreement)"
+            }
         }
     },
     "templates": {
@@ -411,5 +451,92 @@
             "step4": "Enable \"Debug Info\" to see technical details about the i18n system"
         },
         "supportedLanguages": "Supported Languages"
+    },
+    "documentation": {
+        "title": "NBS IPS QR Code Documentation",
+        "fieldReference": {
+            "title": "Field Reference Guide",
+            "description": "Complete reference for all NBS IPS QR code fields",
+            "fields": {
+                "k": {
+                    "name": "K: Payment Type",
+                    "description": "Payment type (PR/PT/EK)",
+                    "required": true,
+                    "values": ["PR", "PT", "EK"]
+                },
+                "v": {
+                    "name": "V: Version",
+                    "description": "Version (always 01)",
+                    "required": true,
+                    "values": ["01"]
+                },
+                "c": {
+                    "name": "C: Character Set",
+                    "description": "Character set (1 or 2)",
+                    "required": true,
+                    "values": ["1", "2"]
+                },
+                "r": {
+                    "name": "R: Recipient Account",
+                    "description": "18-digit recipient account number",
+                    "required": true,
+                    "format": "18 digits"
+                },
+                "n": {
+                    "name": "N: Recipient Name and Address",
+                    "description": "Recipient name and address (use line breaks for address)",
+                    "required": true,
+                    "format": "Text with line breaks"
+                }
+            }
+        },
+        "formatting": {
+            "title": "Formatting Guidelines",
+            "amount": {
+                "title": "Amount Format",
+                "description": "Format as CURRxxxxx,xx (e.g., RSD1000,00)",
+                "examples": ["RSD1000,00", "EUR250,50", "USD100,00"]
+            },
+            "address": {
+                "title": "Address Format",
+                "description": "Use line breaks to separate address lines",
+                "example": "Company Name\nStreet Address\nCity, Postal Code"
+            },
+            "reference": {
+                "title": "Reference Format",
+                "description": "Use model 97 format for Serbian references",
+                "example": "97 12345678901234567"
+            }
+        },
+        "paymentTypes": {
+            "title": "Payment Type Details",
+            "pr": {
+                "code": "PR",
+                "name": "General Payment Request",
+                "description": "General payment request (invoices, bills)",
+                "usage": "Standard payments, invoices, bills"
+            },
+            "pt": {
+                "code": "PT",
+                "name": "Point of Sale",
+                "description": "Point of sale (requires bank agreement)",
+                "usage": "Physical merchant locations",
+                "note": "Requires acquiring bank contract"
+            },
+            "ek": {
+                "code": "EK",
+                "name": "E-Commerce",
+                "description": "E-commerce (requires bank agreement)",
+                "usage": "Online payments",
+                "note": "Requires acquiring bank contract"
+            }
+        },
+        "specifications": {
+            "title": "Technical Specifications",
+            "encoding": "UTF-8 or Windows-1250",
+            "maxLength": "Various per field",
+            "separator": "|",
+            "format": "K:value|V:value|C:value|..."
+        }
     }
 }

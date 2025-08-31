@@ -7,17 +7,22 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>
+            <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4"
+            >
+                <h2 class="mb-2 mb-md-0">
                     <i class="fas fa-file-alt text-info me-2"></i>
                     <span data-i18n="templates.title"
                         >Templates Management</span
                     >
                 </h2>
-                <div class="btn-group" role="group">
+                <div
+                    class="btn-group d-flex flex-column flex-sm-row w-100 w-md-auto"
+                    role="group"
+                >
                     <button
                         type="button"
-                        class="btn btn-success"
+                        class="btn btn-success flex-fill"
                         data-bs-toggle="modal"
                         data-bs-target="#createTemplateModal"
                     >
@@ -28,7 +33,7 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-primary"
+                        class="btn btn-outline-primary flex-fill"
                         onclick="exportTemplates()"
                     >
                         <i class="fas fa-download me-1"></i
@@ -38,7 +43,7 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-secondary"
+                        class="btn btn-outline-secondary flex-fill"
                         data-bs-toggle="modal"
                         data-bs-target="#importModal"
                     >
@@ -49,7 +54,7 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-danger"
+                        class="btn btn-outline-danger flex-fill"
                         onclick="clearAllTemplates()"
                     >
                         <i class="fas fa-trash me-1"></i
@@ -229,10 +234,13 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                     Start by creating your first template or importing existing
                     ones
                 </p>
-                <div class="btn-group" role="group">
+                <div
+                    class="btn-group d-flex flex-column flex-sm-row w-100"
+                    role="group"
+                >
                     <button
                         type="button"
-                        class="btn btn-primary"
+                        class="btn btn-primary flex-fill"
                         data-bs-toggle="modal"
                         data-bs-target="#createTemplateModal"
                     >
@@ -243,7 +251,7 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-secondary"
+                        class="btn btn-outline-secondary flex-fill"
                         data-bs-toggle="modal"
                         data-bs-target="#importModal"
                     >

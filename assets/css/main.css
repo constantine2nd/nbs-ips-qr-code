@@ -160,6 +160,48 @@ body {
     border-color: var(--primary-color);
 }
 
+/* Generation type selector improvements */
+.btn-group {
+    transition: all 0.3s ease;
+}
+
+.btn-group .btn {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.btn-group .btn:checked + label,
+.btn-group .btn-check:checked + .btn {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.25);
+}
+
+/* Enhanced touch feedback for mobile */
+.btn-group .btn:active {
+    transform: scale(0.98);
+}
+
+.btn-group .btn:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Responsive header layout */
+@media (min-width: 768px) {
+    .api-section .d-flex.flex-md-row h3 {
+        flex-shrink: 0;
+        margin-right: 2rem;
+    }
+
+    .api-section .btn-group {
+        flex-shrink: 0;
+        min-width: max-content;
+    }
+}
+
 /* Hero Section */
 .hero-section {
     background: linear-gradient(135deg, var(--primary-color), #0b5ed7);
@@ -403,6 +445,69 @@ body {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
     }
+
+    /* Mobile-friendly button group */
+    .btn-group {
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        border-radius: var(--border-radius) !important;
+        margin-bottom: 0.25rem;
+        min-height: 44px; /* Touch-friendly minimum height */
+        white-space: nowrap;
+        flex: 1;
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .btn-group .btn:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Ensure button text doesn't wrap on tablets */
+    .btn-group .btn span {
+        display: inline;
+    }
+
+    /* Better spacing for header section on mobile */
+    .api-section .d-flex.flex-column h3 {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    /* Page header improvements */
+    .d-flex.flex-column h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.75rem;
+    }
+
+    /* Horizontal layout on small tablets */
+    .btn-group.flex-sm-row {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .btn-group.flex-sm-row .btn {
+        margin-bottom: 0.25rem;
+        margin-right: 0;
+        flex: 1 1 calc(50% - 0.125rem);
+        min-width: 120px;
+    }
+
+    /* For 3-button groups - better layout */
+    .btn-group.flex-sm-row .btn:nth-child(3):nth-last-child(1) {
+        flex: 1 1 100%;
+    }
+
+    /* For 4-button groups - 2x2 grid on tablets */
+    .btn-group.flex-sm-row .btn:nth-child(4):nth-last-child(1),
+    .btn-group.flex-sm-row .btn:nth-child(3):nth-last-child(2) {
+        flex: 1 1 calc(50% - 0.125rem);
+    }
 }
 
 @media (max-width: 576px) {
@@ -422,6 +527,68 @@ body {
     .template-actions .btn {
         width: 100%;
         margin-bottom: 0.5rem;
+    }
+
+    /* Extra small screens - stack vertically */
+    .btn-group {
+        flex-direction: column !important;
+        gap: 0.5rem;
+    }
+
+    .btn-group .btn {
+        font-size: 0.875rem;
+        padding: 0.75rem 1rem;
+        text-align: center;
+        min-height: 48px; /* Larger touch target for small screens */
+        border-radius: var(--border-radius) !important;
+        margin-bottom: 0;
+        width: 100%;
+        white-space: normal;
+        line-height: 1.4;
+    }
+
+    .btn-group .btn i {
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+
+    .btn-group .btn span {
+        font-size: 0.8rem;
+    }
+
+    /* Improve header layout on small screens */
+    .api-section .d-flex.flex-column h3 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .d-flex.flex-column h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+    }
+
+    /* Force vertical stacking */
+    .btn-group.flex-sm-row {
+        flex-direction: column !important;
+        flex-wrap: nowrap;
+    }
+
+    .btn-group.flex-sm-row .btn {
+        margin-right: 0;
+        margin-bottom: 0;
+        flex: none;
+    }
+
+    /* Templates page specific - reduce button text on mobile */
+    .btn-group .btn span {
+        display: inline;
+    }
+
+    /* Compact mode for 4+ button groups */
+    .btn-group .btn:nth-child(n + 4) .fas {
+        margin-right: 0.25rem;
     }
 }
 
