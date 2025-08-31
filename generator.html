@@ -1,0 +1,1257 @@
+---
+layout: default
+title: 'QR Code Generator - NBS IPS QR'
+description: 'Generate NBS IPS QR codes from payment data using the official Serbian National Bank API'
+---
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-qrcode text-primary me-2"></i>
+                    <span data-i18n="generator.title">QR Code Generator</span>
+                </h2>
+                <div class="btn-group" role="group">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        data-action="save-template"
+                        title="Save as Template (Ctrl+S)"
+                    >
+                        <i class="fas fa-bookmark me-1"></i
+                        ><span data-i18n="generator.saveTemplate"
+                            >Save Template</span
+                        >
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="exportTemplates()"
+                        title="Export Templates"
+                    >
+                        <i class="fas fa-download me-1"></i
+                        ><span data-i18n="generator.export">Export</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-info"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importModal"
+                        title="Import Templates"
+                    >
+                        <i class="fas fa-upload me-1"></i
+                        ><span data-i18n="generator.import">Import</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: Form -->
+        <div class="col-lg-8">
+            <div class="api-section">
+                <div
+                    class="d-flex justify-content-between align-items-center mb-3"
+                >
+                    <h3 data-i18n="generator.generateTitle">
+                        Generate QR Code
+                    </h3>
+                    <div
+                        class="btn-group btn-group-sm"
+                        role="group"
+                        aria-label="Generation type"
+                    >
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="generationType"
+                            id="genImage"
+                            value="gen"
+                            checked
+                        />
+                        <label class="btn btn-outline-primary" for="genImage">
+                            <i class="fas fa-image me-1"></i
+                            ><span
+                                data-i18n="generator.generationType.imageOnly"
+                                >Image Only</span
+                            >
+                        </label>
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="generationType"
+                            id="genFull"
+                            value="generate"
+                        />
+                        <label class="btn btn-outline-primary" for="genFull">
+                            <i class="fas fa-code me-1"></i
+                            ><span
+                                data-i18n="generator.generationType.fullResponse"
+                                >Full Response</span
+                            >
+                        </label>
+                    </div>
+                </div>
+
+                <form
+                    id="generatorForm"
+                    data-api-endpoint="/gen"
+                    data-method="POST"
+                >
+                    <!-- Payment Type -->
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label
+                                for="K"
+                                class="form-label"
+                                data-i18n="generator.form.paymentType.label"
+                                >Payment Type (K)</label
+                            >
+                            <select
+                                class="form-control"
+                                name="K"
+                                id="K"
+                                required
+                            >
+                                <option
+                                    value="PR"
+                                    selected
+                                    data-i18n="generator.form.paymentType.pr"
+                                >
+                                    Regular Payment (PR)
+                                </option>
+                                <option
+                                    value="PT"
+                                    data-i18n="generator.form.paymentType.pt"
+                                >
+                                    Point of Sale (PT)
+                                </option>
+                                <option
+                                    value="EK"
+                                    data-i18n="generator.form.paymentType.ek"
+                                >
+                                    E-Commerce (EK)
+                                </option>
+                            </select>
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.paymentType.help"
+                            >
+                                Type of payment request
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label
+                                for="V"
+                                class="form-label"
+                                data-i18n="generator.form.version.label"
+                                >Version (V)</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="V"
+                                id="V"
+                                value="01"
+                                required
+                            />
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.version.help"
+                            >
+                                QR code version (always 01)
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label
+                                for="C"
+                                class="form-label"
+                                data-i18n="generator.form.characterSet.label"
+                                >Character Set (C)</label
+                            >
+                            <select
+                                class="form-control"
+                                name="C"
+                                id="C"
+                                required
+                            >
+                                <option value="1" selected>1 - UTF-8</option>
+                                <option
+                                    value="2"
+                                    data-i18n="generator.form.characterSet.windows"
+                                >
+                                    Windows-1250 (2)
+                                </option>
+                            </select>
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.characterSet.help"
+                            >
+                                Character encoding
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipient Account -->
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <label
+                                for="R"
+                                class="form-label"
+                                data-i18n="generator.form.accountNumber.labelDetailed"
+                                >Recipient Account (R) *</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="R"
+                                id="R"
+                                required
+                                placeholder="845000000040484987"
+                                maxlength="18"
+                            />
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.accountNumber.helpDetailed"
+                            >
+                                18-digit account number of the payment recipient
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipient Name and Address -->
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <label
+                                for="N"
+                                class="form-label"
+                                data-i18n="generator.form.companyName.labelDetailed"
+                                >Recipient Name and Address (N) *</label
+                            >
+                            <textarea
+                                class="form-control"
+                                name="N"
+                                id="N"
+                                rows="3"
+                                required
+                                placeholder="JP EPS BEOGRAD&#10;BALKANSKA 13"
+                            ></textarea>
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.companyName.helpDetailed"
+                            >
+                                Name and address of payment recipient (use line
+                                breaks for address)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label
+                                for="I"
+                                class="form-label"
+                                data-i18n="generator.form.amount.label"
+                                >Amount (I)</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="I"
+                                id="I"
+                                placeholder="RSD3596,13"
+                                pattern="[A-Z]{3}[\d,\.]+"
+                            />
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.amount.helpDetailed"
+                            >
+                                Currency code + amount (e.g., RSD1000,00)
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label
+                                for="SF"
+                                class="form-label"
+                                data-i18n="generator.form.paymentCode.label"
+                                >Payment Code (SF)</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="SF"
+                                id="SF"
+                                placeholder="189"
+                                maxlength="3"
+                            />
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.paymentCode.helpDetailed"
+                            >
+                                3-digit payment purpose code
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payer Information -->
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <label
+                                for="P"
+                                class="form-label"
+                                data-i18n="generator.form.payerName.label"
+                                >Payer Name and Address (P)</label
+                            >
+                            <textarea
+                                class="form-control"
+                                name="P"
+                                id="P"
+                                rows="3"
+                                placeholder="MARKO PETROVIĆ&#10;KNEZ MIHAILOVA 12&#10;BEOGRAD 11000"
+                            ></textarea>
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.payerName.help"
+                            >
+                                Optional: Name and address of payer (use line
+                                breaks for address)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Description -->
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <label
+                                for="S"
+                                class="form-label"
+                                data-i18n="generator.form.paymentPurpose.labelDetailed"
+                                >Payment Description (S)</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="S"
+                                id="S"
+                                placeholder="UPLATA PO RAČUNU ZA EL. ENERGIJU"
+                                maxlength="140"
+                            />
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.paymentPurpose.helpDetailed"
+                            >
+                                Description of payment (max 140 characters)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reference Number -->
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <label
+                                for="RO"
+                                class="form-label"
+                                data-i18n="generator.form.referenceNumber.label"
+                                >Reference Number (RO)</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="RO"
+                                id="RO"
+                                placeholder="97163220000111111111000"
+                                maxlength="25"
+                            />
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.referenceNumber.helpDetailed"
+                            >
+                                Reference number for payment identification (max
+                                25 characters)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR Size Option -->
+                    <div class="form-row" id="sizeOption">
+                        <div class="form-col">
+                            <label
+                                for="size"
+                                class="form-label"
+                                data-i18n="generator.form.qrCodeSize.label"
+                                >QR Code Size</label
+                            >
+                            <select class="form-control" name="size" id="size">
+                                <option value="">Default (150x150)</option>
+                                <option value="100">100x100 px</option>
+                                <option value="150">150x150 px</option>
+                                <option value="200">200x200 px</option>
+                                <option value="300">300x300 px</option>
+                                <option value="400">400x400 px</option>
+                                <option value="500">500x500 px</option>
+                            </select>
+                            <div
+                                class="form-text"
+                                data-i18n="generator.form.qrCodeSize.help"
+                            >
+                                Select desired QR code size
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-row">
+                        <div class="form-col-full">
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-qrcode me-1"></i
+                                    ><span
+                                        data-i18n="generator.buttons.generate"
+                                        >Generate QR Code</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary"
+                                    data-action="clear"
+                                >
+                                    <i class="fas fa-eraser me-1"></i
+                                    ><span data-i18n="generator.buttons.clear"
+                                        >Clear Form</span
+                                    >
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-success"
+                                    onclick="fillSampleData()"
+                                >
+                                    <i class="fas fa-fill-drip me-1"></i
+                                    ><span data-i18n="generator.buttons.sample"
+                                        >Fill Sample Data</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- API Response Display -->
+            <div id="responseSection" style="display: none">
+                <div data-result="success" style="display: none"></div>
+                <div data-result="error" style="display: none"></div>
+            </div>
+        </div>
+
+        <!-- Right Column: QR Display and Templates -->
+        <div class="col-lg-4">
+            <!-- QR Code Display -->
+            <div class="qr-display" style="display: none">
+                <h5><i class="fas fa-qrcode me-2"></i>Generated QR Code</h5>
+                <img
+                    class="qr-image"
+                    alt="Generated QR Code"
+                    style="display: none"
+                />
+                <div class="mt-3">
+                    <button
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="downloadQRCode()"
+                    >
+                        <i class="fas fa-download me-1"></i>Download
+                    </button>
+                    <button
+                        class="btn btn-sm btn-outline-info"
+                        onclick="printQRCode()"
+                    >
+                        <i class="fas fa-print me-1"></i>Print
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Templates -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bookmark text-info me-2"></i>
+                        <span data-i18n="generator.quickTemplates.title"
+                            >Quick Templates</span
+                        >
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="quickTemplates">
+                        <p class="text-muted text-center">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <span
+                                data-i18n="generator.quickTemplates.noTemplates"
+                                >No templates saved yet</span
+                            >
+                        </p>
+                        <div class="text-center">
+                            <a
+                                href="/templates.html"
+                                class="btn btn-sm btn-outline-info"
+                            >
+                                <i class="fas fa-plus me-1"></i
+                                ><span
+                                    data-i18n="generator.quickTemplates.createTemplate"
+                                    >Create Template</span
+                                >
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Panel -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-question-circle text-warning me-2"></i>
+                        <span data-i18n="generator.help.title"
+                            >Help & Tips</span
+                        >
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="helpAccordion">
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#helpRequired"
+                                >
+                                    <span
+                                        data-i18n="generator.help.requiredFields.title"
+                                        >Required Fields</span
+                                    >
+                                </button>
+                            </h6>
+                            <div
+                                id="helpRequired"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#helpAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>
+                                            <strong>K:</strong> Payment type
+                                            (PR/PT/EK)
+                                        </li>
+                                        <li>
+                                            <strong>V:</strong> Version (always
+                                            01)
+                                        </li>
+                                        <li>
+                                            <strong>C:</strong> Character set (1
+                                            or 2)
+                                        </li>
+                                        <li>
+                                            <strong>R:</strong> 18-digit
+                                            recipient account
+                                        </li>
+                                        <li>
+                                            <strong>N:</strong> Recipient name
+                                            and address
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#helpFormatting"
+                                >
+                                    <span
+                                        data-i18n="generator.help.formattingTips.title"
+                                        >Formatting Tips</span
+                                    >
+                                </button>
+                            </h6>
+                            <div
+                                id="helpFormatting"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#helpAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>
+                                            <strong>Amount:</strong> Format as
+                                            CURRxxxxx,xx (e.g., RSD1000,00)
+                                        </li>
+                                        <li>
+                                            <strong>Address:</strong> Use line
+                                            breaks to separate address lines
+                                        </li>
+                                        <li>
+                                            <strong>Reference:</strong> Use
+                                            model 97 format for Serbian
+                                            references
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                    class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#helpPaymentTypes"
+                                >
+                                    <span
+                                        data-i18n="generator.help.paymentTypes.title"
+                                        >Payment Types</span
+                                    >
+                                </button>
+                            </h6>
+                            <div
+                                id="helpPaymentTypes"
+                                class="accordion-collapse collapse"
+                                data-bs-parent="#helpAccordion"
+                            >
+                                <div class="accordion-body small">
+                                    <ul class="mb-0">
+                                        <li>
+                                            <strong>PR:</strong> General payment
+                                            request (invoices, bills)
+                                        </li>
+                                        <li>
+                                            <strong>PT:</strong> Point of sale
+                                            (requires bank agreement)
+                                        </li>
+                                        <li>
+                                            <strong>EK:</strong> E-commerce
+                                            (requires bank agreement)
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Page-specific JavaScript
+    document.addEventListener('DOMContentLoaded', function () {
+        // Set up generation type toggle
+        const generationTypeRadios = document.querySelectorAll(
+            'input[name="generationType"]'
+        );
+        const form = document.getElementById('generatorForm');
+
+        generationTypeRadios.forEach((radio) => {
+            radio.addEventListener('change', function () {
+                const endpoint = this.value === 'gen' ? '/gen' : '/generate';
+                form.setAttribute('data-api-endpoint', endpoint);
+
+                // Update button text
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (this.value === 'gen') {
+                    submitBtn.innerHTML =
+                        '<i class="fas fa-qrcode me-1"></i>Generate QR Image';
+                } else {
+                    submitBtn.innerHTML =
+                        '<i class="fas fa-code me-1"></i>Generate with Response';
+                }
+            });
+        });
+
+        // Set up form submission handler
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            handleGeneratorFormSubmission();
+        });
+
+        // Load quick templates using the new ready system
+        if (window.TemplateManagerReady) {
+            loadQuickTemplates();
+        } else if (window.waitForTemplateManager) {
+            window.waitForTemplateManager().then(loadQuickTemplates);
+        } else {
+            // Fallback to event listener
+            window.addEventListener('templateManagerReady', loadQuickTemplates);
+            // Also try after a delay as backup
+            setTimeout(loadQuickTemplates, 100);
+        }
+
+        // Set up save template button
+        const saveTemplateBtn = document.querySelector(
+            '[data-action="save-template"]'
+        );
+        if (saveTemplateBtn) {
+            saveTemplateBtn.addEventListener('click', function () {
+                // Check if we have stored template data from successful QR generation
+                if (
+                    !window.currentTemplate ||
+                    !window.currentTemplate.data ||
+                    Object.keys(window.currentTemplate.data).length === 0
+                ) {
+                    // Try to collect form data now as fallback
+                    const form = document.getElementById('generatorForm');
+                    if (form) {
+                        const formData = collectFormData(form);
+
+                        // If we can get form data now, use it
+                        if (formData && Object.keys(formData).length > 0) {
+                            window.currentTemplate = {
+                                form: form,
+                                data: formData,
+                                endpoint:
+                                    form.getAttribute('data-api-endpoint'),
+                                method:
+                                    form.getAttribute('data-method') || 'POST',
+                            };
+                        } else {
+                            showNotification(
+                                'No template data available. Please fill the form and generate a QR code successfully first.',
+                                'error'
+                            );
+                            return;
+                        }
+                    } else {
+                        showNotification(
+                            'Form not found. Please refresh the page and try again.',
+                            'error'
+                        );
+                        return;
+                    }
+                }
+
+                const modal = new bootstrap.Modal(
+                    document.getElementById('templateModal')
+                );
+                modal.show();
+            });
+        }
+
+        // Check for template to load from session storage
+        checkForTemplateToLoad();
+
+        // Add debug helper
+        window.debugGenerator = function () {
+            console.log('=== Generator Debug Info ===');
+            console.log(
+                'Form endpoint:',
+                document
+                    .getElementById('generatorForm')
+                    .getAttribute('data-api-endpoint')
+            );
+            console.log('Loading modal state:', {
+                exists: !!document.getElementById('loadingModal'),
+                instance: bootstrap.Modal.getInstance(
+                    document.getElementById('loadingModal')
+                ),
+                visible: document
+                    .getElementById('loadingModal')
+                    ?.classList.contains('show'),
+            });
+            console.log(
+                'Modal backdrops:',
+                document.querySelectorAll('.modal-backdrop').length
+            );
+            console.log('Body classes:', document.body.className);
+            console.log('Body style:', document.body.style.cssText);
+        };
+    });
+
+    function handleGeneratorFormSubmission() {
+        const form = document.getElementById('generatorForm');
+        const endpoint = form.getAttribute('data-api-endpoint');
+        const isImageOnly = endpoint === '/gen';
+
+        // Clear previous results
+        clearPreviousResults();
+
+        // Collect form data
+        const formData = collectFormData(form);
+
+        // Validate required fields
+        if (!validateRequiredFields(formData)) {
+            return;
+        }
+
+        // Prepare data based on endpoint
+        let requestData;
+        if (isImageOnly) {
+            // For /gen endpoint, send JSON object
+            requestData = {
+                K: formData.K,
+                V: formData.V,
+                C: formData.C,
+                R: formData.R,
+                N: formData.N,
+            };
+
+            // Add optional fields if present
+            if (formData.I) requestData.I = formData.I;
+            if (formData.P) requestData.P = formData.P;
+            if (formData.SF) requestData.SF = formData.SF;
+            if (formData.S) requestData.S = formData.S;
+            if (formData.RO) requestData.RO = formData.RO;
+        } else {
+            // For /generate endpoint, send text string
+            requestData = buildQRTextString(formData);
+        }
+
+        // Make API call
+        console.log('Starting API call for endpoint:', endpoint);
+        showLoadingModal();
+
+        const options = {
+            size: formData.size || null,
+            lang: currentLanguage,
+        };
+
+        if (isImageOnly) {
+            // Use JSON data for gen endpoint
+            console.log('Making image-only API call to:', endpoint);
+            makeAPICall(endpoint, 'POST', requestData, options)
+                .then((response) => {
+                    console.log('Image API call successful');
+                    handleGeneratorResponse(response, endpoint);
+                })
+                .catch((error) => {
+                    console.error('Image API call failed:', error);
+                    handleAPIError(error);
+                })
+                .finally(() => {
+                    console.log('Cleaning up after image API call');
+                    forceCleanupModal();
+                });
+        } else {
+            // Use text data for generate endpoint
+            console.log('Making full response API call to:', endpoint);
+            options.isTextData = true;
+            makeAPICall(endpoint, 'POST', requestData, options)
+                .then((response) => {
+                    console.log('Full response API call successful');
+                    handleGeneratorResponse(response, endpoint);
+                })
+                .catch((error) => {
+                    console.error('Full response API call failed:', error);
+                    handleAPIError(error);
+                })
+                .finally(() => {
+                    console.log('Cleaning up after full response API call');
+                    forceCleanupModal();
+                });
+        }
+    }
+
+    function forceCleanupModal() {
+        setTimeout(() => {
+            try {
+                console.log('Force cleaning modal...');
+                hideLoadingModal();
+
+                // Additional cleanup after a delay
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(
+                        document.getElementById('loadingModal')
+                    );
+                    if (modal) {
+                        modal.hide();
+                    }
+
+                    // Remove any stuck modal backdrops
+                    const backdrops =
+                        document.querySelectorAll('.modal-backdrop');
+                    backdrops.forEach((backdrop) => {
+                        console.log('Removing stuck backdrop');
+                        backdrop.remove();
+                    });
+
+                    // Remove modal-open class from body
+                    document.body.classList.remove('modal-open');
+                    document.body.style.paddingRight = '';
+                    document.body.style.overflow = '';
+
+                    console.log('Modal cleanup completed');
+                }, 100);
+            } catch (error) {
+                console.error('Error during modal cleanup:', error);
+            }
+        }, 50);
+    }
+
+    function collectFormData(form) {
+        const data = {};
+
+        // Get all form elements directly instead of using FormData
+        const formElements = form.querySelectorAll('input, select, textarea');
+
+        formElements.forEach((element) => {
+            const name = element.name;
+            const value = element.value;
+
+            // Skip elements without names or size field if empty
+            if (!name || (name === 'size' && !value)) {
+                return;
+            }
+
+            // Handle different input types
+            if (element.type === 'checkbox' || element.type === 'radio') {
+                if (element.checked) {
+                    data[name] = value;
+                }
+            } else {
+                // For all other inputs, selects, and textareas
+                if (value !== null && value !== undefined) {
+                    data[name] = value;
+                }
+            }
+        });
+
+        return data;
+    }
+
+    function validateRequiredFields(data) {
+        const required = ['K', 'V', 'C', 'R', 'N'];
+
+        for (const field of required) {
+            if (!data[field] || data[field].trim() === '') {
+                showNotification(`Field "${field}" is required`, 'error');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function buildQRTextString(data) {
+        const fields = ['K', 'V', 'C', 'R', 'N', 'I', 'P', 'SF', 'S', 'RO'];
+        const parts = [];
+
+        fields.forEach((field) => {
+            if (data[field] && data[field].trim()) {
+                // Replace line breaks with \r\n for proper formatting
+                const value = data[field].replace(/\n/g, '\r\n');
+                parts.push(`${field}:${value}`);
+            }
+        });
+
+        return parts.join('|');
+    }
+
+    function clearPreviousResults() {
+        // Hide QR display
+        const qrDisplay = document.querySelector('.qr-display');
+        if (qrDisplay) {
+            qrDisplay.style.display = 'none';
+        }
+
+        // Clear QR image
+        const qrImage = document.querySelector('.qr-image');
+        if (qrImage) {
+            qrImage.src = '';
+            qrImage.style.display = 'none';
+        }
+
+        // Clear result containers
+        const responseSection = document.getElementById('responseSection');
+        if (responseSection) {
+            responseSection.style.display = 'none';
+            const resultContainers =
+                responseSection.querySelectorAll('[data-result]');
+            resultContainers.forEach((container) => {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            });
+        }
+    }
+
+    function handleGeneratorResponse(response, endpoint) {
+        console.log('handleGeneratorResponse called with:', {
+            success: response.success,
+            isImage: response.isImage,
+            endpoint: endpoint,
+        });
+
+        try {
+            if (response.success) {
+                // Store current form data for template saving after successful generation
+                const form = document.getElementById('generatorForm');
+
+                if (form) {
+                    const formData = collectFormData(form);
+
+                    // Store template data for saving
+                    if (formData && Object.keys(formData).length > 0) {
+                        window.currentTemplate = {
+                            form: form,
+                            data: formData,
+                            endpoint: form.getAttribute('data-api-endpoint'),
+                            method: form.getAttribute('data-method') || 'POST',
+                        };
+                    }
+                }
+
+                if (response.isImage) {
+                    console.log('Processing image response');
+                    // Handle image response from /gen endpoint
+                    console.log('Generator showing image notification');
+                    const imageUrl = URL.createObjectURL(response.data);
+                    displayQRImage(imageUrl);
+                    showNotification(
+                        'QR code generated successfully',
+                        'success'
+                    );
+                } else {
+                    console.log('Processing JSON response');
+                    // Handle JSON response from /generate endpoint
+                    handleAPIResponse(response, endpoint);
+
+                    // Also display image if present
+                    if (response.data && response.data.i) {
+                        displayBase64Image(response.data.i);
+                    }
+                    // Note: Don't show duplicate notification here as handleAPIResponse already shows one
+                }
+            } else {
+                console.log('Response indicates failure');
+                handleAPIError(response);
+            }
+        } catch (error) {
+            console.error('Error in handleGeneratorResponse:', error);
+            showNotification(
+                'Error processing response: ' + error.message,
+                'error'
+            );
+        } finally {
+            console.log('handleGeneratorResponse finally block executing');
+            // Don't do modal cleanup here - let forceCleanupModal handle it
+        }
+    }
+
+    function checkForTemplateToLoad() {
+        const templateToLoad = sessionStorage.getItem('loadTemplate');
+        if (templateToLoad) {
+            try {
+                const templateData = JSON.parse(templateToLoad);
+                sessionStorage.removeItem('loadTemplate');
+
+                // Check if this page can handle the template
+                if (
+                    templateData.endpoint === '/gen' ||
+                    templateData.endpoint === '/generate'
+                ) {
+                    loadTemplateIntoForm(templateData);
+                }
+            } catch (error) {
+                console.error('Error loading template from session:', error);
+            }
+        }
+    }
+
+    function loadTemplateIntoForm(templateData) {
+        const form = document.getElementById('generatorForm');
+
+        // Set endpoint
+        form.setAttribute('data-api-endpoint', templateData.endpoint);
+
+        // Set generation type
+        const generationType =
+            templateData.endpoint === '/gen' ? 'gen' : 'generate';
+        const radio = document.getElementById(
+            generationType === 'gen' ? 'genImage' : 'genFull'
+        );
+        if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event('change'));
+        }
+
+        // Load form data
+        Object.entries(templateData.data).forEach(([key, value]) => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                // Convert various line break formats back to actual line breaks for textareas
+                let processedValue = value;
+                if (typeof value === 'string') {
+                    processedValue = value
+                        .replace(/\\r\\n/g, '\n') // Escaped \r\n sequences
+                        .replace(/\\n/g, '\n') // Escaped \n sequences
+                        .replace(/\r\n/g, '\n') // Actual \r\n sequences
+                        .replace(/\r/g, '\n'); // Standalone \r sequences
+                }
+                input.value = processedValue;
+            }
+        });
+
+        showNotification('Template loaded successfully', 'success');
+    }
+
+    function fillSampleData() {
+        document.getElementById('K').value = 'PR';
+        document.getElementById('V').value = '01';
+        document.getElementById('C').value = '1';
+        document.getElementById('R').value = '845000000040484987';
+        document.getElementById('N').value = 'JP EPS BEOGRAD\nBALKANSKA 13';
+        document.getElementById('I').value = 'RSD3596,13';
+        document.getElementById('SF').value = '189';
+        document.getElementById('P').value =
+            'MARKO PETROVIĆ\nKNEZ MIHAILOVA 12\nBEOGRAD 11000';
+        document.getElementById('S').value = 'UPLATA PO RAČUNU ZA EL. ENERGIJU';
+        document.getElementById('RO').value = '97163220000111111111000';
+
+        showNotification('Sample data loaded', 'success');
+    }
+
+    function loadQuickTemplates() {
+        // Check if TemplateManager is available
+        if (
+            !window.TemplateManager ||
+            typeof window.TemplateManager.filterByEndpoint !== 'function'
+        ) {
+            console.log(
+                'TemplateManager still not ready, giving up for this call'
+            );
+            // Show message that no templates are available
+            const container = document.getElementById('quickTemplates');
+            if (container) {
+                container.innerHTML = `
+                    <p class="text-muted text-center">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Templates loading...
+                    </p>
+                `;
+            }
+            return;
+        }
+
+        console.log('TemplateManager ready, loading templates...');
+
+        const templates = window.TemplateManager.filterByEndpoint('/gen')
+            .concat(window.TemplateManager.filterByEndpoint('/generate'))
+            .slice(0, 5); // Show only first 5
+
+        const container = document.getElementById('quickTemplates');
+
+        if (templates.length === 0) {
+            container.innerHTML = `
+            <p class="text-muted text-center">
+                <i class="fas fa-info-circle me-1"></i>
+                No templates saved yet
+            </p>
+            <div class="text-center">
+                <a href="{{ '/templates' | relative_url }}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-plus me-1"></i>Create Template
+                </a>
+            </div>
+        `;
+            return;
+        }
+
+        let html = '';
+        templates.forEach((template) => {
+            html += `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <strong class="small">${escapeHtml(template.name)}</strong>
+                    <div class="text-muted small">${getEndpointLabel(template.endpoint)}</div>
+                </div>
+                <button class="btn btn-sm btn-outline-primary" onclick="loadTemplate('${template.id}')">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+        `;
+        });
+
+        html += `
+        <div class="text-center mt-3">
+            <a href="/templates.html" class="btn btn-sm btn-outline-info">
+                <i class="fas fa-list me-1"></i>View All Templates
+            </a>
+        </div>
+    `;
+
+        container.innerHTML = html;
+    }
+
+    function getEndpointLabel(endpoint) {
+        const labels = {
+            '/gen': 'Image Only',
+            '/generate': 'Full Response',
+        };
+        return labels[endpoint] || endpoint;
+    }
+
+    function downloadQRCode() {
+        const img = document.querySelector('.qr-image');
+        if (!img || !img.src) {
+            showNotification('No QR code to download', 'error');
+            return;
+        }
+
+        const link = document.createElement('a');
+        link.href = img.src;
+        link.download = 'nbs-ips-qr-code.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showNotification('QR code downloaded', 'success');
+    }
+
+    function printQRCode() {
+        const img = document.querySelector('.qr-image');
+        if (!img || !img.src) {
+            showNotification('No QR code to print', 'error');
+            return;
+        }
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(
+            `
+        <html>
+            <head>
+                <title>NBS IPS QR Code</title>
+                <style>
+                    body { margin: 0; padding: 20px; text-align: center; font-family: Arial, sans-serif; }
+                    img { max-width: 100%; height: auto; }
+                    .footer { margin-top: 20px; font-size: 12px; color: #666; }
+                </style>
+            </head>
+            <body>
+                <h2>NBS IPS QR Code</h2>
+                <img src="${img.src}" alt="NBS IPS QR Code">
+                <div class="footer">
+                    Generated: ${new Date().toLocaleString()}<br>
+                    National Bank of Serbia IPS QR Code
+                </div>
+                <scr` +
+                `ipt>window.onload = function() { window.print(); window.close(); }</scr` +
+                `ipt>
+            </body>
+        </html>
+    `
+        );
+    }
+
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>

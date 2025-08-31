@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+    nbs-ips-qr-app:
+        build: .
+        container_name: nbs-ips-qr-code
+        ports:
+            - '4000:4000'
+            - '35729:35729' # LiveReload port
+        volumes:
+            - .:/app
+            - bundle_cache:/app/vendor/bundle
+            - /app/_site
+        environment:
+            - JEKYLL_ENV=development
+            - BUNDLE_PATH=/app/vendor/bundle
+        command: >
+            sh -c "bundle install &&
+                   bundle exec jekyll serve
+                   -H 0.0.0.0
+                   -P 4000
+                   --livereload
+                   --livereload-port 35729
+                   --force_polling
+                   --incremental"
+        networks:
+            - nbs-network
+        restart: unless-stopped
+
+networks:
+    nbs-network:
+        driver: bridge
+
+volumes:
+    bundle_cache:
+        driver: local
