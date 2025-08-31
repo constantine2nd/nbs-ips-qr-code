@@ -9,18 +9,23 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         <div class="col-12">
             <div
                 class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4"
+                style="flex-wrap: nowrap"
             >
-                <h2 class="mb-2 mb-md-0">
+                <h2
+                    class="mb-2 mb-md-0"
+                    style="flex: 1 1 auto; min-width: 0; white-space: nowrap"
+                >
                     <i class="fas fa-qrcode text-primary me-2"></i>
                     <span data-i18n="generator.title">QR Code Generator</span>
                 </h2>
                 <div
-                    class="btn-group d-flex flex-column flex-sm-row w-100 w-md-auto"
+                    class="btn-group btn-group-mobile-full d-flex flex-column flex-sm-row w-100 w-lg-auto"
                     role="group"
+                    style="flex: 0 0 auto; max-width: 60%"
                 >
                     <button
                         type="button"
-                        class="btn btn-outline-primary flex-fill"
+                        class="btn btn-outline-primary btn-mobile-full flex-fill flex-lg-grow-0"
                         data-action="save-template"
                         title="Save as Template (Ctrl+S)"
                     >
@@ -31,7 +36,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-secondary flex-fill"
+                        class="btn btn-outline-secondary btn-mobile-full flex-fill flex-lg-grow-0"
                         onclick="exportTemplates()"
                         title="Export Templates"
                     >
@@ -40,7 +45,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     </button>
                     <button
                         type="button"
-                        class="btn btn-outline-info flex-fill"
+                        class="btn btn-outline-info btn-mobile-full flex-fill flex-lg-grow-0"
                         data-bs-toggle="modal"
                         data-bs-target="#importModal"
                         title="Import Templates"
@@ -67,7 +72,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                         Generate QR Code
                     </h3>
                     <div
-                        class="btn-group btn-group-sm d-flex flex-column flex-sm-row w-100 w-md-auto"
+                        class="btn-group btn-group-sm"
                         role="group"
                         aria-label="Generation type"
                     >
@@ -79,10 +84,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             value="gen"
                             checked
                         />
-                        <label
-                            class="btn btn-outline-primary flex-fill"
-                            for="genImage"
-                        >
+                        <label class="btn btn-outline-primary" for="genImage">
                             <i class="fas fa-image me-1"></i
                             ><span
                                 data-i18n="generator.generationType.imageOnly"
@@ -96,10 +98,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             id="genFull"
                             value="generate"
                         />
-                        <label
-                            class="btn btn-outline-primary flex-fill"
-                            for="genFull"
-                        >
+                        <label class="btn btn-outline-primary" for="genFull">
                             <i class="fas fa-code me-1"></i
                             ><span
                                 data-i18n="generator.generationType.fullResponse"
