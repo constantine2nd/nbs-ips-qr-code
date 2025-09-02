@@ -1387,17 +1387,18 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
 
         // Determine target page based on endpoint
         let targetPage;
+        const baseUrl = window.SITE_CONFIG ? window.SITE_CONFIG.baseUrl : '/';
         switch (template.endpoint) {
             case '/gen':
             case '/generate':
-                targetPage = '/generator';
+                targetPage = baseUrl + 'generator';
                 break;
             case '/validate':
             case '/upload':
-                targetPage = '/validator';
+                targetPage = baseUrl + 'validator';
                 break;
             default:
-                targetPage = '/';
+                targetPage = baseUrl;
         }
 
         // Store template data for loading on target page

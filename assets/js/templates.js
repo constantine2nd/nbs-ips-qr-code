@@ -478,14 +478,15 @@ function loadTemplateAndNavigate(templateId) {
     sessionStorage.setItem('loadTemplate', JSON.stringify(template));
 
     // Navigate to appropriate page based on endpoint
+    const baseUrl = window.SITE_CONFIG ? window.SITE_CONFIG.baseUrl : '/';
     let targetPage = '';
     if (template.endpoint === '/gen' || template.endpoint === '/generate') {
-        targetPage = '/generator';
+        targetPage = baseUrl + 'generator';
     } else if (template.endpoint === '/validate') {
-        targetPage = '/validator';
+        targetPage = baseUrl + 'validator';
     } else {
         // Default to generator page
-        targetPage = '/generator';
+        targetPage = baseUrl + 'generator';
     }
 
     // If we're already on the target page, just load the template directly
@@ -496,14 +497,14 @@ function loadTemplateAndNavigate(templateId) {
 
     if (
         basePath === targetPage ||
-        (basePath === '' && targetPage === '/generator') ||
-        (basePath === '/' && targetPage === '/generator')
+        (basePath === '' && targetPage === baseUrl + 'generator') ||
+        (basePath === '/' && targetPage === baseUrl + 'generator')
     ) {
         // Load template directly on current page
         loadTemplate(templateId);
     } else {
         // Navigate to target page (template will be loaded by checkForTemplateToLoad)
-        window.location.href = targetPage + '.html';
+        window.location.href = targetPage;
     }
 }
 

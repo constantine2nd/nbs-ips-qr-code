@@ -966,7 +966,7 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                 <span data-i18n="validator.quickTemplates.description">Recent validation templates will appear here</span>
             </p>
             <div class="text-center">
-                <a href="{{ '/templates' | relative_url }}" class="btn btn-sm btn-outline-info">
+                <a href="${window.SITE_CONFIG ? window.SITE_CONFIG.templatesUrl : '/templates'}" class="btn btn-sm btn-outline-info">
                     <i class="fas fa-list me-1"></i><span data-i18n="validator.quickTemplates.manage">Manage Templates</span>
                 </a>
             </div>
@@ -991,7 +991,7 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
 
         html += `
         <div class="text-center mt-3">
-            <a href="{{ '/templates' | relative_url }}" class="btn btn-sm btn-outline-info">
+            <a href="${window.SITE_CONFIG ? window.SITE_CONFIG.templatesUrl : '/templates'}" class="btn btn-sm btn-outline-info">
                 <i class="fas fa-list me-1"></i><span data-i18n="validator.quickTemplates.viewAll">View All Templates</span>
             </a>
         </div>
