@@ -197,6 +197,20 @@
             "title": "Quick Templates",
             "noTemplates": "No templates saved yet",
             "createTemplate": "Create Template"
+        },
+        "favorites": {
+            "title": "Favorites",
+            "noFavorites": "No favorite templates yet",
+            "markAsFavorite": "Mark Templates as Favorites",
+            "addToFavorites": "Add to Favorites",
+            "removeFromFavorites": "Remove from Favorites"
+        },
+        "stats": {
+            "totalTemplates": "Total Templates",
+            "totalUsage": "Total Usage",
+            "uses": "uses",
+            "use": "use",
+            "viewAllTemplates": "View All Templates"
         }
     },
     "validator": {
@@ -325,6 +339,7 @@
             "name": "Name",
             "created": "Created Date",
             "usage": "Usage Count",
+            "favorites": "Favorites First",
             "endpoint": "Endpoint"
         },
         "emptyState": {

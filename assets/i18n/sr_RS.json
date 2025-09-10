@@ -197,6 +197,20 @@
             "title": "Брзи шаблони",
             "noTemplates": "Нема сачуваних шаблона",
             "createTemplate": "Креирај шаблон"
+        },
+        "favorites": {
+            "title": "Омиљени",
+            "noFavorites": "Нема омиљених шаблона",
+            "markAsFavorite": "Означи шаблоне као омиљене",
+            "addToFavorites": "Додај у омиљене",
+            "removeFromFavorites": "Уклони из омиљених"
+        },
+        "stats": {
+            "totalTemplates": "Укупно шаблона",
+            "totalUsage": "Укупно коришћења",
+            "uses": "коришћења",
+            "use": "коришћење",
+            "viewAllTemplates": "Погледај све шаблоне"
         }
     },
     "validator": {
@@ -324,7 +338,8 @@
             "label": "Сортирај по",
             "name": "Назив",
             "created": "Датум креирања",
-            "usage": "Број употреба",
+            "usage": "Број коришћења",
+            "favorites": "Омиљени прво",
             "endpoint": "Endpoint"
         },
         "emptyState": {

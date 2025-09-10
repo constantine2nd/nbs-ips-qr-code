@@ -478,7 +478,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                 </div>
             </div>
 
-            <!-- Quick Templates -->
+            <!-- Quick Templates & Favorites -->
             <div class="card mt-4">
                 <div class="card-header">
                     <h5 class="mb-0">
@@ -488,26 +488,128 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                         >
                     </h5>
                 </div>
-                <div class="card-body">
-                    <div id="quickTemplates">
-                        <p class="text-muted text-center">
-                            <i class="fas fa-info-circle me-1"></i>
-                            <span
-                                data-i18n="generator.quickTemplates.noTemplates"
-                                >No templates saved yet</span
-                            >
-                        </p>
-                        <div class="text-center">
-                            <a
-                                href="{{ '/templates' | relative_url }}"
-                                class="btn btn-sm btn-outline-info"
-                            >
-                                <i class="fas fa-plus me-1"></i
-                                ><span
-                                    data-i18n="generator.quickTemplates.createTemplate"
-                                    >Create Template</span
+                <div class="bg-white border-top p-3">
+                    <div id="templateStats">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div
+                                    class="h4 text-primary"
+                                    id="totalTemplates"
                                 >
-                            </a>
+                                    0
+                                </div>
+                                <small
+                                    class="text-muted"
+                                    data-i18n="generator.stats.totalTemplates"
+                                    >Total Templates</small
+                                >
+                            </div>
+                            <div class="col-6">
+                                <div class="h4 text-success" id="totalUsage">
+                                    0
+                                </div>
+                                <small
+                                    class="text-muted"
+                                    data-i18n="generator.stats.totalUsage"
+                                    >Total Usage</small
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-card mt-3" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link active"
+                                id="quick-templates-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#quick-templates"
+                                type="button"
+                                role="tab"
+                                aria-controls="quick-templates"
+                                aria-selected="true"
+                            >
+                                <i class="fas fa-bolt me-1"></i>Quick Templates
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button
+                                class="nav-link"
+                                id="favorites-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#favorites"
+                                type="button"
+                                role="tab"
+                                aria-controls="favorites"
+                                aria-selected="false"
+                            >
+                                <i class="fas fa-star me-1"></i
+                                ><span data-i18n="generator.favorites.title"
+                                    >Favorites</span
+                                >
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <!-- Quick Templates Tab -->
+                        <div
+                            class="tab-pane fade show active"
+                            id="quick-templates"
+                            role="tabpanel"
+                            aria-labelledby="quick-templates-tab"
+                        >
+                            <div id="quickTemplates">
+                                <p class="text-muted text-center">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    <span
+                                        data-i18n="generator.quickTemplates.noTemplates"
+                                        >No templates saved yet</span
+                                    >
+                                </p>
+                                <div class="text-center">
+                                    <a
+                                        href="{{ '/templates' | relative_url }}"
+                                        class="btn btn-sm btn-outline-info"
+                                    >
+                                        <i class="fas fa-plus me-1"></i
+                                        ><span
+                                            data-i18n="generator.quickTemplates.createTemplate"
+                                            >Create Template</span
+                                        >
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Favorites Tab -->
+                        <div
+                            class="tab-pane fade"
+                            id="favorites"
+                            role="tabpanel"
+                            aria-labelledby="favorites-tab"
+                        >
+                            <div id="favoriteTemplates">
+                                <p class="text-muted text-center">
+                                    <i class="fas fa-star me-1"></i>
+                                    <span
+                                        data-i18n="generator.favorites.noFavorites"
+                                        >No favorite templates yet</span
+                                    >
+                                </p>
+                                <div class="text-center">
+                                    <a
+                                        href="{{ '/templates' | relative_url }}"
+                                        class="btn btn-sm btn-outline-info"
+                                    >
+                                        <i class="fas fa-star me-1"></i
+                                        ><span
+                                            data-i18n="generator.favorites.markAsFavorite"
+                                            >Mark Templates as Favorites</span
+                                        >
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1174,8 +1276,17 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
 
         console.log('TemplateManager ready, loading templates...');
 
-        const templates = window.TemplateManager.filterByEndpoint('/gen')
-            .concat(window.TemplateManager.filterByEndpoint('/generate'))
+        // Update statistics
+        updateTemplateStatistics();
+
+        // Get templates sorted by usage, then filter by endpoint
+        const allTemplates = window.TemplateManager.getTemplatesByUsage();
+        const templates = allTemplates
+            .filter(
+                (template) =>
+                    template.endpoint === '/gen' ||
+                    template.endpoint === '/generate'
+            )
             .slice(0, 5); // Show only first 5
 
         const container = document.getElementById('quickTemplates');
@@ -1197,15 +1308,27 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
 
         let html = '';
         templates.forEach((template) => {
+            const usageCount = template.usageCount || 0;
+            const usageText = usageCount === 1 ? 'use' : 'uses';
             html += `
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <strong class="small">${escapeHtml(template.name)}</strong>
-                    <div class="text-muted small">${getEndpointLabel(template.endpoint)}</div>
+            <div class="template-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong class="text-dark">${escapeHtml(template.name)}</strong>
+                            <span class="template-usage-badge">${usageCount} <span data-i18n="generator.stats.${usageText}">${usageText}</span></span>
+                        </div>
+                        <div class="text-muted small">${getEndpointLabel(template.endpoint)}</div>
+                    </div>
+                    <div class="ms-3 d-flex flex-column gap-1">
+                        <button class="btn btn-sm btn-outline-warning" onclick="toggleTemplateFavorite('${template.id}')" title="${template.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <i class="${template.isFavorite ? 'fas fa-star' : 'far fa-star'}"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="loadTemplate('${template.id}')" title="Load Template">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
                 </div>
-                <button class="btn btn-sm btn-outline-primary" onclick="loadTemplate('${template.id}')">
-                    <i class="fas fa-play"></i>
-                </button>
             </div>
         `;
         });
@@ -1213,12 +1336,110 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         html += `
         <div class="text-center mt-3">
             <a href="${window.SITE_CONFIG ? window.SITE_CONFIG.templatesUrl : '/templates'}" class="btn btn-sm btn-outline-info">
-                <i class="fas fa-list me-1"></i>View All Templates
+                <i class="fas fa-list me-1"></i><span data-i18n="generator.stats.viewAllTemplates">View All Templates</span>
             </a>
         </div>
     `;
 
         container.innerHTML = html;
+
+        // Load favorites
+        loadFavoriteTemplates();
+    }
+
+    function loadFavoriteTemplates() {
+        if (
+            !window.TemplateManager ||
+            typeof window.TemplateManager.getFavoriteTemplates !== 'function'
+        ) {
+            return;
+        }
+
+        const favorites = window.TemplateManager.getFavoriteTemplates();
+        const container = document.getElementById('favoriteTemplates');
+
+        if (favorites.length === 0) {
+            container.innerHTML = `
+            <p class="text-muted text-center">
+                <i class="fas fa-star me-1"></i>
+                <span data-i18n="generator.favorites.noFavorites">No favorite templates yet</span>
+            </p>
+            <div class="text-center">
+                <a href="${window.SITE_CONFIG ? window.SITE_CONFIG.templatesUrl : '/templates'}" class="btn btn-sm btn-outline-info">
+                    <i class="fas fa-star me-1"></i><span data-i18n="generator.favorites.markAsFavorite">Mark Templates as Favorites</span>
+                </a>
+            </div>
+        `;
+            return;
+        }
+
+        let html = '';
+        favorites.forEach((template) => {
+            const usageCount = template.usageCount || 0;
+            const usageText = usageCount === 1 ? 'use' : 'uses';
+            html += `
+            <div class="template-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong class="text-dark">${escapeHtml(template.name)}</strong>
+                            <span class="template-usage-badge">${usageCount} <span data-i18n="generator.stats.${usageText}">${usageText}</span></span>
+                        </div>
+                        <div class="text-muted small">${getEndpointLabel(template.endpoint)}</div>
+                    </div>
+                    <div class="ms-3 d-flex flex-column gap-1">
+                        <button class="btn btn-sm btn-outline-warning" onclick="toggleTemplateFavorite('${template.id}')" title="Remove from Favorites">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="loadTemplate('${template.id}')" title="Load Template">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function updateTemplateStatistics() {
+        if (
+            !window.TemplateManager ||
+            typeof window.TemplateManager.getStatistics !== 'function'
+        ) {
+            return;
+        }
+
+        const stats = window.TemplateManager.getStatistics();
+        const totalTemplatesEl = document.getElementById('totalTemplates');
+        const totalUsageEl = document.getElementById('totalUsage');
+
+        if (totalTemplatesEl) totalTemplatesEl.textContent = stats.total;
+        if (totalUsageEl) totalUsageEl.textContent = stats.totalUsage;
+    }
+
+    function toggleTemplateFavorite(templateId) {
+        if (
+            !window.TemplateManager ||
+            typeof window.TemplateManager.toggleFavorite !== 'function'
+        ) {
+            return;
+        }
+
+        const isFavorite = window.TemplateManager.toggleFavorite(templateId);
+
+        // Refresh both tabs
+        loadQuickTemplates();
+
+        // Show notification
+        const template = window.TemplateManager.getTemplate(templateId);
+        if (template) {
+            const message = isFavorite
+                ? `Added "${template.name}" to favorites`
+                : `Removed "${template.name}" from favorites`;
+            showNotification(message, 'success');
+        }
     }
 
     function getEndpointLabel(endpoint) {

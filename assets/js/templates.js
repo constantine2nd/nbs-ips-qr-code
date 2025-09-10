@@ -19,6 +19,7 @@ class TemplateManager {
                 ...template,
                 usageCount: template.usageCount || 0,
                 lastUsed: template.lastUsed || null,
+                isFavorite: template.isFavorite || false,
             }));
         } catch (error) {
             console.error('Error loading templates:', error);
@@ -52,6 +53,7 @@ class TemplateManager {
             updatedAt: new Date().toISOString(),
             usageCount: 0,
             lastUsed: null,
+            isFavorite: false,
         };
 
         this.templates.push(template);
@@ -114,10 +116,36 @@ class TemplateManager {
     incrementUsage(id) {
         const template = this.getTemplate(id);
         if (template) {
-            template.usageCount++;
+            template.usageCount = (template.usageCount || 0) + 1;
             template.lastUsed = new Date().toISOString();
             this.saveTemplates();
         }
+    }
+
+    // Toggle favorite status
+    toggleFavorite(id) {
+        const template = this.getTemplate(id);
+        if (template) {
+            template.isFavorite = !template.isFavorite;
+            template.updatedAt = new Date().toISOString();
+            this.saveTemplates();
+            return template.isFavorite;
+        }
+        return false;
+    }
+
+    // Get favorite templates sorted by name
+    getFavoriteTemplates() {
+        return this.templates
+            .filter((template) => template.isFavorite)
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Get templates sorted by usage (most used first)
+    getTemplatesByUsage() {
+        return this.templates
+            .slice()
+            .sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0));
     }
 
     // Export templates
@@ -900,29 +928,34 @@ function formatTemplateCard(template) {
             <div class="card template-card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span class="badge bg-primary">${endpointLabel}</span>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v"></i>
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-sm btn-outline-warning me-2" onclick="toggleTemplateFavorite('${template.id}')" title="${template.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
+                            <i class="${template.isFavorite ? 'fas fa-star' : 'far fa-star'}"></i>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="loadTemplateAndNavigate('${template.id}')">
-                                <i class="fas fa-play me-2"></i>Load Template
-                            </a></li>
-                            <li><a class="dropdown-item" href="#" onclick="viewTemplateDetails('${template.id}')">
-                                <i class="fas fa-eye me-2"></i>View Details
-                            </a></li>
-                            <li><a class="dropdown-item" href="#" onclick="console.log('Dropdown edit clicked for ${template.id}'); editTemplateInModal('${template.id}')">
-                                <i class="fas fa-edit me-2"></i>Edit Template
-                            </a></li>
-                            <li><a class="dropdown-item" href="#" onclick="duplicateTemplate('${template.id}')">
-                                <i class="fas fa-copy me-2"></i>Duplicate
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteTemplate('${template.id}')">
-                                <i class="fas fa-trash me-2"></i>Delete
-                            </a></li>
-                        </ul>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="loadTemplateAndNavigate('${template.id}')">
+                                    <i class="fas fa-play me-2"></i>Load Template
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="viewTemplateDetails('${template.id}')">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="console.log('Dropdown edit clicked for ${template.id}'); editTemplateInModal('${template.id}')">
+                                    <i class="fas fa-edit me-2"></i>Edit Template
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="duplicateTemplate('${template.id}')">
+                                    <i class="fas fa-copy me-2"></i>Duplicate
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="deleteTemplate('${template.id}')">
+                                    <i class="fas fa-trash me-2"></i>Delete
+                                </a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -1062,6 +1095,38 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+// Global function to toggle template favorite status
+function toggleTemplateFavorite(templateId) {
+    if (
+        !templateManager ||
+        typeof templateManager.toggleFavorite !== 'function'
+    ) {
+        console.error('TemplateManager not available');
+        return;
+    }
+
+    const isFavorite = templateManager.toggleFavorite(templateId);
+    const template = templateManager.getTemplate(templateId);
+
+    if (template) {
+        const message = isFavorite
+            ? `Added "${template.name}" to favorites`
+            : `Removed "${template.name}" from favorites`;
+
+        if (typeof showNotification === 'function') {
+            showNotification(message, 'success');
+        }
+
+        // Refresh displays if functions exist
+        if (typeof refreshTemplatesDisplay === 'function') {
+            refreshTemplatesDisplay();
+        }
+        if (typeof loadQuickTemplates === 'function') {
+            loadQuickTemplates();
+        }
+    }
 }
 
 // Ensure TemplateManager is available and export all functions

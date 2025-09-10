@@ -197,6 +197,20 @@
             "title": "Brzi šabloni",
             "noTemplates": "Nema sačuvanih šablona",
             "createTemplate": "Kreiraj šablon"
+        },
+        "favorites": {
+            "title": "Omiljeni",
+            "noFavorites": "Nema omiljenih šablona",
+            "markAsFavorite": "Označi šablone kao omiljene",
+            "addToFavorites": "Dodaj u omiljene",
+            "removeFromFavorites": "Ukloni iz omiljenih"
+        },
+        "stats": {
+            "totalTemplates": "Ukupno šablona",
+            "totalUsage": "Ukupno korišćenja",
+            "uses": "korišćenja",
+            "use": "korišćenje",
+            "viewAllTemplates": "Pogledaj sve šablone"
         }
     },
     "validator": {
@@ -324,7 +338,8 @@
             "label": "Sortiraj po",
             "name": "Naziv",
             "created": "Datum kreiranja",
-            "usage": "Broj upotreba",
+            "usage": "Broj korišćenja",
+            "favorites": "Omiljeni prvo",
             "endpoint": "Endpoint"
         },
         "emptyState": {

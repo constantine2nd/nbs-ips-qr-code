@@ -12,12 +12,13 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy Gemfile only (not Gemfile.lock to avoid platform conflicts)
+# Copy Gemfile
 COPY Gemfile ./
 
-# Generate new Gemfile.lock for current platform and install gems
-# This ensures all gems are properly installed for x86_64-linux
-RUN bundle config set --local path /usr/local/bundle && \
+# Remove existing Gemfile.lock to avoid platform conflicts
+# and generate new one for current platform
+RUN rm -f Gemfile.lock && \
+    bundle config set --local path /usr/local/bundle && \
     bundle config set --local deployment false && \
     bundle install
 

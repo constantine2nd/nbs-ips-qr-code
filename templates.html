@@ -165,6 +165,12 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                                     Usage Count
                                 </option>
                                 <option
+                                    value="favorites"
+                                    data-i18n="templates.sort.favorites"
+                                >
+                                    Favorites First
+                                </option>
+                                <option
                                     value="endpoint"
                                     data-i18n="templates.sort.endpoint"
                                 >
@@ -1202,6 +1208,17 @@ description: 'Manage, create, edit, and organize your NBS IPS QR code templates 
                 templates.sort(
                     (a, b) => (b.usageCount || 0) - (a.usageCount || 0)
                 );
+                break;
+            case 'favorites':
+                templates.sort((a, b) => {
+                    // Sort favorites first, then by name
+                    if (a.isFavorite && !b.isFavorite) return -1;
+                    if (!a.isFavorite && b.isFavorite) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+                break;
+            case 'endpoint':
+                templates.sort((a, b) => a.endpoint.localeCompare(b.endpoint));
                 break;
             default:
                 break;
