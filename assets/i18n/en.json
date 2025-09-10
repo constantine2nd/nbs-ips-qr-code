@@ -226,12 +226,21 @@
         },
         "imageUpload": {
             "label": "Select QR Code Image",
-            "dragText": "Drag & drop QR code image here",
+            "dragText": "Drag and drop QR image here",
             "orText": "or",
             "chooseFile": "Choose File",
-            "supportedFormats": "Supported formats: PNG, JPG, JPEG, GIF",
-            "description": "Upload a PNG or JPEG image of a QR code to decode and validate its content."
+            "supportedFormats": "Supported formats: PNG, JPEG (max 5MB)",
+            "description": "Upload a QR code image file to validate its content according to NBS IPS specifications.",
+            "dropHere": "Drop QR Code Image Here",
+            "clickToBrowse": "or click to browse files",
+            "fileSelected": "File Selected"
         },
+        "upload": {
+            "dropHere": "Drop QR Code Image Here",
+            "clickToBrowse": "or click to browse files",
+            "supportedFormats": "Supported formats: PNG, JPEG (max 5MB)"
+        },
+
         "buttons": {
             "validate": "Validate QR Code",
             "validateImage": "Validate Image",
@@ -274,6 +283,23 @@
                 "pr": "PR: General payment request (invoices, bills)",
                 "pt": "PT: Point of sale (requires bank agreement)",
                 "ek": "EK: E-commerce (requires bank agreement)"
+            },
+            "commonErrors": {
+                "title": "Common Errors",
+                "missingFields": "Missing required fields",
+                "invalidAccount": "Invalid account number format",
+                "incorrectAmount": "Incorrect amount format",
+                "invalidReference": "Invalid reference number (Model 97)",
+                "textEndingPipe": "Text ending with pipe character"
+            },
+            "uploadTips": {
+                "title": "Image Upload Tips",
+                "highQuality": "Use high-quality, clear images",
+                "goodContrast": "Ensure good contrast and lighting",
+                "avoidBlurry": "Avoid blurry or distorted images",
+                "supportedFormats": "Supported formats: PNG, JPEG",
+                "maxFileSize": "Maximum file size: 5MB",
+                "fillImage": "QR code should fill most of the image"
             }
         }
     },

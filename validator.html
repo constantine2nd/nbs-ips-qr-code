@@ -181,8 +181,13 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                                 <div class="file-icon">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                 </div>
-                                <h5>Drop QR Code Image Here</h5>
-                                <p class="text-muted">
+                                <h5 data-i18n="validator.upload.dropHere">
+                                    Drop QR Code Image Here
+                                </h5>
+                                <p
+                                    class="text-muted"
+                                    data-i18n="validator.upload.clickToBrowse"
+                                >
                                     or click to browse files
                                 </p>
                                 <input
@@ -193,7 +198,10 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                                     style="display: none"
                                 />
                                 <div class="mt-3">
-                                    <small class="text-muted">
+                                    <small
+                                        class="text-muted"
+                                        data-i18n="validator.upload.supportedFormats"
+                                    >
                                         Supported formats: PNG, JPEG (max 5MB)
                                     </small>
                                 </div>
@@ -466,7 +474,10 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                                     data-bs-toggle="collapse"
                                     data-bs-target="#rulesCommon"
                                 >
-                                    Common Errors
+                                    <span
+                                        data-i18n="validator.help.commonErrors.title"
+                                        >Common Errors</span
+                                    >
                                 </button>
                             </h6>
                             <div
@@ -476,13 +487,31 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                             >
                                 <div class="accordion-body small">
                                     <ul class="mb-0">
-                                        <li>Missing required fields</li>
-                                        <li>Invalid account number format</li>
-                                        <li>Incorrect amount format</li>
-                                        <li>
+                                        <li
+                                            data-i18n="validator.help.commonErrors.missingFields"
+                                        >
+                                            Missing required fields
+                                        </li>
+                                        <li
+                                            data-i18n="validator.help.commonErrors.invalidAccount"
+                                        >
+                                            Invalid account number format
+                                        </li>
+                                        <li
+                                            data-i18n="validator.help.commonErrors.incorrectAmount"
+                                        >
+                                            Incorrect amount format
+                                        </li>
+                                        <li
+                                            data-i18n="validator.help.commonErrors.invalidReference"
+                                        >
                                             Invalid reference number (Model 97)
                                         </li>
-                                        <li>Text ending with pipe character</li>
+                                        <li
+                                            data-i18n="validator.help.commonErrors.textEndingPipe"
+                                        >
+                                            Text ending with pipe character
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -496,17 +525,33 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                 <div class="card-header">
                     <h5 class="mb-0">
                         <i class="fas fa-camera text-warning me-2"></i>
-                        Image Upload Tips
+                        <span data-i18n="validator.help.uploadTips.title"
+                            >Image Upload Tips</span
+                        >
                     </h5>
                 </div>
                 <div class="card-body">
                     <ul class="small mb-0">
-                        <li>Use high-quality, clear images</li>
-                        <li>Ensure good contrast and lighting</li>
-                        <li>Avoid blurry or distorted images</li>
-                        <li>Supported formats: PNG, JPEG</li>
-                        <li>Maximum file size: 5MB</li>
-                        <li>QR code should fill most of the image</li>
+                        <li data-i18n="validator.help.uploadTips.highQuality">
+                            Use high-quality, clear images
+                        </li>
+                        <li data-i18n="validator.help.uploadTips.goodContrast">
+                            Ensure good contrast and lighting
+                        </li>
+                        <li data-i18n="validator.help.uploadTips.avoidBlurry">
+                            Avoid blurry or distorted images
+                        </li>
+                        <li
+                            data-i18n="validator.help.uploadTips.supportedFormats"
+                        >
+                            Supported formats: PNG, JPEG
+                        </li>
+                        <li data-i18n="validator.help.uploadTips.maxFileSize">
+                            Maximum file size: 5MB
+                        </li>
+                        <li data-i18n="validator.help.uploadTips.fillImage">
+                            QR code should fill most of the image
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -516,6 +561,10 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
 
 <script>
     // Page-specific JavaScript for validator
+    console.log(
+        'Validator page loaded - Fixed version v2.0 with file input fixes'
+    );
+
     document.addEventListener('DOMContentLoaded', function () {
         // Wait for TemplateManager to be ready before initializing
         if (
@@ -549,20 +598,49 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
     });
 
     function initializeValidator() {
-        // Set up file upload
+        // Check if essential elements exist before proceeding
+        const requiredElements = [
+            'fileUploadArea',
+            'qrImageFile',
+            'uploadSubmitBtn',
+            'textValidatorForm',
+            'uploadValidatorForm',
+        ];
+
+        let missingElements = [];
+        for (const elementId of requiredElements) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                missingElements.push(elementId);
+            }
+        }
+
+        if (missingElements.length > 0) {
+            console.error(
+                'initializeValidator: Missing required elements:',
+                missingElements
+            );
+            setTimeout(initializeValidator, 500);
+            return;
+        }
+
+        // Set up file upload first
         setupFileUpload();
 
-        // Load validation templates
-        loadValidationTemplates();
+        // Wait a bit to ensure event handlers are ready, then set up other handlers
+        setTimeout(function () {
+            // Load validation templates
+            loadValidationTemplates();
 
-        // Set up save template buttons
-        setupSaveTemplateButtons();
+            // Set up save template buttons
+            setupSaveTemplateButtons();
 
-        // Set up form submission handlers
-        setupValidationForms();
+            // Set up form submission handlers - after file upload is ready
+            setupValidationForms();
 
-        // Check for template to load from session storage
-        checkForTemplateToLoad();
+            // Check for template to load from session storage
+            checkForTemplateToLoad();
+        }, 100);
     }
 
     function setupFileUpload() {
@@ -570,16 +648,33 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
         const fileInput = document.getElementById('qrImageFile');
         const submitBtn = document.getElementById('uploadSubmitBtn');
 
+        if (!fileUploadArea) {
+            console.error('setupFileUpload: fileUploadArea not found');
+            return;
+        }
+
+        if (!fileInput) {
+            console.error('setupFileUpload: fileInput not found');
+            return;
+        }
+
+        if (!submitBtn) {
+            console.error('setupFileUpload: submitBtn not found');
+            return;
+        }
+
         // Click to open file dialog
         fileUploadArea.addEventListener('click', function () {
-            fileInput.click();
+            if (fileInput) {
+                fileInput.click();
+            }
         });
 
         // File selection handler
         fileInput.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
-                handleFileSelection(file);
+                handleValidatorFileSelection(file);
             }
         });
 
@@ -604,12 +699,12 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 fileInput.files = files;
-                handleFileSelection(files[0]);
+                handleValidatorFileSelection(files[0]);
             }
         });
     }
 
-    function handleFileSelection(file) {
+    function handleValidatorFileSelection(file) {
         const submitBtn = document.getElementById('uploadSubmitBtn');
         const fileUploadArea = document.getElementById('fileUploadArea');
 
@@ -618,20 +713,27 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
             return;
         }
 
-        // Update UI
+        // Update UI while preserving the file input element
+        const fileInput = document.getElementById('qrImageFile');
+
         fileUploadArea.innerHTML = `
         <div class="file-icon text-success">
             <i class="fas fa-check-circle"></i>
         </div>
-        <h5 class="text-success">File Selected</h5>
+        <h5 class="text-success" data-i18n="validator.upload.fileSelected">File Selected</h5>
         <p class="mb-1"><strong>${file.name}</strong></p>
         <p class="text-muted small">${formatFileSize(file.size)}</p>
     `;
 
+        // Re-append the file input element to preserve it
+        if (fileInput) {
+            fileUploadArea.appendChild(fileInput);
+        }
+
         // Enable submit button
         submitBtn.disabled = false;
-        submitBtn.innerHTML =
-            '<i class="fas fa-search me-1"></i>Validate Image';
+        submitBtn.classList.remove('btn-outline-secondary');
+        submitBtn.classList.add('btn-primary');
     }
 
     function validateFile(file) {
@@ -664,42 +766,50 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
         const submitBtn = document.getElementById('uploadSubmitBtn');
         const fileUploadArea = document.getElementById('fileUploadArea');
 
-        // Clear file input
-        fileInput.value = '';
+        // Clear the file input value
+        if (fileInput) {
+            fileInput.value = '';
+        }
 
-        // Reset UI
-        fileUploadArea.innerHTML = `
-        <div class="file-icon">
-            <i class="fas fa-cloud-upload-alt"></i>
-        </div>
-        <h5>Drop QR Code Image Here</h5>
-        <p class="text-muted">or click to browse files</p>
-        <input type="file" name="file" id="qrImageFile" accept="image/png,image/jpeg,image/jpg" style="display: none;">
-        <div class="mt-3">
-            <small class="text-muted">
-                Supported formats: PNG, JPEG (max 5MB)
-            </small>
-        </div>
-    `;
+        // Reset UI to original state while preserving the file input
+        if (fileUploadArea) {
+            fileUploadArea.innerHTML = `
+                <div class="file-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h5 data-i18n="validator.upload.dropHere">Drop QR Code Image Here</h5>
+                <p class="text-muted" data-i18n="validator.upload.clickToBrowse">or click to browse files</p>
+                <div class="mt-3">
+                    <small class="text-muted" data-i18n="validator.upload.supportedFormats">
+                        Supported formats: PNG, JPEG (max 5MB)
+                    </small>
+                </div>
+            `;
+
+            // Re-append the file input to preserve it
+            if (fileInput) {
+                fileUploadArea.appendChild(fileInput);
+            }
+        }
 
         // Disable submit button
-        submitBtn.disabled = true;
-        submitBtn.innerHTML =
-            '<i class="fas fa-search me-1"></i>Validate Image';
-
-        // Re-setup file upload for the new input
-        const newFileInput = document.getElementById('qrImageFile');
-        newFileInput.addEventListener('change', function () {
-            const file = this.files[0];
-            if (file) {
-                handleFileSelection(file);
-            }
-        });
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('btn-primary');
+            submitBtn.classList.add('btn-outline-secondary');
+            submitBtn.innerHTML =
+                '<i class="fas fa-search me-1"></i>Validate Image';
+        }
     }
 
     function setupValidationForms() {
         // Text validation form
         const textForm = document.getElementById('textValidatorForm');
+        if (!textForm) {
+            console.error('Text validator form not found');
+            return;
+        }
+
         textForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -712,6 +822,7 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                 return;
             }
 
+            console.log('Text validation: Showing loading modal...');
             showLoadingModal();
 
             validateQRText(qrText)
@@ -722,34 +833,93 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                     handleValidationError(error);
                 })
                 .finally(() => {
+                    console.log('Text validation: Hiding loading modal...');
                     hideLoadingModal();
                 });
         });
 
         // Upload validation form
         const uploadForm = document.getElementById('uploadValidatorForm');
+        if (!uploadForm) {
+            console.error('Upload validator form not found');
+            return;
+        }
+
         uploadForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const fileInput = document.getElementById('qrImageFile');
-            const file = fileInput.files[0];
+            // Prevent multiple submissions
+            if (uploadForm.dataset.submitting === 'true') {
+                console.log(
+                    'Upload form: Submission already in progress, ignoring'
+                );
+                return;
+            }
+            uploadForm.dataset.submitting = 'true';
 
+            console.log('Upload form: Starting submission...');
+
+            // Get the file input element
+            const fileInput = document.getElementById('qrImageFile');
+            if (!fileInput) {
+                uploadForm.dataset.submitting = 'false';
+                showNotification(
+                    'File input not found. Please refresh the page and try again.',
+                    'error'
+                );
+                return;
+            }
+
+            const file = fileInput.files[0];
             if (!file) {
+                uploadForm.dataset.submitting = 'false';
                 showNotification('Please select a file to upload', 'error');
                 return;
             }
 
+            console.log('File upload: Showing loading modal...');
             showLoadingModal();
 
             uploadQRImage(file)
                 .then((response) => {
-                    handleValidationResponse(response, 'upload');
+                    console.log('File upload: Response received', response);
+                    try {
+                        handleValidationResponse(response, 'upload');
+                        console.log(
+                            'File upload: Response handled successfully'
+                        );
+                    } catch (responseError) {
+                        console.error(
+                            'File upload: Error in handleValidationResponse',
+                            responseError
+                        );
+                        throw responseError; // Re-throw to trigger .catch()
+                    }
                 })
                 .catch((error) => {
+                    console.error('File upload: Error occurred', error);
                     handleValidationError(error);
+                    console.log('File upload: Error handled');
                 })
                 .finally(() => {
-                    hideLoadingModal();
+                    console.log('File upload: Hiding loading modal...');
+                    uploadForm.dataset.submitting = 'false';
+                    try {
+                        hideLoadingModal();
+                        console.log('File upload: Modal hide completed');
+                    } catch (modalError) {
+                        console.error(
+                            'File upload: Error hiding modal',
+                            modalError
+                        );
+                        // Force hide modal as fallback
+                        const backdrop =
+                            document.querySelector('.modal-backdrop');
+                        if (backdrop) backdrop.remove();
+                        document.body.classList.remove('modal-open');
+                        document.body.style.overflow = '';
+                        document.body.style.paddingRight = '';
+                    }
                 });
         });
     }
@@ -1029,7 +1199,7 @@ description: 'Validate NBS IPS QR codes and upload QR code images for verificati
                 } else {
                     // Check if upload form has file
                     const fileInput = document.getElementById('qrImageFile');
-                    if (fileInput.files.length > 0) {
+                    if (fileInput && fileInput.files.length > 0) {
                         activeForm = uploadForm;
                     }
                 }

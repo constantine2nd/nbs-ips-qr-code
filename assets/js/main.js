@@ -4,7 +4,10 @@
 let currentLanguage = 'sr_RS_Latn';
 let currentTemplate = null;
 
-// Initialize application
+// Version marker to verify changes are loaded
+console.log('Main.js loaded - Fixed version v2.0 with null container fixes');
+
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
 });
@@ -36,8 +39,10 @@ function t(key, params = {}) {
 
 // Form handling
 function setupFormHandlers() {
-    // Generic form submission handler
-    const forms = document.querySelectorAll('form[data-api-endpoint]');
+    // Generic form submission handler - exclude validator forms to prevent conflicts
+    const forms = document.querySelectorAll(
+        'form[data-api-endpoint]:not(#textValidatorForm):not(#uploadValidatorForm)'
+    );
     forms.forEach((form) => {
         form.addEventListener('submit', handleFormSubmission);
     });
@@ -173,30 +178,47 @@ function clearForm(form) {
 // File upload handling
 function setupFileUploadHandlers() {
     const fileInputs = document.querySelectorAll(
-        'input[type="file"]:not(#importFile)'
+        'input[type="file"]:not(#importFile):not(#qrImageFile)'
     );
-    const dropZones = document.querySelectorAll('.file-upload-area');
+    const dropZones = document.querySelectorAll(
+        '.file-upload-area:not(#fileUploadArea)'
+    );
 
     fileInputs.forEach((input) => {
-        input.addEventListener('change', handleFileSelection);
+        // Additional safety check to avoid validator elements
+        if (
+            input &&
+            input.id !== 'qrImageFile' &&
+            !input.closest('#fileUploadArea')
+        ) {
+            input.addEventListener('change', handleFileSelection);
+        }
     });
 
     dropZones.forEach((zone) => {
-        zone.addEventListener('dragover', handleDragOver);
-        zone.addEventListener('dragleave', handleDragLeave);
-        zone.addEventListener('drop', handleFileDrop);
-        zone.addEventListener('click', function () {
-            const fileInput =
-                this.querySelector('input[type="file"]') ||
-                this.parentElement.querySelector('input[type="file"]');
-            if (fileInput) {
-                fileInput.click();
-            }
-        });
+        // Additional safety check to avoid validator elements
+        if (zone && zone.id !== 'fileUploadArea') {
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('dragleave', handleDragLeave);
+            zone.addEventListener('drop', handleFileDrop);
+            zone.addEventListener('click', function () {
+                const fileInput =
+                    this.querySelector('input[type="file"]') ||
+                    this.parentElement.querySelector('input[type="file"]');
+                if (fileInput && fileInput.id !== 'qrImageFile') {
+                    fileInput.click();
+                }
+            });
+        }
     });
 }
 
 function handleFileSelection(e) {
+    if (!e || !e.target) {
+        console.warn('handleFileSelection: event or event target is null');
+        return;
+    }
+
     const file = e.target.files[0];
     if (file) {
         validateImageFile(file);
@@ -226,9 +248,20 @@ function handleFileDrop(e) {
         const fileInput =
             this.querySelector('input[type="file"]') ||
             this.parentElement.querySelector('input[type="file"]');
-        if (fileInput) {
+        if (
+            fileInput &&
+            fileInput.isConnected &&
+            document.contains(fileInput) &&
+            fileInput.id !== 'qrImageFile'
+        ) {
             fileInput.files = files;
             handleFileSelection({ target: fileInput });
+        } else if (fileInput && fileInput.id === 'qrImageFile') {
+            console.warn(
+                'handleFileDrop: Ignoring validator file input to prevent conflicts'
+            );
+        } else if (fileInput) {
+            console.warn('handleFileDrop: fileInput is not connected to DOM');
         }
     }
 }
@@ -259,7 +292,34 @@ function validateImageFile(file) {
 }
 
 function displayFileInfo(file, input) {
+    console.debug('displayFileInfo called with:', {
+        file: file?.name,
+        input: input?.id || 'no-id',
+        inputConnected: input?.isConnected,
+    });
+
+    if (!input) {
+        console.warn('displayFileInfo: input parameter is null or undefined');
+        return;
+    }
+
+    if (input.id === 'qrImageFile') {
+        console.warn(
+            'displayFileInfo: Ignoring validator file input to prevent conflicts'
+        );
+        return;
+    }
+
     const container = input.closest('.file-upload-area') || input.parentElement;
+
+    if (!container) {
+        console.warn('displayFileInfo: container not found for input element', {
+            inputId: input.id,
+            inputConnected: input.isConnected,
+        });
+        return;
+    }
+
     const existingInfo = container.querySelector('.file-info');
 
     if (existingInfo) {
@@ -288,17 +348,56 @@ function formatFileSize(bytes) {
 
 // Modal handling
 function showLoadingModal() {
-    const modal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    console.log('showLoadingModal: Called');
+    const modalElement = document.getElementById('loadingModal');
+    if (!modalElement) {
+        console.error('showLoadingModal: Modal element not found');
+        return;
+    }
+    const modal = new bootstrap.Modal(modalElement);
     modal.show();
+    console.log('showLoadingModal: Modal shown');
 }
 
 function hideLoadingModal() {
-    const modal = bootstrap.Modal.getInstance(
-        document.getElementById('loadingModal')
-    );
-    if (modal) {
-        modal.hide();
+    console.log('hideLoadingModal: Called');
+    const modalElement = document.getElementById('loadingModal');
+    if (!modalElement) {
+        console.error('hideLoadingModal: Modal element not found');
+        return;
     }
+
+    // More aggressive modal hiding approach
+    try {
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+            console.log('hideLoadingModal: Bootstrap modal hidden');
+        }
+    } catch (error) {
+        console.warn('hideLoadingModal: Bootstrap modal hide failed', error);
+    }
+
+    // Always perform manual cleanup to ensure modal is fully hidden
+    setTimeout(() => {
+        // Remove all modal backdrops
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach((backdrop) => backdrop.remove());
+
+        // Reset modal element
+        modalElement.style.display = 'none';
+        modalElement.classList.remove('show');
+        modalElement.setAttribute('aria-hidden', 'true');
+        modalElement.removeAttribute('aria-modal');
+        modalElement.removeAttribute('role');
+
+        // Reset body
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+
+        console.log('hideLoadingModal: Manual cleanup completed');
+    }, 100);
 }
 
 function openSaveTemplateModal(form) {

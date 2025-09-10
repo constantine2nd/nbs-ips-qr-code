@@ -225,13 +225,22 @@
             "help": "Unesi kompletan tekst QR koda koristeći format: K:PR|V:01|C:1|..."
         },
         "imageUpload": {
-            "label": "Izaberi QR kod sliku",
-            "dragText": "Prevuci i otpusti QR kod sliku ovde",
+            "label": "Izaberite QR kod sliku",
+            "dragText": "Prevucite i otpustite QR sliku ovde",
             "orText": "ili",
-            "chooseFile": "Izaberi datoteku",
-            "supportedFormats": "Podržani formati: PNG, JPG, JPEG, GIF",
-            "description": "Otpremi PNG ili JPEG sliku QR koda da dekodiraš i validiraš njen sadržaj."
+            "chooseFile": "Izaberite fajl",
+            "supportedFormats": "Podržani formati: PNG, JPEG (maks 5MB)",
+            "description": "Otpremite sliku QR koda za validaciju sadržaja prema NBS IPS specifikacijama.",
+            "dropHere": "Otpustite QR kod sliku ovde",
+            "clickToBrowse": "ili kliknite da pretražite fajlove",
+            "fileSelected": "Fajl izabran"
         },
+        "upload": {
+            "dropHere": "Otpustite QR kod sliku ovde",
+            "clickToBrowse": "ili kliknite da pretražite fajlove",
+            "supportedFormats": "Podržani formati: PNG, JPEG (maks 5MB)"
+        },
+
         "buttons": {
             "validate": "Validiraj QR kod",
             "validateImage": "Validiraj sliku",
@@ -272,8 +281,25 @@
             "paymentTypeDetails": {
                 "title": "Detalji tipa plaćanja",
                 "pr": "PR: Opšti zahtev za plaćanje (računi, fakture)",
-                "pt": "PT: Prodajno mesto (zahteva sporazum sa bankom)",
+                "pt": "PT: Mesto prodaje (zahteva sporazum sa bankom)",
                 "ek": "EK: E-trgovina (zahteva sporazum sa bankom)"
+            },
+            "commonErrors": {
+                "title": "Česte greške",
+                "missingFields": "Nedostaju obavezna polja",
+                "invalidAccount": "Neispravan format broja računa",
+                "incorrectAmount": "Neispravan format iznosa",
+                "invalidReference": "Neispravan poziv na broj (Model 97)",
+                "textEndingPipe": "Tekst završava sa pipe karakterom"
+            },
+            "uploadTips": {
+                "title": "Saveti za otpremanje slike",
+                "highQuality": "Koristite slike visokog kvaliteta",
+                "goodContrast": "Obezbedite dobar kontrast i osvetljenje",
+                "avoidBlurry": "Izbegavajte zamućene ili iskrivljene slike",
+                "supportedFormats": "Podržani formati: PNG, JPEG",
+                "maxFileSize": "Maksimalna veličina fajla: 5MB",
+                "fillImage": "QR kod treba da popuni većinu slike"
             }
         }
     },
