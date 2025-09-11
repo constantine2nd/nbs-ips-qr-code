@@ -146,12 +146,10 @@
         "share": {
             "title": "Подели QR код",
             "native": "Подели",
-            "email": "Е-пошта",
-            "sms": "СМС",
             "whatsapp": "WhatsApp",
             "viber": "Viber",
             "telegram": "Telegram",
-            "copyLink": "Копирај линк",
+            "copyImage": "Копирај слику",
             "close": "Затвори"
         },
         "results": {

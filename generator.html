@@ -80,11 +80,14 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             type="radio"
                             class="btn-check"
                             name="generationType"
-                            id="genImage"
+                            id="genImageGenerator"
                             value="gen"
                             checked
                         />
-                        <label class="btn btn-outline-primary" for="genImage">
+                        <label
+                            class="btn btn-outline-primary"
+                            for="genImageGenerator"
+                        >
                             <i class="fas fa-image me-1"></i
                             ><span
                                 data-i18n="generator.generationType.imageOnly"
@@ -95,10 +98,13 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             type="radio"
                             class="btn-check"
                             name="generationType"
-                            id="genFull"
+                            id="genFullGenerator"
                             value="generate"
                         />
-                        <label class="btn btn-outline-primary" for="genFull">
+                        <label
+                            class="btn btn-outline-primary"
+                            for="genFullGenerator"
+                        >
                             <i class="fas fa-code me-1"></i
                             ><span
                                 data-i18n="generator.generationType.fullResponse"
@@ -109,7 +115,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                 </div>
 
                 <form
-                    id="generatorForm"
+                    id="generatorFormMain"
                     data-api-endpoint="/gen"
                     data-method="POST"
                 >
@@ -125,7 +131,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             <select
                                 class="form-control"
                                 name="K"
-                                id="K"
+                                id="KGenerator"
                                 required
                             >
                                 <option
@@ -166,7 +172,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 type="text"
                                 class="form-control"
                                 name="V"
-                                id="V"
+                                id="VGenerator"
                                 value="01"
                                 required
                             />
@@ -187,7 +193,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             <select
                                 class="form-control"
                                 name="C"
-                                id="C"
+                                id="CGenerator"
                                 required
                             >
                                 <option value="1" selected>1 - UTF-8</option>
@@ -220,7 +226,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 type="text"
                                 class="form-control"
                                 name="R"
-                                id="R"
+                                id="RGenerator"
                                 required
                                 maxlength="18"
                             />
@@ -245,7 +251,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             <textarea
                                 class="form-control"
                                 name="N"
-                                id="N"
+                                id="NGenerator"
                                 rows="3"
                                 required
                             ></textarea>
@@ -272,7 +278,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 type="text"
                                 class="form-control"
                                 name="I"
-                                id="I"
+                                id="IGenerator"
                                 pattern="[A-Z]{3}[\d,\.]+"
                             />
                             <div
@@ -293,7 +299,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 type="text"
                                 class="form-control"
                                 name="SF"
-                                id="SF"
+                                id="SFGenerator"
                                 maxlength="3"
                             />
                             <div
@@ -317,7 +323,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                             <textarea
                                 class="form-control"
                                 name="P"
-                                id="P"
+                                id="PGenerator"
                                 rows="3"
                             ></textarea>
                             <div
@@ -343,7 +349,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 type="text"
                                 class="form-control"
                                 name="S"
-                                id="S"
+                                id="SGenerator"
                                 maxlength="140"
                             />
                             <div
@@ -368,7 +374,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 type="text"
                                 class="form-control"
                                 name="RO"
-                                id="RO"
+                                id="ROGenerator"
                                 maxlength="25"
                             />
                             <div
@@ -382,15 +388,19 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     </div>
 
                     <!-- QR Size Option -->
-                    <div class="form-row" id="sizeOption">
+                    <div class="form-row" id="sizeOptionGenerator">
                         <div class="form-col">
                             <label
-                                for="size"
+                                for="sizeGenerator"
                                 class="form-label"
                                 data-i18n="generator.form.qrCodeSize.label"
                                 >QR Code Size</label
                             >
-                            <select class="form-control" name="size" id="size">
+                            <select
+                                class="form-control"
+                                name="size"
+                                id="sizeGenerator"
+                            >
                                 <option value="">Default (150x150)</option>
                                 <option value="100">100x100 px</option>
                                 <option value="150">150x150 px</option>
@@ -446,7 +456,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
             </div>
 
             <!-- API Response Display -->
-            <div id="responseSection" style="display: none">
+            <div id="responseSectionGenerator" style="display: none">
                 <div data-result="success" style="display: none"></div>
                 <div data-result="error" style="display: none"></div>
             </div>
@@ -455,13 +465,22 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         <!-- Right Column: QR Display and Templates -->
         <div class="col-lg-4">
             <!-- QR Code Display -->
-            <div class="qr-display" style="display: none">
+            <div class="qr-display-generator text-center" style="display: none">
                 <h5><i class="fas fa-qrcode me-2"></i>Generated QR Code</h5>
-                <img
-                    class="qr-image"
-                    alt="Generated QR Code"
-                    style="display: none"
-                />
+                <div class="d-flex justify-content-center">
+                    <img
+                        class="qr-image-generator img-fluid"
+                        alt="Generated QR Code"
+                        style="
+                            display: none;
+                            max-width: 300px;
+                            height: auto;
+                            border: 2px solid #dee2e6;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        "
+                    />
+                </div>
                 <div class="mt-3">
                     <!-- Primary Actions -->
                     <div class="d-grid gap-2 mb-2">
@@ -486,7 +505,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                         <button
                             class="btn btn-sm btn-outline-success"
                             onclick="shareQRCode()"
-                            id="shareButton"
+                            id="shareButtonGenerator"
                         >
                             <i class="fas fa-share-alt me-1"></i
                             ><span data-i18n="generator.actions.share"
@@ -498,7 +517,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     <!-- Mobile Share Options -->
                     <div
                         class="share-options"
-                        id="shareOptions"
+                        id="shareOptionsGenerator"
                         style="display: none"
                     >
                         <div class="card border-success">
@@ -515,12 +534,12 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                     <!-- Native Share -->
                                     <div
                                         class="col-6"
-                                        id="nativeShareOption"
+                                        id="nativeShareOptionGenerator"
                                         style="display: none"
                                     >
                                         <button
                                             class="btn btn-outline-primary btn-sm w-100"
-                                            onclick="shareNative()"
+                                            onclick="shareNativeGenerator()"
                                         >
                                             <i
                                                 class="fas fa-mobile-alt me-1"
@@ -532,39 +551,11 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                         </button>
                                     </div>
 
-                                    <!-- Email -->
-                                    <div class="col-6">
-                                        <button
-                                            class="btn btn-outline-info btn-sm w-100"
-                                            onclick="shareViaEmail()"
-                                        >
-                                            <i class="fas fa-envelope me-1"></i
-                                            ><span
-                                                data-i18n="generator.share.email"
-                                                >Email</span
-                                            >
-                                        </button>
-                                    </div>
-
-                                    <!-- SMS -->
-                                    <div class="col-6">
-                                        <button
-                                            class="btn btn-outline-success btn-sm w-100"
-                                            onclick="shareViaSMS()"
-                                        >
-                                            <i class="fas fa-sms me-1"></i
-                                            ><span
-                                                data-i18n="generator.share.sms"
-                                                >SMS</span
-                                            >
-                                        </button>
-                                    </div>
-
                                     <!-- WhatsApp -->
                                     <div class="col-6">
                                         <button
                                             class="btn btn-outline-success btn-sm w-100"
-                                            onclick="shareViaWhatsApp()"
+                                            onclick="shareViaWhatsAppGenerator()"
                                         >
                                             <i class="fab fa-whatsapp me-1"></i
                                             ><span
@@ -578,7 +569,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                     <div class="col-6">
                                         <button
                                             class="btn btn-outline-purple btn-sm w-100"
-                                            onclick="shareViaViber()"
+                                            onclick="shareViaViberGenerator()"
                                         >
                                             <i class="fab fa-viber me-1"></i
                                             ><span
@@ -592,7 +583,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                     <div class="col-6">
                                         <button
                                             class="btn btn-outline-info btn-sm w-100"
-                                            onclick="shareViaTelegram()"
+                                            onclick="shareViaTelegramGenerator()"
                                         >
                                             <i class="fab fa-telegram me-1"></i
                                             ><span
@@ -602,16 +593,16 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                         </button>
                                     </div>
 
-                                    <!-- Copy Link -->
+                                    <!-- Copy Image -->
                                     <div class="col-12">
                                         <button
                                             class="btn btn-outline-secondary btn-sm w-100"
-                                            onclick="copyQRCodeLink()"
+                                            onclick="copyQRImageGenerator()"
                                         >
                                             <i class="fas fa-copy me-1"></i
                                             ><span
-                                                data-i18n="generator.share.copyLink"
-                                                >Copy Link</span
+                                                data-i18n="generator.share.copyImage"
+                                                >Copy Image</span
                                             >
                                         </button>
                                     </div>
@@ -620,7 +611,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 <div class="text-center mt-2">
                                     <button
                                         class="btn btn-link btn-sm text-muted"
-                                        onclick="hideShareOptions()"
+                                        onclick="hideShareOptionsGenerator()"
                                     >
                                         <small
                                             ><span
@@ -951,7 +942,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         const generationTypeRadios = document.querySelectorAll(
             'input[name="generationType"]'
         );
-        const form = document.getElementById('generatorForm');
+        const form = document.getElementById('generatorFormMain');
 
         generationTypeRadios.forEach((radio) => {
             radio.addEventListener('change', function () {
@@ -1001,7 +992,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     Object.keys(window.currentTemplate.data).length === 0
                 ) {
                     // Try to collect form data now as fallback
-                    const form = document.getElementById('generatorForm');
+                    const form = document.getElementById('generatorFormMain');
                     if (form) {
                         const formData = collectFormData(form);
 
@@ -1047,7 +1038,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
             console.log(
                 'Form endpoint:',
                 document
-                    .getElementById('generatorForm')
+                    .getElementById('generatorFormMain')
                     .getAttribute('data-api-endpoint')
             );
             console.log('Loading modal state:', {
@@ -1069,7 +1060,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
     });
 
     function handleGeneratorFormSubmission() {
-        const form = document.getElementById('generatorForm');
+        const form = document.getElementById('generatorFormMain');
         const endpoint = form.getAttribute('data-api-endpoint');
         const isImageOnly = endpoint === '/gen';
 
@@ -1249,20 +1240,22 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
 
     function clearPreviousResults() {
         // Hide QR display
-        const qrDisplay = document.querySelector('.qr-display');
+        const qrDisplay = document.querySelector('.qr-display-generator');
         if (qrDisplay) {
             qrDisplay.style.display = 'none';
         }
 
         // Clear QR image
-        const qrImage = document.querySelector('.qr-image');
+        const qrImage = document.querySelector('.qr-image-generator');
         if (qrImage) {
             qrImage.src = '';
             qrImage.style.display = 'none';
         }
 
         // Clear result containers
-        const responseSection = document.getElementById('responseSection');
+        const responseSection = document.getElementById(
+            'responseSectionGenerator'
+        );
         if (responseSection) {
             responseSection.style.display = 'none';
             const resultContainers =
@@ -1284,7 +1277,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         try {
             if (response.success) {
                 // Store current form data for template saving after successful generation
-                const form = document.getElementById('generatorForm');
+                const form = document.getElementById('generatorFormMain');
 
                 if (form) {
                     const formData = collectFormData(form);
@@ -1305,7 +1298,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                     // Handle image response from /gen endpoint
                     console.log('Generator showing image notification');
                     const imageUrl = URL.createObjectURL(response.data);
-                    displayQRImage(imageUrl);
+                    displayQRImageGenerator(imageUrl);
                     showNotification(
                         'QR code generated successfully',
                         'success'
@@ -1358,7 +1351,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
     }
 
     function loadTemplateIntoForm(templateData) {
-        const form = document.getElementById('generatorForm');
+        const form = document.getElementById('generatorFormMain');
 
         // Set endpoint
         form.setAttribute('data-api-endpoint', templateData.endpoint);
@@ -1367,7 +1360,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         const generationType =
             templateData.endpoint === '/gen' ? 'gen' : 'generate';
         const radio = document.getElementById(
-            generationType === 'gen' ? 'genImage' : 'genFull'
+            generationType === 'gen' ? 'genImageGenerator' : 'genFullGenerator'
         );
         if (radio) {
             radio.checked = true;
@@ -1577,138 +1570,242 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         if (totalUsageEl) totalUsageEl.textContent = stats.totalUsage;
     }
 
-    function toggleTemplateFavorite(templateId) {
-        if (
-            !window.TemplateManager ||
-            typeof window.TemplateManager.toggleFavorite !== 'function'
-        ) {
+    // Display QR Image function - Generator specific
+    function displayQRImageGenerator(imageUrl) {
+        const qrImages = document.querySelectorAll('.qr-image-generator');
+        qrImages.forEach((img) => {
+            img.src = imageUrl;
+            img.style.display = 'block';
+
+            // Ensure proper styling and centering
+            img.style.maxWidth = '300px';
+            img.style.height = 'auto';
+            img.style.border = '2px solid #dee2e6';
+            img.style.borderRadius = '8px';
+            img.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+            img.classList.add('img-fluid');
+
+            // Add click handler for full-size view
+            img.onclick = () => openImageModal(imageUrl);
+        });
+
+        const qrDisplays = document.querySelectorAll('.qr-display-generator');
+        qrDisplays.forEach((display) => {
+            display.style.display = 'block';
+            display.classList.add('text-center');
+        });
+    }
+
+    // QR Code Sharing Functions - Global scope with Generator-specific naming
+    window.shareQRCode = function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            showNotification('No QR code to share', 'error');
             return;
         }
 
-        // QR Code Sharing Functions - Global scope
-        window.shareQRCode = function () {
-            const img = document.querySelector('.qr-image');
-            if (!img || !img.src) {
-                showNotification('No QR code to share', 'error');
-                return;
-            }
+        // Check if native sharing is available
+        const nativeShareOption = document.getElementById(
+            'nativeShareOptionGenerator'
+        );
+        if (navigator.share && navigator.canShare) {
+            nativeShareOption.style.display = 'block';
+        } else {
+            nativeShareOption.style.display = 'none';
+        }
 
-            // Check if native sharing is available
-            const nativeShareOption =
-                document.getElementById('nativeShareOption');
-            if (navigator.share && navigator.canShare) {
-                nativeShareOption.style.display = 'block';
+        // Show share options
+        const shareOptions = document.getElementById('shareOptionsGenerator');
+        shareOptions.style.display =
+            shareOptions.style.display === 'none' ? 'block' : 'none';
+    };
+
+    window.hideShareOptionsGenerator = function () {
+        document.getElementById('shareOptionsGenerator').style.display = 'none';
+    };
+
+    window.shareNativeGenerator = async function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            showNotification('No QR code to share', 'error');
+            return;
+        }
+
+        try {
+            // Convert image to blob for sharing
+            const response = await fetch(img.src);
+            const blob = await response.blob();
+            const file = new File([blob], 'nbs-ips-qr-code.png', {
+                type: 'image/png',
+            });
+
+            const shareData = {
+                title: 'NBS IPS QR Code',
+                text: 'Generated QR code for NBS Instant Payment System',
+                files: [file],
+            };
+
+            if (navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+                showNotification('QR code shared successfully', 'success');
+                hideShareOptionsGenerator();
             } else {
-                nativeShareOption.style.display = 'none';
-            }
-
-            // Show share options
-            const shareOptions = document.getElementById('shareOptions');
-            shareOptions.style.display =
-                shareOptions.style.display === 'none' ? 'block' : 'none';
-        };
-
-        window.hideShareOptions = function () {
-            document.getElementById('shareOptions').style.display = 'none';
-        };
-
-        window.shareNative = async function () {
-            const img = document.querySelector('.qr-image');
-            if (!img || !img.src) {
-                showNotification('No QR code to share', 'error');
-                return;
-            }
-
-            try {
-                // Convert image to blob for sharing
-                const response = await fetch(img.src);
-                const blob = await response.blob();
-                const file = new File([blob], 'nbs-ips-qr-code.png', {
-                    type: 'image/png',
+                // Fallback to URL sharing if file sharing is not supported
+                const shareUrl = window.location.href;
+                await navigator.share({
+                    title: 'NBS IPS QR Code Generator',
+                    text: 'Check out this QR code generator for NBS Instant Payment System',
+                    url: shareUrl,
                 });
+                showNotification('Link shared successfully', 'success');
+                hideShareOptionsGenerator();
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                showNotification('Sharing failed: ' + error.message, 'error');
+            }
+        }
+    };
 
-                const shareData = {
-                    title: 'NBS IPS QR Code',
-                    text: 'Generated QR code for NBS Instant Payment System',
-                    files: [file],
-                };
+    // Utility function to download QR code image - Generator specific
+    window.downloadQRCodeForSharingGenerator = async function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            throw new Error('No QR code available');
+        }
 
-                if (navigator.canShare && navigator.canShare(shareData)) {
-                    await navigator.share(shareData);
-                    showNotification('QR code shared successfully', 'success');
-                    hideShareOptions();
-                } else {
-                    // Fallback to URL sharing if file sharing is not supported
-                    const shareUrl = window.location.href;
-                    await navigator.share({
-                        title: 'NBS IPS QR Code Generator',
-                        text: 'Check out this QR code generator for NBS Instant Payment System',
-                        url: shareUrl,
-                    });
-                    showNotification('Link shared successfully', 'success');
-                    hideShareOptions();
-                }
-            } catch (error) {
-                if (error.name !== 'AbortError') {
+        try {
+            const timestamp = new Date().getTime();
+            const filename = `nbs-ips-qr-${timestamp}.png`;
+
+            // Create download link
+            const link = document.createElement('a');
+            link.href = img.src;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            return filename;
+        } catch (error) {
+            throw new Error('Failed to download QR code: ' + error.message);
+        }
+    };
+
+    // Copy QR Image to clipboard
+    window.copyQRImageGenerator = async function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            showNotification('No QR code to copy', 'error');
+            return;
+        }
+
+        try {
+            // Convert image to blob
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const tempImg = new Image();
+            tempImg.crossOrigin = 'anonymous';
+
+            await new Promise((resolve, reject) => {
+                tempImg.onload = resolve;
+                tempImg.onerror = reject;
+                tempImg.src = img.src;
+            });
+
+            canvas.width = tempImg.width;
+            canvas.height = tempImg.height;
+            ctx.drawImage(tempImg, 0, 0);
+
+            // Convert to blob
+            canvas.toBlob(async (blob) => {
+                try {
+                    // Try to copy as image to clipboard
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        await navigator.clipboard.write([item]);
+                        showNotification(
+                            'QR code image copied to clipboard!',
+                            'success'
+                        );
+                    } else {
+                        // Fallback: copy as base64 data URL
+                        const dataUrl = canvas.toDataURL('image/png');
+                        await navigator.clipboard.writeText(dataUrl);
+                        showNotification(
+                            'QR code data copied to clipboard! Paste into image editor.',
+                            'success'
+                        );
+                    }
+                } catch (error) {
+                    console.error('Copy failed:', error);
+                    // Final fallback: show download option
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = `nbs-ips-qr-${new Date().getTime()}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                     showNotification(
-                        'Sharing failed: ' + error.message,
-                        'error'
+                        'Image copied to Downloads folder instead',
+                        'info'
                     );
                 }
-            }
-        };
+            }, 'image/png');
 
-        window.shareViaEmail = function () {
-            const img = document.querySelector('.qr-image');
-            if (!img || !img.src) {
-                showNotification('No QR code to share', 'error');
-                return;
-            }
+            hideShareOptionsGenerator();
+        } catch (error) {
+            console.error('Error copying QR image:', error);
+            showNotification('Failed to copy image', 'error');
+        }
+    };
 
-            const subject = encodeURIComponent('NBS IPS QR Code');
-            const body = encodeURIComponent(
-                'Here is the generated QR code for NBS Instant Payment System.\n\n' +
-                    'You can view and download it from: ' +
+    window.shareViaWhatsAppGenerator = async function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            showNotification('No QR code to share', 'error');
+            return;
+        }
+
+        try {
+            // Download the QR code image first
+            const filename = await downloadQRCodeForSharingGenerator();
+
+            const message = encodeURIComponent(
+                '💳 NBS IPS QR Code Generated!\n\n' +
+                    "I've generated a QR code for NBS Instant Payment System.\n\n" +
+                    '📎 The QR code image has been downloaded as: ' +
+                    filename +
+                    '\n\n' +
+                    '🔗 You can also view it here: ' +
                     window.location.href +
                     '\n\n' +
-                    'Generated on: ' +
-                    new Date().toLocaleString()
+                    '📅 Generated: ' +
+                    new Date().toLocaleString() +
+                    '\n\n' +
+                    '💡 Please attach the downloaded image to share the QR code!'
             );
 
-            const mailtoUrl = `mailto:?subject=${subject}&body=${body}`;
+            const whatsappUrl = `https://wa.me/?text=${message}`;
 
-            // For mobile devices, try to open native email app
-            if (isMobileDevice()) {
-                window.location.href = mailtoUrl;
-            } else {
-                window.open(mailtoUrl);
-            }
+            // Small delay to ensure download completes
+            setTimeout(() => {
+                if (isMobileDevice()) {
+                    window.location.href = whatsappUrl;
+                } else {
+                    window.open(whatsappUrl, '_blank');
+                }
+            }, 500);
 
-            showNotification('Opening email client...', 'info');
-            hideShareOptions();
-        };
-
-        window.shareViaSMS = function () {
-            const message = encodeURIComponent(
-                'Check out this NBS IPS QR code: ' +
-                    window.location.href +
-                    ' Generated on: ' +
-                    new Date().toLocaleString()
+            showNotification(
+                '✅ QR code downloaded! Check your Downloads folder. Opening WhatsApp to attach the image...',
+                'success'
             );
+            hideShareOptionsGenerator();
+        } catch (error) {
+            console.error('Error sharing via WhatsApp:', error);
 
-            let smsUrl;
-            if (isIOSDevice()) {
-                smsUrl = `sms:&body=${message}`;
-            } else {
-                smsUrl = `sms:?body=${message}`;
-            }
-
-            window.location.href = smsUrl;
-            showNotification('Opening SMS app...', 'info');
-            hideShareOptions();
-        };
-
-        window.shareViaWhatsApp = function () {
+            // Fallback to original behavior
             const message = encodeURIComponent(
                 'Check out this NBS IPS QR code generator: ' +
                     window.location.href +
@@ -1724,28 +1821,88 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                 window.open(whatsappUrl, '_blank');
             }
 
-            showNotification('Opening WhatsApp...', 'info');
-            hideShareOptions();
-        };
+            showNotification(
+                'Opening WhatsApp... Please download QR code separately.',
+                'info'
+            );
+            hideShareOptionsGenerator();
+        }
+    };
 
-        window.shareViaViber = function () {
+    window.shareViaViberGenerator = async function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            showNotification('No QR code to share', 'error');
+            return;
+        }
+
+        try {
+            // Download the QR code image first
+            const filename = await downloadQRCodeForSharingGenerator();
+
+            const message = encodeURIComponent(
+                '💳 NBS IPS QR Code Generated!\n\n' +
+                    "I've generated a QR code for NBS Instant Payment System.\n\n" +
+                    '📎 QR code downloaded as: ' +
+                    filename +
+                    '\n\n' +
+                    '🔗 View online: ' +
+                    window.location.href +
+                    '\n\n' +
+                    '📅 Generated: ' +
+                    new Date().toLocaleString() +
+                    '\n\n' +
+                    '💡 Attach the downloaded image to share the QR code!'
+            );
+
+            const viberUrl = `viber://forward?text=${message}`;
+
+            // Small delay to ensure download completes
+            setTimeout(() => {
+                // Viber deep link for mobile
+                if (isMobileDevice()) {
+                    window.location.href = viberUrl;
+
+                    // Fallback to Viber web if app is not installed
+                    setTimeout(() => {
+                        const viberWebUrl = `https://3p3x.adj.st/?adjust_t=u783g1_kw9yml&adjust_fallback=https%3A%2F%2Fwww.viber.com%2F&adjust_campaign=share&adjust_deeplink=${encodeURIComponent(viberUrl)}`;
+                        window.open(viberWebUrl, '_blank');
+                    }, 1000);
+                } else {
+                    // For desktop, open Viber web
+                    const viberWebUrl = 'https://www.viber.com/';
+                    window.open(viberWebUrl, '_blank');
+                    copyToClipboard(decodeURIComponent(message));
+                    showNotification(
+                        'Message copied to clipboard. Paste it in Viber.',
+                        'info'
+                    );
+                }
+            }, 500);
+
+            showNotification(
+                '✅ QR code downloaded! Check your Downloads folder. Opening Viber to attach the image...',
+                'success'
+            );
+            hideShareOptionsGenerator();
+        } catch (error) {
+            console.error('Error sharing via Viber:', error);
+
+            // Fallback to original behavior
             const message = encodeURIComponent(
                 'Check out this NBS IPS QR code: ' + window.location.href
             );
 
             const viberUrl = `viber://forward?text=${message}`;
 
-            // Viber deep link for mobile
             if (isMobileDevice()) {
                 window.location.href = viberUrl;
 
-                // Fallback to Viber web if app is not installed
                 setTimeout(() => {
                     const viberWebUrl = `https://3p3x.adj.st/?adjust_t=u783g1_kw9yml&adjust_fallback=https%3A%2F%2Fwww.viber.com%2F&adjust_campaign=share&adjust_deeplink=${encodeURIComponent(viberUrl)}`;
                     window.open(viberWebUrl, '_blank');
                 }, 1000);
             } else {
-                // For desktop, open Viber web
                 const viberWebUrl = 'https://www.viber.com/';
                 window.open(viberWebUrl, '_blank');
                 copyToClipboard(decodeURIComponent(message));
@@ -1755,11 +1912,67 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                 );
             }
 
-            showNotification('Opening Viber...', 'info');
-            hideShareOptions();
-        };
+            showNotification(
+                'Opening Viber... Please download QR code separately.',
+                'info'
+            );
+            hideShareOptionsGenerator();
+        }
+    };
 
-        window.shareViaTelegram = function () {
+    window.shareViaTelegramGenerator = async function () {
+        const img = document.querySelector('.qr-image-generator');
+        if (!img || !img.src) {
+            showNotification('No QR code to share', 'error');
+            return;
+        }
+
+        try {
+            // Download the QR code image first
+            const filename = await downloadQRCodeForSharingGenerator();
+
+            const message = encodeURIComponent(
+                '💳 NBS IPS QR Code Generated!\n\n' +
+                    "I've generated a QR code for NBS Instant Payment System.\n\n" +
+                    '📎 The QR code image has been downloaded as: ' +
+                    filename +
+                    '\n\n' +
+                    '🔗 View online: ' +
+                    window.location.href +
+                    '\n\n' +
+                    '📅 Generated: ' +
+                    new Date().toLocaleString() +
+                    '\n\n' +
+                    '💡 Attach the downloaded image to share the QR code!'
+            );
+
+            const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${message}`;
+
+            // Small delay to ensure download completes
+            setTimeout(() => {
+                if (isMobileDevice()) {
+                    // Try Telegram app first
+                    const telegramAppUrl = `tg://msg?text=${message}`;
+                    window.location.href = telegramAppUrl;
+
+                    // Fallback to web version
+                    setTimeout(() => {
+                        window.open(telegramUrl, '_blank');
+                    }, 1000);
+                } else {
+                    window.open(telegramUrl, '_blank');
+                }
+            }, 500);
+
+            showNotification(
+                '✅ QR code downloaded! Check your Downloads folder. Opening Telegram to attach the image...',
+                'success'
+            );
+            hideShareOptionsGenerator();
+        } catch (error) {
+            console.error('Error sharing via Telegram:', error);
+
+            // Fallback to original behavior
             const message = encodeURIComponent(
                 'Check out this NBS IPS QR code generator: ' +
                     window.location.href
@@ -1768,11 +1981,9 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
             const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${message}`;
 
             if (isMobileDevice()) {
-                // Try Telegram app first
                 const telegramAppUrl = `tg://msg?text=${message}`;
                 window.location.href = telegramAppUrl;
 
-                // Fallback to web version
                 setTimeout(() => {
                     window.open(telegramUrl, '_blank');
                 }, 1000);
@@ -1780,101 +1991,92 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                 window.open(telegramUrl, '_blank');
             }
 
-            showNotification('Opening Telegram...', 'info');
-            hideShareOptions();
-        };
-
-        window.copyQRCodeLink = async function () {
-            const url = window.location.href;
-
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(url);
-                    showNotification('Link copied to clipboard', 'success');
-                } else {
-                    // Fallback for older browsers
-                    copyToClipboard(url);
-                    showNotification('Link copied to clipboard', 'success');
-                }
-            } catch (error) {
-                // Final fallback
-                copyToClipboard(url);
-                showNotification('Link copied to clipboard', 'success');
-            }
-
-            hideShareOptions();
-        };
-
-        // Utility functions for device detection and clipboard
-        window.isMobileDevice = function () {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                navigator.userAgent
+            showNotification(
+                'Opening Telegram... Please download QR code separately.',
+                'info'
             );
-        };
+            hideShareOptionsGenerator();
+        }
+    };
 
-        window.isIOSDevice = function () {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent);
-        };
+    // Utility functions for device detection and clipboard
+    window.isMobileDevice = function () {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+        );
+    };
 
-        window.isAndroidDevice = function () {
-            return /Android/i.test(navigator.userAgent);
-        };
+    window.isIOSDevice = function () {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+    };
 
-        window.copyToClipboard = function (text) {
-            // Create temporary textarea element
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            textarea.setSelectionRange(0, 99999); // For mobile devices
+    window.isAndroidDevice = function () {
+        return /Android/i.test(navigator.userAgent);
+    };
 
-            try {
-                document.execCommand('copy');
-            } catch (error) {
-                console.error('Copy failed:', error);
+    window.copyToClipboard = function (text) {
+        // Create temporary textarea element
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // For mobile devices
+
+        try {
+            document.execCommand('copy');
+        } catch (error) {
+            console.error('Copy failed:', error);
+        }
+
+        document.body.removeChild(textarea);
+    };
+
+    // Enhanced download function with better mobile support
+    window.downloadQRCodeEnhanced = function () {
+        const img = document.querySelector('.qr-image');
+        if (!img || !img.src) {
+            showNotification('No QR code to download', 'error');
+            return;
+        }
+
+        // For mobile devices, try different approaches
+        if (isMobileDevice()) {
+            // Try to trigger download
+            const link = document.createElement('a');
+            link.href = img.src;
+            link.download = `nbs-ips-qr-${new Date().getTime()}.png`;
+
+            // For iOS Safari, open in new tab since download might not work
+            if (isIOSDevice()) {
+                link.target = '_blank';
+                showNotification(
+                    'Image will open in new tab. Long press to save.',
+                    'info'
+                );
             }
 
-            document.body.removeChild(textarea);
-        };
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-        // Enhanced download function with better mobile support
-        window.downloadQRCodeEnhanced = function () {
-            const img = document.querySelector('.qr-image');
-            if (!img || !img.src) {
-                showNotification('No QR code to download', 'error');
-                return;
+            if (!isIOSDevice()) {
+                showNotification('QR code downloaded', 'success');
             }
+        } else {
+            // Desktop download
+            downloadQRCode();
+        }
+    };
 
-            // For mobile devices, try different approaches
-            if (isMobileDevice()) {
-                // Try to trigger download
-                const link = document.createElement('a');
-                link.href = img.src;
-                link.download = `nbs-ips-qr-${new Date().getTime()}.png`;
-
-                // For iOS Safari, open in new tab since download might not work
-                if (isIOSDevice()) {
-                    link.target = '_blank';
-                    showNotification(
-                        'Image will open in new tab. Long press to save.',
-                        'info'
-                    );
-                }
-
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                if (!isIOSDevice()) {
-                    showNotification('QR code downloaded', 'success');
-                }
-            } else {
-                // Desktop download
-                downloadQRCode();
-            }
-        };
+    function toggleTemplateFavorite(templateId) {
+        if (
+            !window.TemplateManager ||
+            typeof window.TemplateManager.toggleFavorite !== 'function'
+        ) {
+            return;
+        }
 
         const isFavorite = window.TemplateManager.toggleFavorite(templateId);
 
@@ -1900,7 +2102,7 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
     }
 
     function downloadQRCode() {
-        const img = document.querySelector('.qr-image');
+        const img = document.querySelector('.qr-image-generator');
         if (!img || !img.src) {
             showNotification('No QR code to download', 'error');
             return;
@@ -1912,12 +2114,10 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        showNotification('QR code downloaded', 'success');
     }
 
     function printQRCode() {
-        const img = document.querySelector('.qr-image');
+        const img = document.querySelector('.qr-image-generator');
         if (!img || !img.src) {
             showNotification('No QR code to print', 'error');
             return;

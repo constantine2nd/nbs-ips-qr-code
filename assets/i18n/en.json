@@ -37,12 +37,10 @@
         "share": {
             "title": "Share QR Code",
             "native": "Share",
-            "email": "Email",
-            "sms": "SMS",
             "whatsapp": "WhatsApp",
             "viber": "Viber",
             "telegram": "Telegram",
-            "copyLink": "Copy Link",
+            "copyImage": "Copy Image",
             "close": "Close"
         },
         "keyFeatures": {
@@ -157,12 +155,10 @@
         "share": {
             "title": "Share QR Code",
             "native": "Share",
-            "email": "Email",
-            "sms": "SMS",
             "whatsapp": "WhatsApp",
             "viber": "Viber",
             "telegram": "Telegram",
-            "copyLink": "Copy Link",
+            "copyImage": "Copy Image",
             "close": "Close"
         },
         "results": {

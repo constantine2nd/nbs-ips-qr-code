@@ -249,10 +249,10 @@ function handleAPIResponse(response, endpoint) {
 }
 
 function handleImageResponse(response) {
-    console.log('API.js handleImageResponse called - showing notification');
+    console.log('API.js handleImageResponse called - displaying image');
     const imageUrl = URL.createObjectURL(response.data);
-    displayQRImage(imageUrl);
-    showNotification('QR code generated successfully', 'success');
+    displayQRImageGenerator(imageUrl);
+    // Note: Notification is handled by the calling function to prevent duplicates
 }
 
 function handleJSONResponse(response, endpoint) {
@@ -268,8 +268,10 @@ function handleJSONResponse(response, endpoint) {
             displayBase64Image(data.i);
         }
 
-        console.log('API.js handleJSONResponse showing success notification');
-        showNotification('Operation completed successfully', 'success');
+        console.log(
+            'API.js handleJSONResponse - success (notification handled by caller)'
+        );
+        // Note: Notification is handled by the calling function to prevent duplicates
     } else {
         // API returned error
         displayAPIError(data, endpoint);
@@ -313,24 +315,33 @@ function handleAPIError(error) {
 
 // Display functions
 function displayQRImage(imageUrl) {
-    const qrImages = document.querySelectorAll('.qr-image');
+    const qrImages = document.querySelectorAll('.qr-image-generator');
     qrImages.forEach((img) => {
         img.src = imageUrl;
         img.style.display = 'block';
+
+        // Ensure proper styling and centering
+        img.style.maxWidth = '300px';
+        img.style.height = 'auto';
+        img.style.border = '2px solid #dee2e6';
+        img.style.borderRadius = '8px';
+        img.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        img.classList.add('img-fluid');
 
         // Add click handler for full-size view
         img.onclick = () => openImageModal(imageUrl);
     });
 
-    const qrDisplays = document.querySelectorAll('.qr-display');
+    const qrDisplays = document.querySelectorAll('.qr-display-generator');
     qrDisplays.forEach((display) => {
         display.style.display = 'block';
+        display.classList.add('text-center');
     });
 }
 
 function displayBase64Image(base64Data) {
     const imageUrl = `data:image/png;base64,${base64Data}`;
-    displayQRImage(imageUrl);
+    displayQRImageGenerator(imageUrl);
 }
 
 function displayAPISuccess(data, endpoint) {

@@ -41,7 +41,7 @@ function t(key, params = {}) {
 function setupFormHandlers() {
     // Generic form submission handler - exclude validator forms to prevent conflicts
     const forms = document.querySelectorAll(
-        'form[data-api-endpoint]:not(#textValidatorForm):not(#uploadValidatorForm)'
+        'form[data-api-endpoint]:not(#textValidatorForm):not(#uploadValidatorForm):not(#generatorFormMain)'
     );
     forms.forEach((form) => {
         form.addEventListener('submit', handleFormSubmission);

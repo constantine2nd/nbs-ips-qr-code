@@ -146,12 +146,10 @@
         "share": {
             "title": "Podeli QR kod",
             "native": "Podeli",
-            "email": "E-pošta",
-            "sms": "SMS",
             "whatsapp": "WhatsApp",
             "viber": "Viber",
             "telegram": "Telegram",
-            "copyLink": "Kopiraj link",
+            "copyImage": "Kopiraj sliku",
             "close": "Zatvori"
         },
         "results": {

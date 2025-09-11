@@ -140,6 +140,8 @@ body {
     border-radius: var(--border-radius);
     background: white;
     padding: 0.5rem;
+    display: block;
+    margin: 0 auto;
 }
 
 /* Share button animations */
@@ -679,8 +681,10 @@ body {
     height: auto;
     border: 2px solid #e9ecef;
     border-radius: var(--border-radius);
-    padding: 1rem;
-    margin-bottom: 1rem;
+    background: white;
+    padding: 0.5rem;
+    display: block;
+    margin: 0 auto 1rem auto;
 }
 
 /* Response Display */
