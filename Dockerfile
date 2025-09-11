@@ -12,21 +12,25 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy Gemfile
+# Copy Gemfile only (let bundler generate lock file)
 COPY Gemfile ./
 
-# Remove existing Gemfile.lock to avoid platform conflicts
-# and generate new one for current platform
-RUN rm -f Gemfile.lock && \
-    bundle config set --local path /usr/local/bundle && \
+# Install gems without using existing lock file
+RUN bundle config set --local path /usr/local/bundle && \
     bundle config set --local deployment false && \
-    bundle install
+    bundle config set --local without development && \
+    bundle install --jobs 4 --retry 3
 
 # Copy application code
 COPY . .
 
+# Handle potential Gemfile.lock conflicts from volume mounts
+# by ensuring bundle is consistent after copying
+RUN bundle install --jobs 4 --retry 3
+
 # Build Jekyll site for production
-RUN JEKYLL_ENV=production bundle exec jekyll build
+RUN rm -rf _site .jekyll-cache && \
+    JEKYLL_ENV=production bundle exec jekyll build
 
 # Expose port
 EXPOSE 4000

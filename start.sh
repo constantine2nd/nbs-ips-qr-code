@@ -29,6 +29,10 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+print_debug() {
+    echo -e "${YELLOW}[DEBUG]${NC} $1"
+}
+
 # Function to check if command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -96,6 +100,7 @@ show_usage() {
     echo "  clean      Clean build files"
     echo "  install    Install dependencies"
     echo "  setup      Setup development environment (fix platforms)"
+    echo "  fix-deps   Fix gem dependency conflicts"
     echo "  stop       Stop running containers"
     echo "  logs       Show application logs"
     echo "  restart    Restart the application"
@@ -176,15 +181,94 @@ build_app() {
 
     if command_exists docker && command_exists docker-compose; then
         print_info "Building with Docker..."
-        docker-compose build
-        print_success "Docker image built successfully!"
+
+        # Stop any running containers first
+        if docker-compose ps | grep -q "Up"; then
+            print_info "Stopping existing containers..."
+            docker-compose down
+        fi
+
+        # Clean up any cached images to ensure fresh build
+        print_info "Cleaning Docker cache..."
+        docker-compose build --no-cache
+
+        # Test the built image
+        print_info "Testing Docker build..."
+        if docker-compose up -d; then
+            sleep 10
+            if docker-compose ps | grep -q "Up"; then
+                print_success "Docker build and test successful!"
+
+                # Test health endpoint
+                if command_exists curl; then
+                    for i in {1..6}; do
+                        if curl -f -s http://localhost:4000/health.html > /dev/null 2>&1; then
+                            print_success "Health check passed!"
+                            break
+                        fi
+                        if [ $i -eq 6 ]; then
+                            print_warning "Health check failed, but container is running"
+                        fi
+                        sleep 5
+                    done
+                fi
+
+                docker-compose down
+            else
+                print_error "Docker container failed to start properly"
+                docker-compose logs
+                exit 1
+            fi
+        else
+            print_error "Failed to start Docker container for testing"
+            exit 1
+        fi
     fi
 
     if command_exists bundle; then
-        print_info "Building Jekyll site..."
+        print_info "Building Jekyll site locally..."
+
+        # Handle Gemfile.lock conflicts
+        print_info "Resolving gem dependencies..."
+        if [ -f "Gemfile.lock" ]; then
+            print_info "Backing up existing Gemfile.lock..."
+            cp Gemfile.lock Gemfile.lock.backup
+        fi
+
+        # Add platform compatibility and install
+        bundle lock --add-platform x86_64-linux || print_warning "Could not add x86_64-linux platform"
         bundle install
-        bundle exec jekyll build
-        print_success "Jekyll site built successfully!"
+
+        # Build the site
+        print_info "Building Jekyll site..."
+        JEKYLL_ENV=production bundle exec jekyll build
+
+        if [ -f "_site/index.html" ]; then
+            print_success "Jekyll site built successfully!"
+            print_info "Site files are in _site/ directory"
+        else
+            print_error "Jekyll build failed - no index.html found in _site/"
+
+            # Restore backup if available
+            if [ -f "Gemfile.lock.backup" ]; then
+                print_info "Restoring Gemfile.lock backup..."
+                mv Gemfile.lock.backup Gemfile.lock
+            fi
+            exit 1
+        fi
+
+        # Clean up backup
+        if [ -f "Gemfile.lock.backup" ]; then
+            rm Gemfile.lock.backup
+        fi
+    fi
+
+    if ! command_exists docker && ! command_exists bundle; then
+        print_error "Neither Docker nor Ruby/Bundle found. Please install one of them."
+        echo "Options:"
+        echo "  1. Install Docker: https://docs.docker.com/get-docker/"
+        echo "  2. Install Ruby and Bundler: https://www.ruby-lang.org/en/installation/"
+        exit 1
     fi
 }
 
@@ -268,6 +352,78 @@ setup_dev() {
     print_info "  $0 docker   # For Docker development"
 }
 
+# Function to fix gem dependency conflicts
+fix_deps() {
+    print_info "Fixing gem dependency conflicts..."
+
+    if ! command_exists bundle; then
+        print_error "Bundler is required. Install with: gem install bundler"
+        exit 1
+    fi
+
+    # Backup current Gemfile.lock
+    if [ -f "Gemfile.lock" ]; then
+        print_info "Backing up current Gemfile.lock..."
+        cp Gemfile.lock Gemfile.lock.backup.$(date +%s)
+        print_debug "Created backup: Gemfile.lock.backup.$(date +%s)"
+    fi
+
+    # Remove problematic lock file
+    print_info "Removing existing Gemfile.lock to resolve conflicts..."
+    rm -f Gemfile.lock
+
+    # Clear bundle cache
+    print_info "Clearing bundle cache..."
+    if [ -d ".bundle" ]; then
+        rm -rf .bundle
+    fi
+
+    # Configure bundle settings
+    print_info "Configuring bundle settings..."
+    bundle config set --local path vendor/bundle
+    bundle config set --local deployment false
+
+    # Add platform compatibility
+    print_info "Adding platform compatibility..."
+    bundle lock --add-platform ruby
+    bundle lock --add-platform x86_64-linux
+    bundle lock --add-platform x86_64-linux-gnu
+
+    # Install gems with fresh lock file
+    print_info "Installing gems with fresh dependency resolution..."
+    bundle install --jobs 4 --retry 3
+
+    # Verify installation
+    print_info "Verifying gem installation..."
+    if bundle check; then
+        print_success "Gem dependencies fixed successfully!"
+        print_info "New Gemfile.lock generated with compatible versions"
+
+        # Test Jekyll
+        if bundle exec jekyll --version >/dev/null 2>&1; then
+            print_success "Jekyll is working correctly"
+        else
+            print_warning "Jekyll test failed, but gems are installed"
+        fi
+    else
+        print_error "Bundle check failed. Please review the output above."
+
+        # Try to restore backup if available
+        backup_file=$(ls -t Gemfile.lock.backup.* 2>/dev/null | head -n1)
+        if [ -n "$backup_file" ]; then
+            print_info "Restoring backup: $backup_file"
+            cp "$backup_file" Gemfile.lock
+        fi
+        exit 1
+    fi
+
+    print_success "Dependency fix completed!"
+    print_info "You can now run:"
+    print_info "  $0 build   # To build the application"
+    print_info "  $0 local   # To start locally"
+    print_info "  $0 docker  # To start with Docker"
+}
+
 # Function to stop application
 stop_app() {
     print_info "Stopping NBS IPS QR Code application..."
@@ -342,6 +498,9 @@ case "${1:-help}" in
         ;;
     restart)
         restart_app
+        ;;
+    fix-deps)
+        fix_deps
         ;;
     status)
         check_status
