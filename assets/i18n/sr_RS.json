@@ -140,6 +140,20 @@
             "generate": "Генериши QR код",
             "sample": "Попуни пробне податке"
         },
+        "actions": {
+            "share": "Подели"
+        },
+        "share": {
+            "title": "Подели QR код",
+            "native": "Подели",
+            "email": "Е-пошта",
+            "sms": "СМС",
+            "whatsapp": "WhatsApp",
+            "viber": "Viber",
+            "telegram": "Telegram",
+            "copyLink": "Копирај линк",
+            "close": "Затвори"
+        },
         "results": {
             "title": "Генерисани QR код",
             "download": "Преузми QR код",

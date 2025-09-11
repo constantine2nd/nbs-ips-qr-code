@@ -1,0 +1,12 @@
+{
+  "name": "nbs-ips-qr-code",
+  "version": "1.0.0",
+  "description": "Jekyll GUI wrapper for NBS IPS QR Code API - Generate and validate Serbian National Bank IPS QR codes",
+  "author": "NBS IPS QR Code Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/constantine2nd/nbs-ips-qr-code.git"
+  },
+  "homepage": "https://github.com/constantine2nd/nbs-ips-qr-code#readme"
+}

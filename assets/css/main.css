@@ -51,6 +51,176 @@ body {
         sans-serif;
 }
 
+/* Sharing functionality styles */
+.share-options {
+    margin-top: 1rem;
+    animation: slideDown 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-outline-purple {
+    color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.btn-outline-purple:hover {
+    color: #fff;
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.btn-outline-purple:focus {
+    box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+}
+
+/* Mobile-specific styles for sharing */
+@media (max-width: 768px) {
+    .share-options .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.5rem;
+    }
+
+    .share-options .card-body {
+        padding: 0.75rem;
+    }
+
+    .btn-mobile-full {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .d-grid.gap-2 .btn {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Single column button layout */
+.d-grid.gap-2 {
+    grid-template-columns: 1fr;
+}
+
+.d-grid.gap-2 .btn {
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* QR Code display improvements */
+.qr-display {
+    text-align: center;
+    padding: 1rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1rem;
+}
+
+.qr-display .d-grid.gap-2 {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.qr-image {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #e9ecef;
+    border-radius: var(--border-radius);
+    background: white;
+    padding: 0.5rem;
+}
+
+/* Share button animations */
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Enhanced mobile touch targets */
+@media (max-width: 576px) {
+    .btn-sm {
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .share-options .btn {
+        min-height: 40px;
+        font-size: 0.875rem;
+    }
+
+    .qr-display .btn-sm {
+        min-height: 48px;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+}
+
+/* Platform-specific icon colors */
+.fab.fa-whatsapp {
+    color: #25d366;
+}
+
+.fab.fa-viber {
+    color: #665cac;
+}
+
+.fab.fa-telegram {
+    color: #0088cc;
+}
+
+/* Loading states for share buttons */
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.6;
+    position: relative;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .lang-en {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

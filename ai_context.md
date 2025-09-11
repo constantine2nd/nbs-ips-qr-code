@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-The **NBS IPS QR Code** application is a Jekyll-based static site generator for creating and validating QR codes for the Serbian National Bank (NBS) Instant Payment System (IPS). The project provides tools for QR code generation, validation, and template management.
+The **NBS IPS QR Code** application is a Jekyll-based static site generator for creating and validating QR codes for the Serbian National Bank (NBS) Instant Payment System (IPS). The project provides tools for QR code generation, validation, template management, and comprehensive sharing functionality optimized for mobile devices.
 
 ### Key Technologies
 - **Jekyll 4.3.4** - Static site generator
@@ -36,6 +36,26 @@ nbs-ips-qr-code/
 ├── start.sh                # Development utility script
 └── .github/workflows/      # CI/CD pipeline
     └── jekyll.yml          # GitHub Actions workflow
+
+## Key Features
+
+### QR Code Generation & Validation
+- Full NBS IPS compliance
+- Multiple payment types (PR, PT, EK)
+- Real-time validation
+- Template management system
+
+### Mobile-First Sharing System
+- Native mobile sharing (iOS/Android)
+- Platform-specific integrations:
+  - **Viber** - Deep linking + fallback to web
+  - **WhatsApp** - Direct messaging integration
+  - **Telegram** - App + web sharing
+  - **SMS** - Native messaging apps
+  - **Email** - Native email clients
+- Copy link functionality
+- Enhanced download for mobile devices
+- Print functionality
 ```
 
 ## Development vs Production Environments
@@ -238,6 +258,66 @@ After making changes, verify these work:
 - [ ] Language switching functions
 - [ ] Health check page shows all green status
 
+### ✅ Sharing Functionality Testing
+- [ ] Share button appears after QR generation
+- [ ] Share options expand/collapse properly
+- [ ] Native sharing works on mobile devices (iOS/Android)
+- [ ] Email sharing opens native email client
+- [ ] SMS sharing opens native messaging app
+- [ ] WhatsApp sharing opens WhatsApp
+- [ ] Viber sharing works (deep link + fallback)
+- [ ] Telegram sharing functions properly
+- [ ] Copy link functionality works
+- [ ] All sharing options work on desktop
+- [ ] Sharing translations display correctly in all languages
+
+## Mobile Sharing Implementation Details
+
+### Native Sharing API
+- Uses `navigator.share()` when available
+- Automatically detects file sharing capabilities
+- Falls back to URL sharing if file sharing unsupported
+- Graceful degradation for unsupported browsers
+
+### Platform-Specific Integrations
+
+#### Viber Integration
+```javascript
+// Direct app integration
+viber://forward?text=${message}
+
+// Fallback to Viber web with deep linking
+https://3p3x.adj.st/?adjust_t=u783g1_kw9yml&adjust_fallback=...
+```
+
+#### WhatsApp Integration
+```javascript
+// Universal WhatsApp URL
+https://wa.me/?text=${message}
+```
+
+#### Telegram Integration
+```javascript
+// Try app first: tg://msg?text=${message}
+// Fallback to web: https://t.me/share/url?url=...
+```
+
+#### SMS Integration
+```javascript
+// iOS: sms:&body=${message}
+// Android: sms:?body=${message}
+```
+
+### Device Detection
+- **Mobile Detection**: `/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i`
+- **iOS Detection**: `/iPad|iPhone|iPod/`
+- **Android Detection**: `/Android/i`
+
+### Fallback Mechanisms
+- Copy to clipboard for failed sharing
+- Alternative sharing methods for unsupported platforms
+- Desktop-specific sharing behaviors
+
 ## Multi-language Support
 
 The application supports three languages:
@@ -246,6 +326,16 @@ The application supports three languages:
 - **English** (`en`)
 
 Translation files are located in `assets/i18n/` and managed via `assets/js/i18n.js`.
+
+### Sharing Translations
+All sharing options are fully translated:
+- `generator.share.title` - "Share QR Code"
+- `generator.share.native` - Native sharing button
+- `generator.share.email` - Email option
+- `generator.share.whatsapp` - WhatsApp option
+- `generator.share.viber` - Viber option
+- `generator.share.telegram` - Telegram option
+- And more...
 
 ## API Integration
 
@@ -269,6 +359,39 @@ CORS limitations may apply when testing locally.
 - Asset minification in production builds
 - Docker layer caching for faster builds
 - GitHub Actions cache for dependencies
+
+## Mobile Optimization
+
+### Touch-Friendly Interface
+- Minimum 44px touch targets on iOS
+- Responsive button layouts
+- Mobile-first CSS design
+- Optimized for thumb navigation
+
+### Performance Considerations
+- Lazy loading for sharing options
+- Efficient device detection
+- Minimal JavaScript footprint
+- Fast share option animations
+
+### Cross-Platform Compatibility
+- Works on iOS Safari, Chrome, Firefox
+- Android Chrome, Samsung Internet, Edge
+- Desktop browsers with graceful fallbacks
+- PWA-ready sharing capabilities
+
+## Browser Compatibility
+
+### Native Sharing Support
+- **iOS Safari 14+**: Full file and URL sharing
+- **Android Chrome 89+**: Full sharing capabilities
+- **Desktop browsers**: URL sharing only
+- **Older browsers**: Fallback to individual share methods
+
+### Deep Link Support
+- **iOS**: Universal links and custom URL schemes
+- **Android**: Intent handling and app detection
+- **Desktop**: Web-based sharing interfaces
 
 ---
 
