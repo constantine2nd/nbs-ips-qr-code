@@ -11,6 +11,7 @@ The **NBS IPS QR Code** application is a Jekyll-based static site generator for 
 - **Bootstrap 5.3** - Frontend framework
 - **GitHub Actions** - CI/CD pipeline
 - **GitHub Pages** - Deployment target
+- **NBS WebApp Integration** - Account information lookup API
 
 ## Project Structure
 
@@ -44,6 +45,7 @@ nbs-ips-qr-code/
 - Multiple payment types (PR, PT, EK)
 - Real-time validation
 - Template management system
+- **Account Information Lookup** - Integration with NBS WebApp Center for recipient account details
 
 ### Mobile-First Sharing System
 - Native mobile sharing (iOS/Android)
@@ -56,7 +58,13 @@ nbs-ips-qr-code/
 - Copy link functionality
 - Enhanced download for mobile devices
 - Print functionality
-```
+
+### Account Information Lookup System
+- **Real-time Account Validation** - Lookup recipient account details from NBS WebApp Center
+- **Account Data Population** - Auto-fill recipient name and address from account information
+- **Multi-language Support** - Full translation support for account lookup interface
+- **Error Handling** - Comprehensive error handling for network issues and invalid accounts
+- **Security** - XSS protection with HTML escaping for displayed account data
 
 ## Development vs Production Environments
 
@@ -428,8 +436,102 @@ CORS limitations may apply when testing locally.
 
 ---
 
+## ✅ Account Information Lookup Feature (COMPLETED)
+
+### Task Implementation Status
+**COMPLETED**: ✅ Account lookup functionality has been successfully implemented with the following features:
+
+- **Account Info Button**: Added info button (ℹ️) next to Recipient Account field
+- **Modal Integration**: Created dedicated modal for displaying account information
+- **API Integration**: Connected to NBS WebApp Center API endpoint
+- **Data Parsing**: Robust HTML parsing with pattern matching for reliable data extraction
+- **Auto-fill Feature**: "Use This Information" button to populate recipient name and address
+- **Multi-language Support**: Full translations in Serbian Cyrillic, Latin, and English
+- **Error Handling**: Comprehensive error handling for CORS, network, and validation issues
+- **Security**: XSS protection with HTML escaping for all displayed data
+
+## Account Information Lookup Feature
+
+### Overview
+The Account Information Lookup feature provides real-time integration with the NBS WebApp Center to fetch recipient account details automatically when generating QR codes.
+
+### How It Works
+1. **User enters an 18-digit recipient account number** in the generator form
+2. **Clicks the info button** (ℹ️) next to the account field
+3. **System parses the account number** into bank code, account number, and control digits
+4. **Makes API call** to `https://webappcenter.nbs.rs/PnWebApp/CompanyAccount/CompanyAccountResident`
+5. **Displays account information** in a modal popup with details like:
+   - Account holder name (Назив корисника рачуна)
+   - National ID (Матични број)
+   - Tax ID (Порески број) 
+   - Address (Адреса)
+   - City (Место)
+   - Bank name (Банка)
+   - Account status (Статус)
+   - Block status (Подлеже/не подлеже блокади)
+   - Opening date (Датум отварања)
+
+### Implementation Details
+
+#### Account Number Parsing
+- **Input**: 18-digit number (e.g., `220000000016005771`)
+- **Parsing**: `BBB-AAAAAAAAAAAAA-CC` format
+  - `BBB`: Bank code (first 3 digits)
+  - `AAAAAAAAAAAAA`: Account number (digits 4-16)
+  - `CC`: Control number (last 2 digits)
+
+#### API Integration
+```javascript
+// Example API call
+const apiUrl = `https://webappcenter.nbs.rs/PnWebApp/CompanyAccount/CompanyAccountResident?isSearchExecuted=true&BankCode=220&AccountNumber=0000000160057&ControlNumber=71&CompanyNationalCode=&CompanyTaxCode=&CompanyName=&City=&TypeID=1&OrderBy=&Pagging.CurrentPage=1&Pagging.PageSize=50`;
+```
+
+#### Files Modified
+- **`generator.html`** - Added lookup button to recipient account field
+- **`_layouts/default.html`** - Added account information modal
+- **`assets/js/main.js`** - Added lookup functionality and modal handling
+- **`assets/i18n/*.json`** - Added translations for all supported languages
+
+### Translation Support
+Full translation support in all three languages:
+- **English** - "Account Information", "Lookup Account Information"
+- **Serbian Cyrillic** - "Информације о рачуну", "Претражи информације о рачуну"
+- **Serbian Latin** - "Informacije o računu", "Pretraži informacije o računu"
+
+### CORS Considerations
+⚠️ **Important**: The NBS WebApp Center API may have CORS restrictions that prevent direct browser calls from other domains. This is a security measure by the NBS server.
+
+**Potential Solutions**:
+1. **Proxy Server**: Implement a server-side proxy to make the API calls
+2. **Browser Extensions**: Use CORS-disabling browser extensions for testing
+3. **Production Deployment**: May work differently when deployed to a production domain
+
+### Error Handling
+The system handles various error scenarios:
+- **No Account Entered**: Warning notification
+- **Invalid Format**: Error for non-18-digit account numbers
+- **Network Errors**: CORS and connectivity issues
+- **No Data Found**: When account information is not available
+- **HTML Parsing Errors**: Fallback for unexpected response formats
+
+### Security Features
+- **XSS Protection**: All displayed data is HTML-escaped
+- **Input Validation**: Account number format validation
+- **Error Boundaries**: Graceful error handling with user-friendly messages
+
+### Usage Instructions
+1. Navigate to the QR Code Generator page
+2. Enter an 18-digit recipient account number (e.g., `220000000016005771`)
+3. Click the info button (ℹ️) next to the account field
+4. View the account information in the popup modal
+5. Optionally click "Use This Information" to auto-fill the recipient name and address fields
+6. Continue with QR code generation as normal
+
+---
+
 **Last Updated**: December 2024  
 **Workflow Status**: ✅ All systems operational  
-**Mobile Sharing**: ✅ Fully implemented and tested
+**Mobile Sharing**: ✅ Fully implemented and tested  
+**Account Lookup**: ✅ Implemented with CORS considerations
 **Development Environment**: Docker Compose recommended  
 **Production Environment**: GitHub Pages deployment active

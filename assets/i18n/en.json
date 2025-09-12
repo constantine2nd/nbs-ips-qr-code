@@ -232,6 +232,31 @@
             "uses": "uses",
             "use": "use",
             "viewAllTemplates": "View All Templates"
+        },
+        "accountLookup": {
+            "buttonTitle": "Lookup Account Information",
+            "modalTitle": "Account Information",
+            "loading": "Loading account information...",
+            "noAccount": "Please enter an account number first",
+            "invalidFormat": "Invalid account number format. Please enter an 18-digit account number.",
+            "noData": "No account information found for this account number.",
+            "error": "Error loading account information. This may be due to CORS restrictions or network issues.",
+            "useInfo": "Use This Information",
+            "infoFilled": "Account information has been filled into the form",
+            "fields": {
+                "name": "Account Holder Name",
+                "nationalId": "National ID",
+                "taxId": "Tax ID",
+                "address": "Address",
+                "city": "City",
+                "municipality": "Municipality",
+                "activity": "Activity",
+                "bank": "Bank",
+                "account": "Account Number",
+                "status": "Status",
+                "blockStatus": "Block Status",
+                "openDate": "Opening Date"
+            }
         }
     },
     "validator": {

@@ -223,6 +223,31 @@
             "uses": "korišćenja",
             "use": "korišćenje",
             "viewAllTemplates": "Pogledaj sve šablone"
+        },
+        "accountLookup": {
+            "buttonTitle": "Pretraži informacije o računu",
+            "modalTitle": "Informacije o računu",
+            "loading": "Učitavanje informacija o računu...",
+            "noAccount": "Molimo unesite broj računa prvo",
+            "invalidFormat": "Nevažeći format broja računa. Molimo unesite 18-cifren broj računa.",
+            "noData": "Nisu pronađene informacije za ovaj broj računa.",
+            "error": "Greška prilikom učitavanja informacija o računu. Moguće je da se radi o CORS ograničenjima ili problemima sa mrežom.",
+            "useInfo": "Koristi ove informacije",
+            "infoFilled": "Informacije o računu su unesene u formu",
+            "fields": {
+                "name": "Naziv korisnika računa",
+                "nationalId": "Matični broj",
+                "taxId": "Poreski broj",
+                "address": "Adresa",
+                "city": "Mesto",
+                "municipality": "Opština",
+                "activity": "Delatnost",
+                "bank": "Banka",
+                "account": "Račun",
+                "status": "Status",
+                "blockStatus": "Podleže/ne podleže blokadi",
+                "openDate": "Datum otvaranja"
+            }
         }
     },
     "validator": {

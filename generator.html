@@ -222,14 +222,25 @@ description: 'Generate NBS IPS QR codes from payment data using the official Ser
                                 data-i18n="generator.form.accountNumber.labelDetailed"
                                 >Recipient Account (R) *</label
                             >
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="R"
-                                id="RGenerator"
-                                required
-                                maxlength="18"
-                            />
+                            <div class="input-group">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="R"
+                                    id="RGenerator"
+                                    required
+                                    maxlength="18"
+                                />
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-info"
+                                    onclick="lookupAccountInfo()"
+                                    title="Lookup Account Info"
+                                    data-i18n-title="generator.accountLookup.buttonTitle"
+                                >
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
                             <div
                                 class="form-text"
                                 data-i18n="generator.form.accountNumber.helpDetailed"
